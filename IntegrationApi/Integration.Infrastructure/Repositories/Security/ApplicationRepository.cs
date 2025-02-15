@@ -26,7 +26,8 @@ namespace Integration.Infrastructure.Repositories.Security
             var entity = await _context.Applications.FindAsync(id);
             if (entity == null) return false;
 
-            _context.Applications.Remove(entity);
+            entity.IsActive = false;
+            entity.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
         }
