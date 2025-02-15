@@ -2,7 +2,7 @@
 
 using Integration.Shared.DTO.Aut;
 
-namespace Integration.Aplication.Validations
+namespace Integration.Application.Validations
 {
     public class RegisterUserValidator : AbstractValidator<RegisterUserDTO>
     {

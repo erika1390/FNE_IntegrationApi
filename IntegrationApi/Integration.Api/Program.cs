@@ -1,5 +1,10 @@
+using Integration.Application.Interfaces.Security;
+using Integration.Application.Mappings.Security;
+using Integration.Application.Services.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Data.Contexts;
+using Integration.Infrastructure.Interfaces.Security;
+using Integration.Infrastructure.Repositories.Security;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +22,14 @@ builder.Services.AddSwaggerGen();
 // Configurar conexión a la base de datos
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("IntegrationConnection")));
+
+// Registro de AutoMapper
+builder.Services.AddAutoMapper(typeof(ApplicationProfile));
+
+// Si el servicio no es genérico, registra la implementación específica
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+
 // Configurar Identity
 builder.Services.AddIdentity<User, Role>(options =>
 {
