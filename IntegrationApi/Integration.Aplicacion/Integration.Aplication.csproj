@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Integration.Core\Integration.Core.csproj" />
+    <ProjectReference Include="..\Integration.Infrastructure\Integration.Infrastructure.csproj" />
+    <ProjectReference Include="..\Integration.Shared\Integration.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
