@@ -44,9 +44,18 @@ namespace Integration.Infrastructure.Repositories.Security
 
         public async Task<Application> UpdateAsync(Application entity)
         {
-            _context.Applications.Update(entity);
+            var existingEntity = await _context.Applications.FindAsync(entity.ApplicationId);
+            if (existingEntity == null)
+                return null;
+
+            existingEntity.Name = entity.Name;
+            existingEntity.UpdatedBy = entity.UpdatedBy;
+            existingEntity.UpdatedAt = DateTime.UtcNow;
+            existingEntity.IsActive = entity.IsActive;
+
+            _context.Applications.Update(existingEntity);
             await _context.SaveChangesAsync();
-            return entity;
+            return existingEntity;
         }
     }
 }
