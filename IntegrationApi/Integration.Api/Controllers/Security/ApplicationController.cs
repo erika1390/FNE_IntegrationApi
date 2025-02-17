@@ -1,12 +1,14 @@
 ﻿using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Integration.Api.Controllers.Security
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ApplicationController : ControllerBase
     {
         private readonly IApplicationService _service;
@@ -29,6 +31,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ApplicationDTO> Create(ApplicationDTO entity)
         {
             return await _service.CreateAsync(entity);

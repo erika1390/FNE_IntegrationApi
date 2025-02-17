@@ -3,7 +3,6 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
-
 namespace Integration.Application.Services.Security
 {
     public class ApplicationService : IApplicationService
