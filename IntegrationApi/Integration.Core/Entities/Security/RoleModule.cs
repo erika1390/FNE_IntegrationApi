@@ -13,8 +13,8 @@ namespace Integration.Core.Entities.Security
         public int RoleId { get; set; } 
         [ForeignKey("Module")]
         public int ModuleId { get; set; }
-        public virtual Role Role { get; set; }
-        public virtual Module Module { get; set; }
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
+        public virtual Role? Role { get; set; }
+        public virtual Module? Module { get; set; }
+        public virtual ICollection<RolePermission>? RolePermissions { get; set; }
     }
 }

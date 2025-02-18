@@ -8,15 +8,15 @@ namespace Integration.Core.Entities.Security
     public class User : IdentityUser<int>, IAuditableEntity
     {
         [Required, MaxLength(100)]
-        public string FirstName { get; set; }
+        public required string FirstName { get; set; }
         [Required, MaxLength(100)]
-        public string LastName { get; set; }
+        public required string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public required string CreatedBy { get; set; } = "System";
-        public string UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
         public bool IsActive { get; set; } = true;
-        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public virtual ICollection<UserRole>? UserRoles { get; set; }
     }
 }

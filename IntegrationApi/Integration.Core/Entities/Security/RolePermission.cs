@@ -12,14 +12,14 @@ namespace Integration.Core.Entities.Security
         public int RolePermissionId { get; set; }
 
         public int RoleId { get; set; }
-        public virtual Role Role { get; set; }
+        public virtual Role? Role { get; set; }
 
         public int PermissionId { get; set; }
 
         [ForeignKey(nameof(PermissionId))] // 🔹 Se fuerza la asociación
-        public virtual Permission Permission { get; set; }
+        public virtual Permission? Permission { get; set; }
 
         public int RoleModuleId { get; set; }
-        public virtual RoleModule RoleModule { get; set; }
+        public virtual RoleModule? RoleModule { get; set; }
     }
 }

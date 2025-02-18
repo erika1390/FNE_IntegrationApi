@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-using Integration.Shared.DTO.Aut;
+using Integration.Shared.DTO.Security;
 
 namespace Integration.Application.Validations
 {

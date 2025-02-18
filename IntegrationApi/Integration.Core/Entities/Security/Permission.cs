@@ -11,7 +11,7 @@ namespace Integration.Core.Entities.Security
         [Key]
         public int PermissionId { get; set; }
         [Required, MaxLength(255)]
-        public string Name { get; set; }
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
+        public string? Name { get; set; }
+        public virtual ICollection<RolePermission>? RolePermissions { get; set; }
     }
 }

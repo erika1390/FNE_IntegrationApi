@@ -14,7 +14,7 @@ namespace Integration.Core.Entities.Base
         public string CreatedBy { get; set; } = "System"; // Usuario que creó el registro
 
         [MaxLength(50)]
-        public string UpdatedBy { get; set; } // Usuario que modificó el registro
+        public string? UpdatedBy { get; set; } // Usuario que modificó el registro
 
         public bool IsActive { get; set; } = true;
     }

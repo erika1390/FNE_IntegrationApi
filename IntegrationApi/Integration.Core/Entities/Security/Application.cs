@@ -9,8 +9,8 @@ namespace Integration.Core.Entities.Security
         [Key]
         public int ApplicationId { get; set; }
         [Required, MaxLength(255)]
-        public string Name { get; set; }
-        public virtual ICollection<Role> Roles { get; set; }
-        public virtual ICollection<Module> Modules { get; set; }
+        public required string Name { get; set; }
+        public virtual ICollection<Role>? Roles { get; set; }
+        public virtual ICollection<Module>? Modules { get; set; }
     }
 }

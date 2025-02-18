@@ -1,5 +1,5 @@
 ﻿using Integration.Application.Interfaces.Security;
-using Integration.Shared.DTO.Aut;
+using Integration.Shared.DTO.Security;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,14 +7,9 @@ namespace Integration.Api.Controllers.Security
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(IJwtService jwtService) : ControllerBase
     {
-        private readonly IJwtService _jwtService;
-
-        public AuthController(IJwtService jwtService)
-        {
-            _jwtService = jwtService;
-        }
+        private readonly IJwtService _jwtService = jwtService;
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequestDTO request)
