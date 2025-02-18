@@ -7,6 +7,8 @@ namespace Integration.Core.Entities.Security
     [Table("Users", Schema = "Security")]
     public class User : IdentityUser<int>, IAuditableEntity
     {
+        [Required, MaxLength(10)]
+        public required string Code { get; set; }
         [Required, MaxLength(100)]
         public required string FirstName { get; set; }
         [Required, MaxLength(100)]

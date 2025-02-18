@@ -8,6 +8,8 @@ namespace Integration.Core.Entities.Security
     {
         [Key]
         public int ModuleId { get; set; }
+        [Required, MaxLength(10)]
+        public required string Code { get; set; }
         [Required, MaxLength(255)]
         public required string Name { get; set; }
         [ForeignKey("Application")]

@@ -7,6 +7,8 @@ namespace Integration.Core.Entities.Security
     [Table("Roles", Schema = "Security")]
     public class Role : IdentityRole<int>, IAuditableEntity
     {
+        [Required, MaxLength(10)]
+        public required string Code { get; set; }
         [MaxLength(255)]
         public required string Name { get; set; }
         [ForeignKey("Application")]
