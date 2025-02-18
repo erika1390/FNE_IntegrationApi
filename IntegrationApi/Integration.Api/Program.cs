@@ -1,3 +1,4 @@
+using Integration.Api.Middlewares;
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Mappings.Security;
 using Integration.Application.Services.Security;
@@ -75,6 +76,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
