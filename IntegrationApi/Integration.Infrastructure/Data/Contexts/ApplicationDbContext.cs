@@ -29,14 +29,15 @@ namespace Integration.Infrastructure.Data.Contexts
             base.OnModelCreating(builder);
 
             // 🔹 Definir el esquema "Security" para todas las entidades
-            builder.Entity<User>().ToTable("Users", "Security");
-            builder.Entity<Role>().ToTable("Roles", "Security");
+            builder.Entity<User>().ToTable("Users", "Security").HasIndex(u => u.Code).IsUnique();
+            builder.Entity<Role>().ToTable("Roles", "Security").HasIndex(r => r.Code).IsUnique();
             builder.Entity<UserRole>().ToTable("UserRoles", "Security");
             builder.Entity<RoleModule>().ToTable("RoleModules", "Security");
             builder.Entity<RolePermission>().ToTable("RolePermissions", "Security");
-            builder.Entity<Permission>().ToTable("Permissions", "Security");
-            builder.Entity<Application>().ToTable("Applications", "Security");
-            builder.Entity<Module>().ToTable("Modules", "Security");
+            builder.Entity<Permission>().ToTable("Permissions", "Security").HasIndex(u => u.Code).IsUnique();
+            builder.Entity<Application>().ToTable("Applications", "Security").HasIndex(a => a.Code).IsUnique();
+            builder.Entity<Application>().HasIndex(a => a.Name).IsUnique();
+            builder.Entity<Module>().ToTable("Modules", "Security").HasIndex(u => u.Code).IsUnique(); 
             builder.Entity<UserClaim>().ToTable("UserClaims", "Security");
             builder.Entity<UserLogin>().ToTable("UserLogins", "Security");
             builder.Entity<UserToken>().ToTable("UserTokens", "Security");
