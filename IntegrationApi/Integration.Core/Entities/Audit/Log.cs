@@ -16,7 +16,7 @@ namespace Integration.Core.Entities.Audit
         public required string CodeUser { get; set; }
 
         [Required, MaxLength(100)]
-        public required string ClientIp { get; set; }
+        public required string UserIp { get; set; }
 
         [Required]
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;

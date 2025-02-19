@@ -1,4 +1,5 @@
-﻿using Integration.Core.Entities.Security;
+﻿using Integration.Core.Entities.Audit;
+using Integration.Core.Entities.Security;
 using Integration.Core.Interfaces.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace Integration.Infrastructure.Data.Contexts
         public override DbSet<UserLogin> UserLogins { get; set; }
         public override DbSet<UserToken> UserTokens { get; set; }
         public override DbSet<RoleClaim> RoleClaims { get; set; }
+        public DbSet<Log> Logs { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -42,6 +44,8 @@ namespace Integration.Infrastructure.Data.Contexts
             builder.Entity<UserLogin>().ToTable("UserLogins", "Security");
             builder.Entity<UserToken>().ToTable("UserTokens", "Security");
             builder.Entity<RoleClaim>().ToTable("RoleClaims", "Security");
+
+            builder.Entity<Log>().ToTable("Logs", "Audit");
 
             // 🔹 Definir claves primarias
             builder.Entity<RoleModule>().HasKey(rm => rm.RoleModuleId);
