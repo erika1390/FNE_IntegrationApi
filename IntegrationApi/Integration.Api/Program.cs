@@ -72,17 +72,8 @@ builder.Services.AddAuthentication(options =>
 builder.Host.UseSerilog((context, config) =>
 {
     config.Enrich.FromLogContext()
-          .Enrich.WithThreadId()  // ✅ Ahora no debería dar error
-          .WriteTo.Console()
-          .WriteTo.File("logs/log_.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 10)
-          .WriteTo.MSSqlServer(
-              connectionString: builder.Configuration.GetConnectionString("IntegrationConnection"),
-              sinkOptions: new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions
-              {
-                  TableName = "Logs",
-                  SchemaName = "Audit",
-                  AutoCreateSqlTable = true
-              });
+          .Enrich.WithThreadId()
+          .WriteTo.File("logs/log_.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 10);
 });
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
