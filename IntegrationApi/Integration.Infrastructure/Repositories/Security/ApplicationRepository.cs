@@ -46,15 +46,15 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var entity = await _context.Applications.FindAsync(id);
-                if (entity == null)
+                var application = await _context.Applications.FindAsync(id);
+                if (application == null)
                 {
                     _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para eliminar.", id);
                     return false;
                 }
 
-                entity.IsActive = false;
-                entity.UpdatedAt = DateTime.UtcNow;
+                application.IsActive = false;
+                application.UpdatedAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Aplicación desactivada: {ApplicationId}", id);
@@ -109,25 +109,25 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var existingEntity = await _context.Applications.FindAsync(application.ApplicationId);
-                if (existingEntity == null)
+                var applicationEntity = await _context.Applications.FindAsync(application.ApplicationId);
+                if (applicationEntity == null)
                 {
                     _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para actualizar.", application.ApplicationId);
                     return null;
                 }
 
-                existingEntity.Name = application.Name;
-                existingEntity.UpdatedBy = application.UpdatedBy;
-                existingEntity.UpdatedAt = DateTime.UtcNow;
-                existingEntity.IsActive = application.IsActive;
+                applicationEntity.Name = application.Name;
+                applicationEntity.UpdatedBy = application.UpdatedBy;
+                applicationEntity.UpdatedAt = DateTime.UtcNow;
+                applicationEntity.IsActive = application.IsActive;
 
-                _context.Applications.Update(existingEntity);
+                _context.Applications.Update(applicationEntity);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Aplicación actualizada: {ApplicationId}, Nombre: {Name}",
                     application.ApplicationId, application.Name);
 
-                return existingEntity;
+                return applicationEntity;
             }
             catch (Exception ex)
             {
