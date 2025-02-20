@@ -1,9 +1,8 @@
 ﻿using Integration.Core.Entities.Audit;
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Audit;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 namespace Integration.Infrastructure.Repositories.Audit
 {
     public class LogRepository : ILogRepository
@@ -17,7 +16,7 @@ namespace Integration.Infrastructure.Repositories.Audit
             _logger = logger;
         }
 
-        public async Task<bool> CreateAsync(Log log)
+        public async Task<Log> CreateAsync(Log log)
         {
             if (log == null)
             {
@@ -28,25 +27,45 @@ namespace Integration.Infrastructure.Repositories.Audit
             try
             {
                 await _context.Logs.AddAsync(log);
-                int count = await _context.SaveChangesAsync();
-
-                bool success = count > 0;
-                if (success)
-                {
-                    _logger.LogInformation("Log registrado correctamente en la base de datos.");
-                }
-                else
-                {
-                    _logger.LogWarning("No se insertó ningún registro en la base de datos.");
-                }
-
-                return success;
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Log registrado correctamente en la base de datos.");
+                return log;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al registrar el log en la base de datos.");
-                return false;
+                throw;
             }
+        }
+
+        public async Task<IEnumerable<Log>> SearchAsync(string? codeApplication, string? codeUser, DateTime? timestamp, string? level, string? source, string? method)
+        {
+            _logger.LogInformation("Ejecutando búsqueda de logs con filtros.");
+
+            var query = _context.Logs.AsQueryable();
+
+            if (!string.IsNullOrEmpty(codeApplication))
+                query = query.Where(log => log.CodeApplication == codeApplication);
+
+            if (!string.IsNullOrEmpty(codeUser))
+                query = query.Where(log => log.CodeUser == codeUser);
+
+            if (timestamp.HasValue)
+                query = query.Where(log => log.Timestamp.Date == timestamp.Value.Date);
+
+            if (!string.IsNullOrEmpty(level))
+                query = query.Where(log => log.Level == level);
+
+            if (!string.IsNullOrEmpty(source))
+                query = query.Where(log => log.Source == source);
+
+            if (!string.IsNullOrEmpty(method))
+                query = query.Where(log => log.Method == method);
+
+            var logs = await query.ToListAsync();
+
+            _logger.LogInformation("{Count} logs encontrados con los filtros aplicados.", logs.Count);
+            return logs;
         }
     }
 }

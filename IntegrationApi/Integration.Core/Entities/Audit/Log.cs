@@ -7,7 +7,7 @@ namespace Integration.Core.Entities.Audit
     public class Log
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid LogId { get; set; } = Guid.NewGuid();
 
         [Required, MaxLength(10)]
         public required string CodeApplication { get; set; }

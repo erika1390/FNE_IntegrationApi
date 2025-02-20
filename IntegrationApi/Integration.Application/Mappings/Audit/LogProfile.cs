@@ -9,8 +9,10 @@ namespace Integration.Application.Mappings.Audit
     {
         public LogProfile()
         {
-            CreateMap<LogDTO, Log>().ForMember(dest => dest.Id, opt => opt.Ignore());
-            CreateMap<Log, LogDTO>();
+            CreateMap<LogDTO, Log>()
+                .ForMember(dest => dest.LogId, opt => opt.Condition(src => src.LogId != Guid.Empty));
+
+            CreateMap<Log, LogDTO>().ReverseMap();
         }
     }
 }

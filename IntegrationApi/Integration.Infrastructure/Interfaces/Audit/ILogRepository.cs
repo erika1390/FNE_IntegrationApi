@@ -4,6 +4,7 @@ namespace Integration.Infrastructure.Interfaces.Audit
 {
     public interface ILogRepository
     {
-        Task<bool> CreateAsync(Log application);
+        Task<Log> CreateAsync(Log log);
+        Task<IEnumerable<Log>> SearchAsync(string? codeApplication, string? codeUser, DateTime? timestamp, string? level, string? source, string? method);
     }
 }
