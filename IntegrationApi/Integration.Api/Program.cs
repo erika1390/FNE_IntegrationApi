@@ -1,11 +1,15 @@
 ﻿using Integration.Api.Middlewares;
+using Integration.Application.Interfaces.Audit;
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Mappings.Audit;
 using Integration.Application.Mappings.Security;
+using Integration.Application.Services.Audit;
 using Integration.Application.Services.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Data.Contexts;
+using Integration.Infrastructure.Interfaces.Audit;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Infrastructure.Repositories.Audit;
 using Integration.Infrastructure.Repositories.Security;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,7 +38,9 @@ builder.Services.AddAutoMapper(typeof(LogProfile));
 // Si el servicio no es genérico, registra la implementación específica
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+builder.Services.AddScoped<ILogRepository, LogRepository>();
 
 // Configurar Identity
 builder.Services.AddIdentity<User, Role>(options =>

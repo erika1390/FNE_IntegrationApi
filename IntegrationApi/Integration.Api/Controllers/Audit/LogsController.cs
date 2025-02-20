@@ -52,9 +52,11 @@ namespace Integration.Api.Controllers.Audit
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] LogDTO logDTO)
         {
+            _logger.LogInformation("Datos recibidos para crear log: {@logDTO}", logDTO);
+
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un log.");
+                _logger.LogWarning("Se recibió una solicitud con datos inválidos.");
                 return BadRequest(ResponseApi<LogDTO>.Error("Datos de entrada inválidos."));
             }
 
@@ -64,10 +66,11 @@ namespace Integration.Api.Controllers.Audit
 
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo crear el log.");
+                    _logger.LogWarning("No se pudo crear el log: {@logDTO}", logDTO);
                     return BadRequest(ResponseApi<LogDTO>.Error("No se pudo crear el log."));
                 }
 
+                _logger.LogInformation("Log creado con éxito: ID={LogId}", result.LogId);
                 return Ok(ResponseApi<LogDTO>.Success(result, "Log creado con éxito."));
             }
             catch (Exception ex)
@@ -76,5 +79,6 @@ namespace Integration.Api.Controllers.Audit
                 return StatusCode(500, ResponseApi<LogDTO>.Error("Error interno del servidor."));
             }
         }
+
     }
 }
