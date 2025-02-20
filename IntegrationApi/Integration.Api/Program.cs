@@ -28,8 +28,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("IntegrationConnection")));
 
 // Registro de AutoMapper
+builder.Services.AddAutoMapper(typeof(LogProfile)); 
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
-builder.Services.AddAutoMapper(typeof(LogProfile));
+builder.Services.AddAutoMapper(typeof(ModuleProfile));
 
 // Si el servicio no es genérico, registra la implementación específica
 builder.Services.AddSingleton<IJwtService, JwtService>(); 

@@ -1,8 +1,6 @@
 ﻿using Integration.Core.Entities.Base;
-
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Integration.Core.Entities.Security
 {
     [Table("Permissions", Schema = "Security")]

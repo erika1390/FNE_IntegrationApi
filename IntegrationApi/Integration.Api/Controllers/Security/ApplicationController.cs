@@ -77,7 +77,7 @@ namespace Integration.Api.Controllers.Security
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([FromBody] ApplicationDTO entity)
+        public async Task<IActionResult> Create([FromBody] ApplicationDTO applicationDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -85,11 +85,11 @@ namespace Integration.Api.Controllers.Security
                 return BadRequest(ResponseApi<ApplicationDTO>.Error("Datos de entrada inválidos."));
             }
 
-            _logger.LogInformation("Creando nueva aplicación: {Name}", entity.Name);
+            _logger.LogInformation("Creando nueva aplicación: {Name}", applicationDTO.Name);
 
             try
             {
-                var result = await _service.CreateAsync(entity);
+                var result = await _service.CreateAsync(applicationDTO);
 
                 if (result == null)
                 {
@@ -109,7 +109,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] ApplicationDTO entity)
+        public async Task<IActionResult> Update([FromBody] ApplicationDTO applicationDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -117,15 +117,15 @@ namespace Integration.Api.Controllers.Security
                 return BadRequest(ResponseApi<ApplicationDTO>.Error("Datos de entrada inválidos."));
             }
 
-            _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", entity.ApplicationId, entity.Name);
+            _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.ApplicationId, applicationDTO.Name);
 
             try
             {
-                var result = await _service.UpdateAsync(entity);
+                var result = await _service.UpdateAsync(applicationDTO);
 
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", entity.ApplicationId);
+                    _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
                     return NotFound(ResponseApi<ApplicationDTO>.Error("Aplicación no encontrada."));
                 }
 
@@ -134,7 +134,7 @@ namespace Integration.Api.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", entity.ApplicationId);
+                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
                 return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-
 using Integration.Shared.DTO.Security;
-
 namespace Integration.Application.Mappings.Security
 {
     public class ApplicationProfile : Profile
@@ -11,7 +9,6 @@ namespace Integration.Application.Mappings.Security
             CreateMap<Integration.Core.Entities.Security.Application, ApplicationDTO>()
                 .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
-
             IMappingExpression<ApplicationDTO, Integration.Core.Entities.Security.
                 Application> mappingExpression = CreateMap<ApplicationDTO, Integration.Core.Entities.Security.Application>()
                 .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))
