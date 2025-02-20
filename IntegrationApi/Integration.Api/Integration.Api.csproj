@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Controllers\Administration\" />
     <Folder Include="Controllers\Base\" />
+    <Folder Include="logs\" />
   </ItemGroup>
 
   <ItemGroup>

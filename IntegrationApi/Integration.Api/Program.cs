@@ -11,16 +11,12 @@ using Integration.Infrastructure.Interfaces.Audit;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Infrastructure.Repositories.Audit;
 using Integration.Infrastructure.Repositories.Security;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 using Serilog;
-
 using System.Text;
-
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
@@ -36,11 +32,13 @@ builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddAutoMapper(typeof(LogProfile));
 
 // Si el servicio no es genérico, registra la implementación específica
+builder.Services.AddSingleton<IJwtService, JwtService>(); 
+builder.Services.AddScoped<ILogService, LogService>(); 
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
-builder.Services.AddSingleton<IJwtService, JwtService>();
-builder.Services.AddScoped<ILogService, LogService>();
-builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
+builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 
 // Configurar Identity
 builder.Services.AddIdentity<User, Role>(options =>

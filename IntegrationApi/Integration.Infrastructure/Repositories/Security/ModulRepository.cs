@@ -9,13 +9,11 @@ namespace Integration.Infrastructure.Repositories.Security
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ModuleRepository> _logger;
-
         public ModuleRepository(ApplicationDbContext context, ILogger<ModuleRepository> logger)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
         public async Task<Module> CreateAsync(Module module)
         {
             if (module == null)
@@ -23,14 +21,11 @@ namespace Integration.Infrastructure.Repositories.Security
                 _logger.LogWarning("Intento de crear un módulo con datos nulos.");
                 throw new ArgumentNullException(nameof(module), "El módulo no puede ser nulo.");
             }
-
             try
             {
                 await _context.Modules.AddAsync(module);
                 await _context.SaveChangesAsync();
-
                 _logger.LogInformation("Módulo creado exitosamente: Módulo: {ModuleId}, Nombre: {Name}", module.ModuleId, module.Name);
-
                 return module;
             }
             catch (DbUpdateException ex)
@@ -44,7 +39,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
         public async Task<bool> DeleteAsync(int id)
         {
             try
