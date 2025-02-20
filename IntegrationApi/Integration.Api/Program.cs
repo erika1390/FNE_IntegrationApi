@@ -35,6 +35,9 @@ builder.Services.AddAutoMapper(typeof(LogProfile));
 builder.Services.AddSingleton<IJwtService, JwtService>(); 
 builder.Services.AddScoped<ILogService, LogService>(); 
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IModuleService, ModuleService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
