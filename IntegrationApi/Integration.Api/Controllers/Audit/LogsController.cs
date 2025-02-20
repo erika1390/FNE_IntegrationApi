@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Integration.Application.Interfaces.Audit;
+﻿using Integration.Application.Interfaces.Audit;
 using Integration.Shared.DTO.Audit;
 using Integration.Shared.Response;
-using Integration.Shared.DTO.Security;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace Integration.Api.Controllers.Audit
 {
