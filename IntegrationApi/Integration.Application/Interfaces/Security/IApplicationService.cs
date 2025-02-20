@@ -6,8 +6,8 @@ namespace Integration.Application.Interfaces.Security
     {
         Task<IEnumerable<ApplicationDTO>> GetAllAsync();
         Task<ApplicationDTO> GetByIdAsync(int id);
-        Task<ApplicationDTO> CreateAsync(ApplicationDTO entity);
-        Task<ApplicationDTO> UpdateAsync(ApplicationDTO entity);
+        Task<ApplicationDTO> CreateAsync(ApplicationDTO applicationDTO);
+        Task<ApplicationDTO> UpdateAsync(ApplicationDTO applicationDTO);
         Task<bool> DeleteAsync(int id);
     }
 }
