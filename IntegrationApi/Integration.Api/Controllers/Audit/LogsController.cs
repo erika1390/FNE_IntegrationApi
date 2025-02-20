@@ -28,9 +28,6 @@ namespace Integration.Api.Controllers.Audit
              [FromQuery] string? source,
              [FromQuery] string? method)
         {
-            _logger.LogInformation("Filtrando logs con parámetros: CodeApplication={CodeApplication}, CodeUser={CodeUser}, Timestamp={Timestamp}, Level={Level}, Source={Source}, Method={Method}",
-                codeApplication, codeUser, timestamp, level, source, method);
-
             try
             {
                 var logs = await _service.SearchAsync(codeApplication, codeUser, timestamp, level, source, method);
@@ -39,7 +36,6 @@ namespace Integration.Api.Controllers.Audit
                 {
                     _logger.LogWarning("No se encontraron logs con los filtros aplicados.");
                 }
-                _logger.LogInformation("{Count} logs obtenidos con éxito usando filtros.", logs.Count());
                 return Ok(ResponseApi<IEnumerable<LogDTO>>.Success(logs));
             }
             catch (Exception ex)
@@ -52,8 +48,6 @@ namespace Integration.Api.Controllers.Audit
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] LogDTO logDTO)
         {
-            _logger.LogInformation("Datos recibidos para crear log: {@logDTO}", logDTO);
-
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Se recibió una solicitud con datos inválidos.");
@@ -69,8 +63,6 @@ namespace Integration.Api.Controllers.Audit
                     _logger.LogWarning("No se pudo crear el log: {@logDTO}", logDTO);
                     return BadRequest(ResponseApi<LogDTO>.Error("No se pudo crear el log."));
                 }
-
-                _logger.LogInformation("Log creado con éxito: ID={LogId}", result.LogId);
                 return Ok(ResponseApi<LogDTO>.Success(result, "Log creado con éxito."));
             }
             catch (Exception ex)
