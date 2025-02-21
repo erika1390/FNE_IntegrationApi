@@ -32,7 +32,7 @@ namespace Integration.Api.Controllers.Security
                     return NotFound(ResponseApi<IEnumerable<ModuleDTO>>.Error("No se encontraron modulos."));
                 }
 
-                _logger.LogInformation("{Count} aplicaciones obtenidas correctamente.", result.Count());
+                _logger.LogInformation("{Count} modulos obtenidas correctamente.", result.Count());
                 return Ok(ResponseApi<IEnumerable<ModuleDTO>>.Success(result));
             }
             catch (Exception ex)
