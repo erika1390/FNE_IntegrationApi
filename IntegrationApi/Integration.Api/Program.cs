@@ -9,8 +9,11 @@ using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Audit;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Infrastructure.Interfaces.UnitOfWork;
 using Integration.Infrastructure.Repositories.Audit;
 using Integration.Infrastructure.Repositories.Security;
+using Integration.Infrastructure.Repositories.UnitOfWork;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,12 +35,15 @@ builder.Services.AddAutoMapper(typeof(LogProfile));
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddAutoMapper(typeof(ModuleProfile));
 
+builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
+
 // Si el servicio no es genérico, registra la implementación específica
 builder.Services.AddSingleton<IJwtService, JwtService>(); 
 builder.Services.AddScoped<ILogService, LogService>(); 
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
