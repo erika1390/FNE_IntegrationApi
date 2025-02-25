@@ -1,45 +1,57 @@
 ﻿using Integration.Infrastructure.Data.Contexts;
+using Integration.Infrastructure.Interfaces.Audit;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.UnitOfWork;
-using Integration.Infrastructure.Repositories.Security;
 using Microsoft.Extensions.Logging;
 namespace Integration.Infrastructure.Repositories.UnitOfWork
 {
-    public class ApplicationDbUOW : IApplicationDbUOW
+    public class ApplicationDbUOW : IApplicationDbUOW, IDisposable
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
-        private readonly IApplicationRepository _applicationRepository;
-        private readonly IModuleRepository _moduleRepository;
-        private readonly IPermissionRepository _permissionRepository;
-        private readonly IRoleRepository _roleRepository;
-        public ApplicationDbUOW(ApplicationDbContext context, ILogger logger)
+        private readonly ILogger<ApplicationDbUOW> _logger;
+
+        public ILogRepository LogRepository { get; }
+        public IApplicationRepository ApplicationRepository { get; }
+        public IModuleRepository ModuleRepository { get; }
+        public IPermissionRepository PermissionRepository { get; }
+        public IRoleRepository RoleRepository { get; }
+
+        public ApplicationDbUOW(
+            ApplicationDbContext context,
+            ILogger<ApplicationDbUOW> logger,
+            ILogRepository logRepository,
+            IApplicationRepository applicationRepository,
+            IModuleRepository moduleRepository,
+            IPermissionRepository permissionRepository,
+            IRoleRepository roleRepository)
         {
-            _context = context;
-            _logger = logger;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        }
-        public IApplicationRepository ApplicationRepository => _applicationRepository ?? new ApplicationRepository(_context, _logger);
-
-        public IModuleRepository ModuleRepository => _moduleRepository??new ModuleRepository(_context, _logger);
-
-        public IPermissionRepository PermissionRepository => _permissionRepository??new PermissionRepository(_context, _logger);
-
-        public IRoleRepository RoleRepository => _roleRepository ??new RoleRepository(_context, _logger);
-
-        public async void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async void SaveChanges()
-        {
-            throw new NotImplementedException();
+            LogRepository = logRepository ?? throw new ArgumentNullException(nameof(logRepository));
+            ApplicationRepository = applicationRepository ?? throw new ArgumentNullException(nameof(applicationRepository));
+            ModuleRepository = moduleRepository ?? throw new ArgumentNullException(nameof(moduleRepository));
+            PermissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
+            RoleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
         }
 
-        public async Task SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            await _context.SaveChangesAsync();
+            try
+            {
+                _logger.LogInformation("Guardando cambios en la base de datos.");
+                return await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al guardar cambios en la base de datos.");
+                throw;
+            }
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }
