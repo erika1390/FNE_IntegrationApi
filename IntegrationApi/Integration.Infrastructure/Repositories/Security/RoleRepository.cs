@@ -5,18 +5,20 @@ using Integration.Infrastructure.Interfaces.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using System.Security;
+using System.Data;
+using System.Linq.Expressions;
 namespace Integration.Infrastructure.Repositories.Security
 {
     public class RoleRepository : IRoleRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<RoleRepository> _logger;
-        public RoleRepository(ApplicationDbContext context, ILogger<RoleRepository> logger)
+        private readonly ILogger _logger;
+        public RoleRepository(ApplicationDbContext context, ILogger logger)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _context = context;
+            _logger = logger;
         }
+
         public async Task<Role> CreateAsync(Role role)
         {
             if (role == null)
@@ -72,11 +74,11 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<IEnumerable<Role>> GetAllAsync()
+        public async Task<IEnumerable<Role>> GetAllActiveAsync()
         {
             try
             {
-                var roles = await _context.Roles.AsNoTracking().ToListAsync();
+                var roles = await _context.Roles.Where(r => r.IsActive == true).AsNoTracking().ToListAsync();
 
                 _logger.LogInformation("Se obtuvieron {Count} roles de la base de datos.", roles.Count);
                 return roles;
@@ -86,6 +88,16 @@ namespace Integration.Infrastructure.Repositories.Security
                 _logger.LogError(ex, "Error al obtener todos los roles.");
                 return Enumerable.Empty<Role>();
             }
+        }
+
+        public async Task<List<Role>> GetAllAsync(Expression<Func<Role, bool>> predicado)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<Role>> GetAllAsync(List<Expression<Func<Role, bool>>> predicados)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Role> GetByIdAsync(int id)
