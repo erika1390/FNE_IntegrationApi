@@ -1,13 +1,17 @@
 using Integration.Shared.DTO.Security;
 
+using System.Linq.Expressions;
+
 namespace Integration.Application.Interfaces.Security
 {
     public interface IModuleService
     {
-        Task<IEnumerable<ModuleDTO>> GetAllAsync();
-        Task<ModuleDTO> GetByIdAsync(int id);
         Task<ModuleDTO> CreateAsync(ModuleDTO moduleDTO);
-        Task<ModuleDTO> UpdateAsync(ModuleDTO moduleDTO);
         Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<ModuleDTO>> GetAllActiveAsync();
+        Task<List<ModuleDTO>> GetAllAsync(Expression<Func<ModuleDTO, bool>> predicado);
+        Task<List<ModuleDTO>> GetAllAsync(List<Expression<Func<ModuleDTO, bool>>> predicados);
+        Task<ModuleDTO> GetByIdAsync(int id);
+        Task<ModuleDTO> UpdateAsync(ModuleDTO moduleDTO);
     }
 }

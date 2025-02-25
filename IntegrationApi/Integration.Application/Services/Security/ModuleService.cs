@@ -3,6 +3,9 @@ using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
+
+using System.Linq.Expressions;
+
 namespace Integration.Application.Services.Security
 {
     public class ModuleService : IModuleService
@@ -17,6 +20,7 @@ namespace Integration.Application.Services.Security
             _mapper = mapper;
             _logger = logger;
         }
+
         public async Task<ModuleDTO> CreateAsync(ModuleDTO moduleDTO)
         {
             _logger.LogInformation("Creando modulo: {Name}", moduleDTO.Name);
@@ -33,6 +37,7 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
         public async Task<bool> DeleteAsync(int id)
         {
             _logger.LogInformation("Eliminando modulo con ID: {ModuleId}", id);
@@ -55,12 +60,13 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-        public async Task<IEnumerable<ModuleDTO>> GetAllAsync()
+
+        public async Task<IEnumerable<ModuleDTO>> GetAllActiveAsync()
         {
             _logger.LogInformation("Obteniendo todos los modulos.");
             try
             {
-                var modules = await _repository.GetAllAsync();
+                var modules = await _repository.GetAllActiveAsync();
                 var modulesDTO = _mapper.Map<IEnumerable<ModuleDTO>>(modules);
                 _logger.LogInformation("{Count} modulos obtenidas con éxito.", modulesDTO.Count());
                 return modulesDTO;
@@ -71,6 +77,17 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
+        public async Task<List<ModuleDTO>> GetAllAsync(Expression<Func<ModuleDTO, bool>> predicado)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<ModuleDTO>> GetAllAsync(List<Expression<Func<ModuleDTO, bool>>> predicados)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<ModuleDTO> GetByIdAsync(int id)
         {
             _logger.LogInformation("Buscando modulos con ID: {ModuleId}", id);
@@ -91,6 +108,7 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
         public async Task<ModuleDTO> UpdateAsync(ModuleDTO moduleDTO)
         {
             _logger.LogInformation("Actualizando modulo con ID: {ModuleId}, Nombre: {Name}", moduleDTO.ModuleId, moduleDTO.Name);

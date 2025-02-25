@@ -3,6 +3,7 @@ using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
     public class PermissionService : IPermissionService
@@ -16,6 +17,7 @@ namespace Integration.Application.Services.Security
             _mapper = mapper;
             _logger = logger;
         }
+
         public async Task<PermissionDTO> CreateAsync(PermissionDTO permissionDTO)
         {
             _logger.LogInformation("Creando permiso: {Name}", permissionDTO.Name);
@@ -32,6 +34,7 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
         public async Task<bool> DeleteAsync(int id)
         {
             _logger.LogInformation("Eliminando permiso con ID: {PermissionId}", id);
@@ -54,12 +57,13 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-        public async Task<IEnumerable<PermissionDTO>> GetAllAsync()
+
+        public async Task<IEnumerable<PermissionDTO>> GetAllActiveAsync()
         {
             _logger.LogInformation("Obteniendo todos los permisos.");
             try
             {
-                var permission = await _repository.GetAllAsync();
+                var permission = await _repository.GetAllActiveAsync();
                 var permissionDTO = _mapper.Map<IEnumerable<PermissionDTO>>(permission);
                 _logger.LogInformation("{Count} permisos obtenidas con éxito.", permissionDTO.Count());
                 return permissionDTO;
@@ -70,6 +74,17 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
+        public async Task<List<PermissionDTO>> GetAllAsync(Expression<Func<PermissionDTO, bool>> predicado)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<PermissionDTO>> GetAllAsync(List<Expression<Func<PermissionDTO, bool>>> predicados)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<PermissionDTO> GetByIdAsync(int id)
         {
             _logger.LogInformation("Buscando permisos con ID: {PermissionId}", id);
@@ -90,6 +105,7 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
         public async Task<PermissionDTO> UpdateAsync(PermissionDTO permissionDTO)
         {
             _logger.LogInformation("Actualizando permiso con ID: {PermissionId}, Nombre: {Name}", permissionDTO.PermissionId, permissionDTO.Name);

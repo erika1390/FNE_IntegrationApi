@@ -3,7 +3,7 @@ using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
-
+using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
     public class ApplicationService : IApplicationService
@@ -17,6 +17,7 @@ namespace Integration.Application.Services.Security
             _mapper = mapper;
             _logger = logger;
         }
+
         public async Task<ApplicationDTO> CreateAsync(ApplicationDTO applicationDTO)
         {
             _logger.LogInformation("Creando aplicación: {Name}", applicationDTO.Name);
@@ -33,6 +34,7 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
         public async Task<bool> DeleteAsync(int id)
         {
             _logger.LogInformation("Eliminando aplicación con ID: {ApplicationId}", id);
@@ -55,12 +57,13 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-        public async Task<IEnumerable<ApplicationDTO>> GetAllAsync()
+
+        public async Task<IEnumerable<ApplicationDTO>> GetAllActiveAsync()
         {
             _logger.LogInformation("Obteniendo todas las aplicaciones.");
             try
             {
-                var applications = await _repository.GetAllAsync();
+                var applications = await _repository.GetAllActiveAsync();
                 var applicationsDTO = _mapper.Map<IEnumerable<ApplicationDTO>>(applications);
                 _logger.LogInformation("{Count} aplicaciones obtenidas con éxito.", applicationsDTO.Count());
                 return applicationsDTO;
@@ -71,6 +74,17 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
+        public async Task<List<ApplicationDTO>> GetAllAsync(Expression<Func<ApplicationDTO, bool>> predicado)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<ApplicationDTO>> GetAllAsync(List<Expression<Func<ApplicationDTO, bool>>> predicados)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<ApplicationDTO> GetByIdAsync(int id)
         {
             _logger.LogInformation("Buscando aplicación con ID: {ApplicationId}", id);
@@ -91,6 +105,7 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
         public async Task<ApplicationDTO> UpdateAsync(ApplicationDTO applicationDTO)
         {
             _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.ApplicationId, applicationDTO.Name);
