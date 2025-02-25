@@ -17,14 +17,14 @@ namespace Integration.Api.Controllers.Security
             _service = service;
             _logger = logger;
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("active")]
+        public async Task<IActionResult> GetAllActive()
         {
             _logger.LogInformation("Iniciando solicitud para obtener todas los modulos.");
 
             try
             {
-                var result = await _service.GetAllAsync();
+                var result = await _service.GetAllActiveAsync();
 
                 if (result == null || !result.Any())
                 {
