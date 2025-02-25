@@ -1,13 +1,9 @@
 ﻿using Integration.Core.Entities.Security;
-
+using Integration.Infrastructure.Interfaces.Base;
 namespace Integration.Infrastructure.Interfaces.Security
 {
-    public interface IModuleRepository
+    public interface IModuleRepository : IRepositoryBase<Module>
     {
-        Task<IEnumerable<Module>> GetAllAsync();
-        Task<Module> GetByIdAsync(int id);
-        Task<Module> CreateAsync(Module module);
-        Task<Module> UpdateAsync(Module module);
-        Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<Module>> GetAllActiveAsync();
     }
 }

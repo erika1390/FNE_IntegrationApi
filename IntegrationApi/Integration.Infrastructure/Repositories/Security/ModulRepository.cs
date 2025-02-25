@@ -1,19 +1,24 @@
 ﻿using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
+using System.Linq;
+using System.Linq.Expressions;
 namespace Integration.Infrastructure.Repositories.Security
 {
     public class ModuleRepository : IModuleRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<ModuleRepository> _logger;
-        public ModuleRepository(ApplicationDbContext context, ILogger<ModuleRepository> logger)
+        private readonly ILogger _logger;
+        public ModuleRepository(ApplicationDbContext context, ILogger logger)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _context = context;
+            _logger = logger;
         }
+
         public async Task<Module> CreateAsync(Module module)
         {
             if (module == null)
@@ -39,6 +44,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
+
         public async Task<bool> DeleteAsync(int id)
         {
             try
@@ -71,11 +77,11 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<IEnumerable<Module>> GetAllAsync()
+        public async Task<IEnumerable<Module>> GetAllActiveAsync()
         {
             try
             {
-                var modules = await _context.Modules.AsNoTracking().ToListAsync();
+                var modules = await _context.Modules.Where(m => m.IsActive == true).AsNoTracking().ToListAsync();
 
                 _logger.LogInformation("Se obtuvieron {Count} módulos de la base de datos.", modules.Count);
                 return modules;
@@ -85,6 +91,21 @@ namespace Integration.Infrastructure.Repositories.Security
                 _logger.LogError(ex, "Error al obtener todos los módulos.");
                 return Enumerable.Empty<Module>();
             }
+        }
+
+        public async Task<List<Module>> GetAllAsync(Expression<Func<Module, bool>> predicado)
+        {
+            return await _context.Modules.Where(predicado).ToListAsync();
+        }
+
+        public async Task<List<Module>> GetAllAsync(List<Expression<Func<Module, bool>>> predicados)
+        {
+            var query = _context.Modules.AsQueryable();
+            foreach (var predicado in predicados)
+            {
+                query = query.Where(predicado);
+            }
+            return await query.ToListAsync();
         }
 
         public async Task<Module> GetByIdAsync(int id)
