@@ -3,17 +3,22 @@ using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
+using System.Linq;
+using System.Linq.Expressions;
+using System.Security;
 namespace Integration.Infrastructure.Repositories.Security
 {
     public class PermissionRepository : IPermissionRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<PermissionRepository> _logger;
-        public PermissionRepository(ApplicationDbContext context, ILogger<PermissionRepository> logger)
+        private readonly ILogger _logger;
+        public PermissionRepository(ApplicationDbContext context, ILogger logger)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _context = context;
+            _logger = logger;
         }
+
         public async Task<Permission> CreateAsync(Permission permission)
         {
             if (permission == null)
@@ -69,11 +74,11 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<IEnumerable<Permission>> GetAllAsync()
+        public async Task<IEnumerable<Permission>> GetAllActiveAsync()
         {
             try
             {
-                var permission = await _context.Permissions.AsNoTracking().ToListAsync();
+                var permission = await _context.Permissions.Where(p => p.IsActive == true).AsNoTracking().ToListAsync();
 
                 _logger.LogInformation("Se obtuvieron {Count} permisos de la base de datos.", permission.Count);
                 return permission;
@@ -83,6 +88,21 @@ namespace Integration.Infrastructure.Repositories.Security
                 _logger.LogError(ex, "Error al obtener todos los permisos.");
                 return Enumerable.Empty<Permission>();
             }
+        }
+
+        public async Task<List<Permission>> GetAllAsync(Expression<Func<Permission, bool>> predicado)
+        {
+            return await _context.Permissions.Where(predicado).ToListAsync();
+        }
+
+        public async Task<List<Permission>> GetAllAsync(List<Expression<Func<Permission, bool>>> predicados)
+        {
+            var query = _context.Permissions.AsQueryable();
+            foreach (var predicado in predicados)
+            {
+                query = query.Where(predicado);
+            }
+            return await query.ToListAsync();
         }
 
         public async Task<Permission> GetByIdAsync(int id)

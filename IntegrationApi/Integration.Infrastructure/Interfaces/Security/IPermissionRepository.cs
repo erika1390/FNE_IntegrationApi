@@ -1,12 +1,9 @@
 ﻿using Integration.Core.Entities.Security;
+using Integration.Infrastructure.Interfaces.Base;
 namespace Integration.Infrastructure.Interfaces.Security
 {
-    public interface IPermissionRepository
+    public interface IPermissionRepository : IRepositoryBase<Permission>
     {
-        Task<IEnumerable<Permission>> GetAllAsync();
-        Task<Permission> GetByIdAsync(int id);
-        Task<Permission> CreateAsync(Permission permission);
-        Task<Permission> UpdateAsync(Permission permission);
-        Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<Permission>> GetAllActiveAsync();
     }
 }
