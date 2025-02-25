@@ -1,13 +1,9 @@
 ﻿using Integration.Core.Entities.Security;
-
+using Integration.Infrastructure.Interfaces.Base;
 namespace Integration.Infrastructure.Interfaces.Security
 {
-    public interface IApplicationRepository
+    public interface IApplicationRepository : IRepositoryBase<Application>
     {
-        Task<IEnumerable<Application>> GetAllAsync();
-        Task<Application> GetByIdAsync(int id);
-        Task<Application> CreateAsync(Application application);
-        Task<Application> UpdateAsync(Application application);
-        Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<Application>> GetAllActiveAsync();
     }
 }

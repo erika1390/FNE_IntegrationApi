@@ -1,9 +1,8 @@
-﻿using Integration.Core.Entities.Security;
-using Integration.Infrastructure.Data.Contexts;
+﻿using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
+using System.Linq.Expressions;
 namespace Integration.Infrastructure.Repositories.Security
 {
     public class ApplicationRepository : IApplicationRepository
@@ -17,22 +16,19 @@ namespace Integration.Infrastructure.Repositories.Security
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<Application> CreateAsync(Application application)
+        public async Task<Core.Entities.Security.Application> CreateAsync(Core.Entities.Security.Application application)
         {
             if (application == null)
             {
                 _logger.LogWarning("Intento de crear una aplicación con datos nulos.");
                 throw new ArgumentNullException(nameof(application), "La aplicación no puede ser nula.");
             }
-
             try
             {
                 await _context.Applications.AddAsync(application);
                 await _context.SaveChangesAsync();
-
                 _logger.LogInformation("Aplicación creada exitosamente: {ApplicationId}, Nombre: {Name}",
-                    application.ApplicationId, application.Name);
-
+                application.ApplicationId, application.Name);
                 return application;
             }
             catch (Exception ex)
@@ -67,22 +63,37 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<IEnumerable<Application>> GetAllAsync()
+        public async Task<IEnumerable<Core.Entities.Security.Application>> GetAllActiveAsync()
         {
             try
             {
-                var applications = await _context.Applications.ToListAsync();
+                var applications = await _context.Applications.Where(a => a.IsActive == true).ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} aplicaciones de la base de datos.", applications.Count);
                 return applications;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener todas las aplicaciones.");
-                return Enumerable.Empty<Application>();
+                return Enumerable.Empty<Core.Entities.Security.Application>();
             }
         }
 
-        public async Task<Application> GetByIdAsync(int id)
+        public async Task<List<Core.Entities.Security.Application>> GetAllAsync(Expression<Func<Core.Entities.Security.Application, bool>> predicado)
+        {
+            return await _context.Applications.Where(predicado).ToListAsync();
+        }
+
+        public async Task<List<Core.Entities.Security.Application>> GetAllAsync(List<Expression<Func<Core.Entities.Security.Application, bool>>> predicados)
+        {
+            var query = _context.Applications.AsQueryable();
+            foreach (var predicado in predicados)
+            {
+                query = query.Where(predicado);
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<Core.Entities.Security.Application> GetByIdAsync(int id)
         {
             try
             {
@@ -105,7 +116,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<Application> UpdateAsync(Application application)
+        public async Task<Core.Entities.Security.Application> UpdateAsync(Core.Entities.Security.Application application)
         {
             try
             {
