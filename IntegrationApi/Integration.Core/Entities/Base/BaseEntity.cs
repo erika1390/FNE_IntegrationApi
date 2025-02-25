@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace Integration.Core.Entities.Base
 {
     public abstract class BaseEntity
     {
+        public int Id { get; set; }
+
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
@@ -11,10 +12,10 @@ namespace Integration.Core.Entities.Base
 
         [Required]
         [MaxLength(50)]
-        public string CreatedBy { get; set; } = "System"; // Usuario que creó el registro
+        public string CreatedBy { get; set; } = "System";
 
         [MaxLength(50)]
-        public string? UpdatedBy { get; set; } // Usuario que modificó el registro
+        public string? UpdatedBy { get; set; }
 
         public bool IsActive { get; set; } = true;
     }
