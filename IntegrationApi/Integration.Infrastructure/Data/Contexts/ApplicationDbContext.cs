@@ -5,11 +5,6 @@ using Integration.Core.Interfaces.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Integration.Infrastructure.Data.Contexts
 {
     public class ApplicationDbContext : IdentityDbContext<
