@@ -8,12 +8,12 @@ namespace Integration.Infrastructure.Repositories.Security
     public class ApplicationRepository : IApplicationRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<ApplicationRepository> _logger;
+        private readonly ILogger _logger;
 
-        public ApplicationRepository(ApplicationDbContext context, ILogger<ApplicationRepository> logger)
+        public ApplicationRepository(ApplicationDbContext context, ILogger logger)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _context = context;
+            _logger = logger;
         }
 
         public async Task<Core.Entities.Security.Application> CreateAsync(Core.Entities.Security.Application application)

@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="Repositories\Views\" />
-    <Folder Include="Repositories\UnitOfWork\" />
     <Folder Include="Repositories\Parametrics\" />
   </ItemGroup>
 
