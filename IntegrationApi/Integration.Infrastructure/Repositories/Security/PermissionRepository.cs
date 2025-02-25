@@ -3,10 +3,7 @@ using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
-using System.Linq;
 using System.Linq.Expressions;
-using System.Security;
 namespace Integration.Infrastructure.Repositories.Security
 {
     public class PermissionRepository : IPermissionRepository
@@ -92,17 +89,39 @@ namespace Integration.Infrastructure.Repositories.Security
 
         public async Task<List<Permission>> GetAllAsync(Expression<Func<Permission, bool>> predicado)
         {
-            return await _context.Permissions.Where(predicado).ToListAsync();
+            try
+            {
+                _logger.LogInformation("Obteniendo permisos con un predicado específico.");
+                var roles = await _context.Permissions.Where(predicado).ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} permisos.", roles.Count);
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los permisos con el predicado especificado.");
+                throw;
+            }
         }
 
         public async Task<List<Permission>> GetAllAsync(List<Expression<Func<Permission, bool>>> predicados)
         {
-            var query = _context.Permissions.AsQueryable();
-            foreach (var predicado in predicados)
+            try
             {
-                query = query.Where(predicado);
+                _logger.LogInformation("Obteniendo permisos con múltiples predicados.");
+                var query = _context.Permissions.AsQueryable();
+                foreach (var predicado in predicados)
+                {
+                    query = query.Where(predicado);
+                }
+                var roles = await query.ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} permisos tras aplicar múltiples predicados.", roles.Count);
+                return roles;
             }
-            return await query.ToListAsync();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los permisos con múltiples predicados.");
+                throw;
+            }
         }
 
         public async Task<Permission> GetByIdAsync(int id)

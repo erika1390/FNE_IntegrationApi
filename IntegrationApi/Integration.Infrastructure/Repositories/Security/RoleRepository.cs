@@ -1,10 +1,8 @@
 ﻿using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using System.Data;
 using System.Linq.Expressions;
 namespace Integration.Infrastructure.Repositories.Security
@@ -92,12 +90,39 @@ namespace Integration.Infrastructure.Repositories.Security
 
         public async Task<List<Role>> GetAllAsync(Expression<Func<Role, bool>> predicado)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo roles con un predicado específico.");
+                var roles = await _context.Roles.Where(predicado).ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} roles.", roles.Count);
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los roles con el predicado especificado.");
+                throw;
+            }
         }
 
         public async Task<List<Role>> GetAllAsync(List<Expression<Func<Role, bool>>> predicados)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo roles con múltiples predicados.");
+                var query = _context.Roles.AsQueryable();
+                foreach (var predicado in predicados)
+                {
+                    query = query.Where(predicado);
+                }
+                var roles = await query.ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} roles tras aplicar múltiples predicados.", roles.Count);
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los roles con múltiples predicados.");
+                throw;
+            }
         }
 
         public async Task<Role> GetByIdAsync(int id)

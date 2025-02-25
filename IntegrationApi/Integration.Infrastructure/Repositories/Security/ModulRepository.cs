@@ -95,17 +95,39 @@ namespace Integration.Infrastructure.Repositories.Security
 
         public async Task<List<Module>> GetAllAsync(Expression<Func<Module, bool>> predicado)
         {
-            return await _context.Modules.Where(predicado).ToListAsync();
+            try
+            {
+                _logger.LogInformation("Obteniendo modulos con un predicado específico.");
+                var modules = await _context.Modules.Where(predicado).ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} modulos.", modules.Count);
+                return modules;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los modulos con el predicado especificado.");
+                throw;
+            }
         }
 
         public async Task<List<Module>> GetAllAsync(List<Expression<Func<Module, bool>>> predicados)
         {
-            var query = _context.Modules.AsQueryable();
-            foreach (var predicado in predicados)
+            try
             {
-                query = query.Where(predicado);
+                _logger.LogInformation("Obteniendo modulos con múltiples predicados.");
+                var query = _context.Modules.AsQueryable();
+                foreach (var predicado in predicados)
+                {
+                    query = query.Where(predicado);
+                }
+                var modules = await query.ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} modulos tras aplicar múltiples predicados.", modules.Count);
+                return modules;
             }
-            return await query.ToListAsync();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los modulos con múltiples predicados.");
+                throw;
+            }
         }
 
         public async Task<Module> GetByIdAsync(int id)

@@ -1,4 +1,5 @@
-﻿using Integration.Infrastructure.Data.Contexts;
+﻿using Integration.Core.Entities.Security;
+using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@ namespace Integration.Infrastructure.Repositories.Security
             _logger = logger;
         }
 
-        public async Task<Core.Entities.Security.Application> CreateAsync(Core.Entities.Security.Application application)
+        public async Task<Application> CreateAsync(Application application)
         {
             if (application == null)
             {
@@ -63,7 +64,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<IEnumerable<Core.Entities.Security.Application>> GetAllActiveAsync()
+        public async Task<IEnumerable<Application>> GetAllActiveAsync()
         {
             try
             {
@@ -74,26 +75,48 @@ namespace Integration.Infrastructure.Repositories.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener todas las aplicaciones.");
-                return Enumerable.Empty<Core.Entities.Security.Application>();
+                return Enumerable.Empty<Application>();
             }
         }
 
-        public async Task<List<Core.Entities.Security.Application>> GetAllAsync(Expression<Func<Core.Entities.Security.Application, bool>> predicado)
+        public async Task<List<Application>> GetAllAsync(Expression<Func<Application, bool>> predicado)
         {
-            return await _context.Applications.Where(predicado).ToListAsync();
-        }
-
-        public async Task<List<Core.Entities.Security.Application>> GetAllAsync(List<Expression<Func<Core.Entities.Security.Application, bool>>> predicados)
-        {
-            var query = _context.Applications.AsQueryable();
-            foreach (var predicado in predicados)
+            try
             {
-                query = query.Where(predicado);
+                _logger.LogInformation("Obteniendo aplicaciones con un predicado específico.");
+                var applications = await _context.Applications.Where(predicado).ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} aplicaciones.", applications.Count);
+                return applications;
             }
-            return await query.ToListAsync();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los aplicaciones con el predicado especificado.");
+                throw;
+            }
         }
 
-        public async Task<Core.Entities.Security.Application> GetByIdAsync(int id)
+        public async Task<List<Application>> GetAllAsync(List<Expression<Func<Application, bool>>> predicados)
+        {
+            try
+            {
+                _logger.LogInformation("Obteniendo aplicaciones con múltiples predicados.");
+                var query = _context.Applications.AsQueryable();
+                foreach (var predicado in predicados)
+                {
+                    query = query.Where(predicado);
+                }
+                var modules = await query.ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} aplicaciones tras aplicar múltiples predicados.", modules.Count);
+                return modules;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener los aplicaciones con múltiples predicados.");
+                throw;
+            }
+        }
+
+        public async Task<Application> GetByIdAsync(int id)
         {
             try
             {
@@ -116,7 +139,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<Core.Entities.Security.Application> UpdateAsync(Core.Entities.Security.Application application)
+        public async Task<Application> UpdateAsync(Application application)
         {
             try
             {

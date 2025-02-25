@@ -26,9 +26,9 @@ namespace Integration.Infrastructure.Repositories.Audit
                 await _context.SaveChangesAsync();
                 return log;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw;
+                return null;
             }
         }
         public async Task<IEnumerable<Log>> SearchAsync(string? codeApplication, string? codeUser, DateTime? timestamp, string? level, string? source, string? method)
