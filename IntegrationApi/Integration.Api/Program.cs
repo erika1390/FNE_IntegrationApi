@@ -43,6 +43,7 @@ builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 // Configurar Identity
 builder.Services.AddIdentity<User, Role>(options =>
