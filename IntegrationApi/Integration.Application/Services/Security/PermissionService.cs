@@ -107,7 +107,7 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el modulo con ID {permissionDTO}.", permissionDTO.PermissionId);
+                _logger.LogError(ex, "Error al actualizar el permiso con ID {permissionDTO}.", permissionDTO.PermissionId);
                 throw;
             }
         }
