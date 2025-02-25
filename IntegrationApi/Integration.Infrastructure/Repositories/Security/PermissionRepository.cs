@@ -9,8 +9,8 @@ namespace Integration.Infrastructure.Repositories.Security
     public class PermissionRepository : IPermissionRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
-        public PermissionRepository(ApplicationDbContext context, ILogger logger)
+        private readonly ILogger<PermissionRepository> _logger;
+        public PermissionRepository(ApplicationDbContext context, ILogger<PermissionRepository> logger)
         {
             _context = context;
             _logger = logger;

@@ -5,15 +5,14 @@ using Integration.Infrastructure.Interfaces.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using System.Linq;
 using System.Linq.Expressions;
 namespace Integration.Infrastructure.Repositories.Security
 {
     public class ModuleRepository : IModuleRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
-        public ModuleRepository(ApplicationDbContext context, ILogger logger)
+        private readonly ILogger<ModuleRepository> _logger;
+        public ModuleRepository(ApplicationDbContext context, ILogger<ModuleRepository> logger)
         {
             _context = context;
             _logger = logger;

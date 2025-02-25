@@ -9,9 +9,9 @@ namespace Integration.Infrastructure.Repositories.Security
     public class ApplicationRepository : IApplicationRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<ApplicationRepository> _logger;
 
-        public ApplicationRepository(ApplicationDbContext context, ILogger logger)
+        public ApplicationRepository(ApplicationDbContext context, ILogger<ApplicationRepository> logger)
         {
             _context = context;
             _logger = logger;

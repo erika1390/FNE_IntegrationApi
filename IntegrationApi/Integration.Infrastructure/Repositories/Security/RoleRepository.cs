@@ -10,8 +10,8 @@ namespace Integration.Infrastructure.Repositories.Security
     public class RoleRepository : IRoleRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
-        public RoleRepository(ApplicationDbContext context, ILogger logger)
+        private readonly ILogger<RoleRepository> _logger;
+        public RoleRepository(ApplicationDbContext context, ILogger<RoleRepository> logger)
         {
             _context = context;
             _logger = logger;
