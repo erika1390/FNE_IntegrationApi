@@ -8,7 +8,7 @@ namespace Integration.Infrastructure.Data.Configurations.Security
         public void Configure(EntityTypeBuilder<Permission> builder)
         {
             builder.ToTable("Permissions", "Security");
-            builder.HasKey(e => e.PermissionId);
+            builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Code)
                 .IsRequired()

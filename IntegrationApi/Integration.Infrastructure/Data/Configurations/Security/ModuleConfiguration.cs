@@ -10,7 +10,7 @@ namespace Integration.Infrastructure.Data.Configurations.Security
         public void Configure(EntityTypeBuilder<Module> builder)
         {
             builder.ToTable("Modules", "Security");
-            builder.HasKey(e => e.ModuleId);
+            builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Code)
                 .IsRequired()

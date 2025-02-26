@@ -8,9 +8,9 @@ namespace Integration.Infrastructure.Data.Configurations.Security
         public void Configure(EntityTypeBuilder<RolePermission> builder)
         {
             builder.ToTable("RolePermissions", "Security");
-            builder.HasKey(e => e.RolePermissionId);
+            builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.RolePermissionId)
+            builder.Property(e => e.Id)
                 .IsRequired();
 
             builder.HasOne(e => e.Role)
