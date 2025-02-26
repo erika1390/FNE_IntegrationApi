@@ -29,7 +29,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 await _context.Applications.AddAsync(application);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Aplicación creada exitosamente: {ApplicationId}, Nombre: {Name}",
-                application.ApplicationId, application.Name);
+                application.Id, application.Name);
                 return application;
             }
             catch (Exception ex)
@@ -128,7 +128,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 else
                 {
                     _logger.LogInformation("Aplicación encontrada: {ApplicationId}, Nombre: {Name}",
-                        application.ApplicationId, application.Name);
+                        application.Id, application.Name);
                 }
                 return application;
             }
@@ -143,10 +143,10 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var applicationEntity = await _context.Applications.FindAsync(application.ApplicationId);
+                var applicationEntity = await _context.Applications.FindAsync(application.Id);
                 if (applicationEntity == null)
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para actualizar.", application.ApplicationId);
+                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para actualizar.", application.Id);
                     return null;
                 }
 
@@ -159,13 +159,13 @@ namespace Integration.Infrastructure.Repositories.Security
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Aplicación actualizada: {ApplicationId}, Nombre: {Name}",
-                    application.ApplicationId, application.Name);
+                    application.Id, application.Name);
 
                 return applicationEntity;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", application.ApplicationId);
+                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", application.Id);
                 return null;
             }
         }

@@ -29,7 +29,7 @@ namespace Integration.Infrastructure.Repositories.Security
             {
                 await _context.Modules.AddAsync(module);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Módulo creado exitosamente: Módulo: {ModuleId}, Nombre: {Name}", module.ModuleId, module.Name);
+                _logger.LogInformation("Módulo creado exitosamente: Módulo: {ModuleId}, Nombre: {Name}", module.Id, module.Name);
                 return module;
             }
             catch (DbUpdateException ex)
@@ -133,14 +133,14 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var module = await _context.Modules.AsNoTracking().FirstOrDefaultAsync(m => m.ModuleId == id);
+                var module = await _context.Modules.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
                 if (module == null)
                 {
                     _logger.LogWarning("No se encontró el módulo con ID {ModuleId}.", id);
                     return null;
                 }
 
-                _logger.LogInformation("Módulo encontrado: Módulo: {ModuleId}, Nombre: {Name}", module.ModuleId, module.Name);
+                _logger.LogInformation("Módulo encontrado: Módulo: {ModuleId}, Nombre: {Name}", module.Id, module.Name);
 
                 return module;
             }
@@ -160,10 +160,10 @@ namespace Integration.Infrastructure.Repositories.Security
             }
             try
             {
-                var moduleEntity = await _context.Modules.FindAsync(module.ModuleId);
+                var moduleEntity = await _context.Modules.FindAsync(module.Id);
                 if (moduleEntity == null)
                 {
-                    _logger.LogWarning("No se encontró el módulo con ID {ModuleId} para actualizar.", module.ModuleId);
+                    _logger.LogWarning("No se encontró el módulo con ID {ModuleId} para actualizar.", module.Id);
                     return null;
                 }
                 moduleEntity.Name = module.Name;
@@ -172,17 +172,17 @@ namespace Integration.Infrastructure.Repositories.Security
                 moduleEntity.IsActive = module.IsActive;
                 _context.Modules.Update(moduleEntity);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Módulo actualizado: {ModuleId}, Nombre: {Name}", module.ModuleId, module.Name);
+                _logger.LogInformation("Módulo actualizado: {ModuleId}, Nombre: {Name}", module.Id, module.Name);
                 return moduleEntity;
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error de base de datos al actualizar el módulo con ID {ModuleId}.", module.ModuleId);
+                _logger.LogError(ex, "Error de base de datos al actualizar el módulo con ID {ModuleId}.", module.Id);
                 return null;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al actualizar el módulo con ID {ModuleId}.", module.ModuleId);
+                _logger.LogError(ex, "Error inesperado al actualizar el módulo con ID {ModuleId}.", module.Id);
                 return null;
             }
         }

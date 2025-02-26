@@ -27,7 +27,7 @@ namespace Integration.Infrastructure.Repositories.Security
             {
                 await _context.Permissions.AddAsync(permission);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Permiso creado exitosamente: Permiso: {PermissionId}, Nombre: {Name}", permission.PermissionId, permission.Name);
+                _logger.LogInformation("Permiso creado exitosamente: Permiso: {PermissionId}, Nombre: {Name}", permission.Id, permission.Name);
                 return permission;
             }
             catch (DbUpdateException ex)
@@ -128,14 +128,14 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var permission = await _context.Permissions.AsNoTracking().FirstOrDefaultAsync(p => p.PermissionId == id);
+                var permission = await _context.Permissions.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
                 if (permission == null)
                 {
                     _logger.LogWarning("No se encontró el permiso con ID {PermissionId}.", id);
                     return null;
                 }
 
-                _logger.LogInformation("Permiso encontrado: Permiso: {PermissionId}, Nombre: {Name}", permission.PermissionId, permission.Name);
+                _logger.LogInformation("Permiso encontrado: Permiso: {PermissionId}, Nombre: {Name}", permission.Id, permission.Name);
 
                 return permission;
             }
@@ -155,10 +155,10 @@ namespace Integration.Infrastructure.Repositories.Security
             }
             try
             {
-                var permissionEntity = await _context.Permissions.FindAsync(permission.PermissionId);
+                var permissionEntity = await _context.Permissions.FindAsync(permission.Id);
                 if (permissionEntity == null)
                 {
-                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId} para actualizar.", permission.PermissionId);
+                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId} para actualizar.", permission.Id);
                     return null;
                 }
                 permissionEntity.Name = permission.Name;
@@ -167,17 +167,17 @@ namespace Integration.Infrastructure.Repositories.Security
                 permissionEntity.IsActive = permission.IsActive;
                 _context.Permissions.Update(permissionEntity);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Permiso actualizado: {PermissionId}, Nombre: {Name}", permission.PermissionId, permission.Name);
+                _logger.LogInformation("Permiso actualizado: {PermissionId}, Nombre: {Name}", permission.Id, permission.Name);
                 return permissionEntity;
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error de base de datos al actualizar el permiso con ID {PermissionId}.", permission.PermissionId);
+                _logger.LogError(ex, "Error de base de datos al actualizar el permiso con ID {PermissionId}.", permission.Id);
                 return null;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al actualizar el permiso con ID {PermissionId}.", permission.PermissionId);
+                _logger.LogError(ex, "Error inesperado al actualizar el permiso con ID {PermissionId}.", permission.Id);
                 return null;
             }
         }
