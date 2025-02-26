@@ -28,7 +28,7 @@ namespace Integration.Application.Services.Security
             {
                 var module = _mapper.Map<Integration.Core.Entities.Security.Module>(moduleDTO);
                 var result = await _repository.CreateAsync(module);
-                _logger.LogInformation("Modulo creado con éxito: {ModuleId}, Nombre: {Name}", result.ModuleId, result.Name);
+                _logger.LogInformation("Modulo creado con éxito: {ModuleId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<ModuleDTO>(result);
             }
             catch (Exception ex)
@@ -99,7 +99,7 @@ namespace Integration.Application.Services.Security
                     _logger.LogWarning("No se encontró el modulo con ID {ModuleId}.", id);
                     return null;
                 }
-                _logger.LogInformation("Modulo encontrada: {ModuleId}, Nombre: {Name}", molule.ModuleId, molule.Name);
+                _logger.LogInformation("Modulo encontrada: {ModuleId}, Nombre: {Name}", molule.Id, molule.Name);
                 return _mapper.Map<ModuleDTO>(molule);
             }
             catch (Exception ex)
@@ -121,7 +121,7 @@ namespace Integration.Application.Services.Security
                     _logger.LogWarning("No se pudo actualizar el modulo con ID {ModuleId}.", moduleDTO.ModuleId);
                     return null;
                 }
-                _logger.LogInformation("Modulo actualizado con éxito: {ModuleId}, Nombre: {Name}", updatedModule.ModuleId, updatedModule.Name);
+                _logger.LogInformation("Modulo actualizado con éxito: {ModuleId}, Nombre: {Name}", updatedModule.Id, updatedModule.Name);
                 return _mapper.Map<ModuleDTO>(updatedModule);
             }
             catch (Exception ex)

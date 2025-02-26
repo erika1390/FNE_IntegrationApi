@@ -25,7 +25,7 @@ namespace Integration.Application.Services.Security
             {
                 var application = _mapper.Map<Integration.Core.Entities.Security.Application>(applicationDTO);
                 var result = await _repository.CreateAsync(application);
-                _logger.LogInformation("Aplicación creada con éxito: {ApplicationId}, Nombre: {Name}", result.ApplicationId, result.Name);
+                _logger.LogInformation("Aplicación creada con éxito: {ApplicationId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<ApplicationDTO>(result);
             }
             catch (Exception ex)
@@ -96,7 +96,7 @@ namespace Integration.Application.Services.Security
                     _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId}.", id);
                     return null;
                 }
-                _logger.LogInformation("Aplicación encontrada: {ApplicationId}, Nombre: {Name}", application.ApplicationId, application.Name);
+                _logger.LogInformation("Aplicación encontrada: {ApplicationId}, Nombre: {Name}", application.Id, application.Name);
                 return _mapper.Map<ApplicationDTO>(application);
             }
             catch (Exception ex)
@@ -118,7 +118,7 @@ namespace Integration.Application.Services.Security
                     _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
                     return null;
                 }
-                _logger.LogInformation("Aplicación actualizada con éxito: {ApplicationId}, Nombre: {Name}", updatedApplication.ApplicationId, updatedApplication.Name);
+                _logger.LogInformation("Aplicación actualizada con éxito: {ApplicationId}, Nombre: {Name}", updatedApplication.Id, updatedApplication.Name);
                 return _mapper.Map<ApplicationDTO>(updatedApplication);
             }
             catch (Exception ex)

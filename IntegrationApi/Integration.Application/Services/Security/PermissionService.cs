@@ -25,7 +25,7 @@ namespace Integration.Application.Services.Security
             {
                 var permission = _mapper.Map<Integration.Core.Entities.Security.Permission>(permissionDTO);
                 var result = await _repository.CreateAsync(permission);
-                _logger.LogInformation("Permiso creado con éxito: {PermissionId}, Nombre: {Name}", result.PermissionId, result.Name);
+                _logger.LogInformation("Permiso creado con éxito: {PermissionId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<PermissionDTO>(result);
             }
             catch (Exception ex)
@@ -96,7 +96,7 @@ namespace Integration.Application.Services.Security
                     _logger.LogWarning("No se encontró el permiso con ID {PermissionId}.", id);
                     return null;
                 }
-                _logger.LogInformation("Permiso encontrada: {PermissionId}, Nombre: {Name}", permission.PermissionId, permission.Name);
+                _logger.LogInformation("Permiso encontrada: {PermissionId}, Nombre: {Name}", permission.Id, permission.Name);
                 return _mapper.Map<PermissionDTO>(permission);
             }
             catch (Exception ex)
@@ -118,7 +118,7 @@ namespace Integration.Application.Services.Security
                     _logger.LogWarning("No se pudo actualizar el permiso con ID {PermissionId}.", permissionDTO.PermissionId);
                     return null;
                 }
-                _logger.LogInformation("Permiso actualizado con éxito: {PermissionId}, Nombre: {Name}", updatedPermission.PermissionId, updatedPermission.Name);
+                _logger.LogInformation("Permiso actualizado con éxito: {PermissionId}, Nombre: {Name}", updatedPermission.Id, updatedPermission.Name);
                 return _mapper.Map<PermissionDTO>(updatedPermission);
             }
             catch (Exception ex)
