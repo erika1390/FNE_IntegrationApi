@@ -9,7 +9,7 @@ namespace Integration.Application.Mappings.Security
         public ModuleProfile()
         {
             CreateMap<ModuleDTO, Module>()
-                .ForMember(dest => dest.ModuleId, opt => opt.MapFrom(src => src.ModuleId))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ModuleId))
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId))
@@ -17,7 +17,7 @@ namespace Integration.Application.Mappings.Security
                 .ForMember(dest => dest.RoleModules, opt => opt.Ignore());
 
             CreateMap<Module, ModuleDTO>()
-                    .ForMember(dest => dest.ModuleId, opt => opt.MapFrom(src => src.ModuleId))
+                    .ForMember(dest => dest.ModuleId, opt => opt.MapFrom(src => src.Id))
                     .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                     .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.ApplicationId));
