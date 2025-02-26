@@ -6,9 +6,6 @@ namespace Integration.Core.Entities.Security
     [Table("RolePermissions", Schema = "Security")]
     public class RolePermission : BaseEntity
     {
-        [Key]
-        public int RolePermissionId { get; set; }
-
         public int RoleId { get; set; }
         public virtual Role? Role { get; set; }
 

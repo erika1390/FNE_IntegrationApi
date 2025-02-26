@@ -6,8 +6,6 @@ namespace Integration.Core.Entities.Security
     [Table("RoleModules", Schema = "Security")]
     public class RoleModule : BaseEntity
     {
-        [Key]
-        public int RoleModuleId { get; set; }
         [ForeignKey("Role")]
         public int RoleId { get; set; } 
         [ForeignKey("Module")]

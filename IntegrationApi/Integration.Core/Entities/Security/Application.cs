@@ -6,8 +6,6 @@ namespace Integration.Core.Entities.Security
     [Table("Applications", Schema = "Security")]
     public class Application : BaseEntity
     {
-        [Key]
-        public int ApplicationId { get; set; }
         [Required, MaxLength(10)]
         public required string Code { get; set; }
         [Required, MaxLength(255)]
