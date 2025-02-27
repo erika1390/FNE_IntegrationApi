@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
+
 using Microsoft.Extensions.Logging;
+
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
@@ -74,10 +77,21 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-
-        public async Task<List<ApplicationDTO>> GetAllAsync(Expression<Func<ApplicationDTO, bool>> predicado)
+        public async Task<List<ApplicationDTO>> GetAllAsync(Expression<Func<ApplicationDTO, bool>> filterDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo todas las aplicaciones y aplicando el filtro en memoria.");
+                var applications = await _repository.GetAllAsync(a => true);
+                var applicationDTOs = _mapper.Map<List<ApplicationDTO>>(applications);
+                var filteredApplications = applicationDTOs.AsQueryable().Where(filterDto).ToList();
+                return filteredApplications;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en el servicio al obtener aplicaciones.");
+                throw;
+            }
         }
 
         public async Task<List<ApplicationDTO>> GetAllAsync(List<Expression<Func<ApplicationDTO, bool>>> predicados)

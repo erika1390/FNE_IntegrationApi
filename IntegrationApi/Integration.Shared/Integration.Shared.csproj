@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DTO\Filter\" />
     <Folder Include="Enumerations\" />
   </ItemGroup>
 

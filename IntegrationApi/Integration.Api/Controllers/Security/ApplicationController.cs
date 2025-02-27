@@ -1,8 +1,11 @@
 ﻿using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
     [Route("api/[controller]")]
@@ -74,6 +77,63 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetApplications([FromQuery] string filterField, [FromQuery] string filterValue)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
+                {
+                    return BadRequest("Debe proporcionar un campo y un valor para filtrar.");
+                }
+
+                // Crear una expresión sobre ApplicationDTO en lugar de Application
+                ParameterExpression param = Expression.Parameter(typeof(ApplicationDTO), "dto");
+                MemberExpression property = Expression.Property(param, filterField);
+                ConstantExpression constant = Expression.Constant(filterValue);
+                BinaryExpression comparison = Expression.Equal(property, constant);
+                Expression<Func<ApplicationDTO, bool>> filter = Expression.Lambda<Func<ApplicationDTO, bool>>(comparison, param);
+
+                var applications = await _service.GetAllAsync(filter);
+                return Ok(applications);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener aplicaciones con filtro.");
+                return StatusCode(500, "Ocurrió un error interno.");
+            }
+        }
+
+
+        /*[HttpPost("filters")]
+        public async Task<IActionResult> GetApplicationsWithFilters([FromBody] List<FilterRequest> filters)
+        {
+            try
+            {
+                if (filters == null || filters.Count == 0)
+                {
+                    return BadRequest("Debe proporcionar al menos un filtro.");
+                }
+
+                var expressions = new List<Expression<Func<Application, bool>>>();
+
+                foreach (var filter in filters)
+                {
+                    expressions.Add(app => EF.Property<string>(app, filter.Field) == filter.Value);
+                }
+
+                var applications = await _applicationService.GetApplicationsAsync(expressions);
+
+                return Ok(applications);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener aplicaciones con múltiples filtros.");
+                return StatusCode(500, "Ocurrió un error interno.");
+            }
+        }
+    }*/
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
