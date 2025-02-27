@@ -1,10 +1,8 @@
 ﻿using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -106,8 +104,8 @@ namespace Integration.Api.Controllers.Security
         }
 
 
-        /*[HttpPost("filters")]
-        public async Task<IActionResult> GetApplicationsWithFilters([FromBody] List<FilterRequest> filters)
+        [HttpGet("filters")]
+        public async Task<IActionResult> GetApplications([FromQuery] Dictionary<string, string> filters)
         {
             try
             {
@@ -116,15 +114,21 @@ namespace Integration.Api.Controllers.Security
                     return BadRequest("Debe proporcionar al menos un filtro.");
                 }
 
-                var expressions = new List<Expression<Func<Application, bool>>>();
+                // Crear lista de expresiones
+                List<Expression<Func<ApplicationDTO, bool>>> predicados = new List<Expression<Func<ApplicationDTO, bool>>>();
 
                 foreach (var filter in filters)
                 {
-                    expressions.Add(app => EF.Property<string>(app, filter.Field) == filter.Value);
+                    ParameterExpression param = Expression.Parameter(typeof(ApplicationDTO), "dto");
+                    MemberExpression property = Expression.Property(param, filter.Key);
+                    ConstantExpression constant = Expression.Constant(filter.Value);
+                    BinaryExpression comparison = Expression.Equal(property, constant);
+
+                    Expression<Func<ApplicationDTO, bool>> filterExpression = Expression.Lambda<Func<ApplicationDTO, bool>>(comparison, param);
+                    predicados.Add(filterExpression);
                 }
 
-                var applications = await _applicationService.GetApplicationsAsync(expressions);
-
+                var applications = await _service.GetAllAsync(predicados);
                 return Ok(applications);
             }
             catch (Exception ex)
@@ -133,7 +137,8 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, "Ocurrió un error interno.");
             }
         }
-    }*/
+
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]

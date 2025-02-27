@@ -2,6 +2,7 @@
 
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Security;
 
 using Microsoft.Extensions.Logging;
@@ -96,8 +97,32 @@ namespace Integration.Application.Services.Security
 
         public async Task<List<ApplicationDTO>> GetAllAsync(List<Expression<Func<ApplicationDTO, bool>>> predicados)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo todas las aplicaciones y aplicando múltiples filtros en memoria.");
+
+                // Obtener todas las aplicaciones sin filtro
+                var applications = await _repository.GetAllAsync(a => true);
+
+                // Mapear a DTOs
+                var applicationDTOs = _mapper.Map<List<ApplicationDTO>>(applications);
+
+                // Aplicar los filtros en memoria
+                IQueryable<ApplicationDTO> query = applicationDTOs.AsQueryable();
+                foreach (var predicado in predicados)
+                {
+                    query = query.Where(predicado);
+                }
+
+                return query.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en el servicio al obtener aplicaciones con múltiples filtros.");
+                throw;
+            }
         }
+
 
         public async Task<ApplicationDTO> GetByIdAsync(int id)
         {
