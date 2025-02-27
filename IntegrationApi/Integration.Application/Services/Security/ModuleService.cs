@@ -78,14 +78,42 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<ModuleDTO>> GetAllAsync(Expression<Func<ModuleDTO, bool>> predicado)
+        public async Task<List<ModuleDTO>> GetAllAsync(Expression<Func<ModuleDTO, bool>> filterDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo todos los modulos y aplicando el filtro en memoria.");
+                var modules = await _repository.GetAllAsync(a => true);
+                var modulesDTOs = _mapper.Map<List<ModuleDTO>>(modules);
+                var filteredApplications = modulesDTOs.AsQueryable().Where(filterDto).ToList();
+                return filteredApplications;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en el servicio al obtener aplicaciones.");
+                throw;
+            }
         }
 
         public async Task<List<ModuleDTO>> GetAllAsync(List<Expression<Func<ModuleDTO, bool>>> predicados)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo todos los modulos y aplicando múltiples filtros en memoria.");
+                var applications = await _repository.GetAllAsync(a => true);
+                var applicationDTOs = _mapper.Map<List<ModuleDTO>>(applications);
+                IQueryable<ModuleDTO> query = applicationDTOs.AsQueryable();
+                foreach (var predicado in predicados)
+                {
+                    query = query.Where(predicado);
+                }
+                return query.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en el servicio al obtener los modulos con múltiples filtros.");
+                throw;
+            }
         }
 
         public async Task<ModuleDTO> GetByIdAsync(int id)

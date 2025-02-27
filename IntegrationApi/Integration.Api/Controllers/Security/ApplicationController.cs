@@ -113,21 +113,16 @@ namespace Integration.Api.Controllers.Security
                 {
                     return BadRequest("Debe proporcionar al menos un filtro.");
                 }
-
-                // Crear lista de expresiones
                 List<Expression<Func<ApplicationDTO, bool>>> predicados = new List<Expression<Func<ApplicationDTO, bool>>>();
-
                 foreach (var filter in filters)
                 {
                     ParameterExpression param = Expression.Parameter(typeof(ApplicationDTO), "dto");
                     MemberExpression property = Expression.Property(param, filter.Key);
                     ConstantExpression constant = Expression.Constant(filter.Value);
                     BinaryExpression comparison = Expression.Equal(property, constant);
-
                     Expression<Func<ApplicationDTO, bool>> filterExpression = Expression.Lambda<Func<ApplicationDTO, bool>>(comparison, param);
                     predicados.Add(filterExpression);
                 }
-
                 var applications = await _service.GetAllAsync(predicados);
                 return Ok(applications);
             }

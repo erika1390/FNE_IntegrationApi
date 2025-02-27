@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
-
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
-using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Security;
-
 using Microsoft.Extensions.Logging;
-
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
@@ -21,7 +17,6 @@ namespace Integration.Application.Services.Security
             _mapper = mapper;
             _logger = logger;
         }
-
         public async Task<ApplicationDTO> CreateAsync(ApplicationDTO applicationDTO)
         {
             _logger.LogInformation("Creando aplicación: {Name}", applicationDTO.Name);
@@ -94,26 +89,18 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-
         public async Task<List<ApplicationDTO>> GetAllAsync(List<Expression<Func<ApplicationDTO, bool>>> predicados)
         {
             try
             {
                 _logger.LogInformation("Obteniendo todas las aplicaciones y aplicando múltiples filtros en memoria.");
-
-                // Obtener todas las aplicaciones sin filtro
                 var applications = await _repository.GetAllAsync(a => true);
-
-                // Mapear a DTOs
                 var applicationDTOs = _mapper.Map<List<ApplicationDTO>>(applications);
-
-                // Aplicar los filtros en memoria
                 IQueryable<ApplicationDTO> query = applicationDTOs.AsQueryable();
                 foreach (var predicado in predicados)
                 {
                     query = query.Where(predicado);
                 }
-
                 return query.ToList();
             }
             catch (Exception ex)
@@ -122,8 +109,6 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-
-
         public async Task<ApplicationDTO> GetByIdAsync(int id)
         {
             _logger.LogInformation("Buscando aplicación con ID: {ApplicationId}", id);

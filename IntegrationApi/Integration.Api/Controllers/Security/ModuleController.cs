@@ -3,6 +3,8 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
     [Route("api/[controller]")]
@@ -66,6 +68,60 @@ namespace Integration.Api.Controllers.Security
             {
                 _logger.LogError(ex, "Error al obtener la modulo con ID {ModuleId}.", id);
                 return StatusCode(500, ResponseApi<ModuleDTO>.Error("Error interno del servidor."));
+            }
+        }
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetModules([FromQuery] string filterField, [FromQuery] string filterValue)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
+                {
+                    return BadRequest("Debe proporcionar un campo y un valor para filtrar.");
+                }
+
+                // Crear una expresión sobre ModulesDTO en lugar de Modules
+                ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
+                MemberExpression property = Expression.Property(param, filterField);
+                ConstantExpression constant = Expression.Constant(filterValue);
+                BinaryExpression comparison = Expression.Equal(property, constant);
+                Expression<Func<ModuleDTO, bool>> filter = Expression.Lambda<Func<ModuleDTO, bool>>(comparison, param);
+
+                var applications = await _service.GetAllAsync(filter);
+                return Ok(applications);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener aplicaciones con filtro.");
+                return StatusCode(500, "Ocurrió un error interno.");
+            }
+        }
+        [HttpGet("filters")]
+        public async Task<IActionResult> GetModules([FromQuery] Dictionary<string, string> filters)
+        {
+            try
+            {
+                if (filters == null || filters.Count == 0)
+                {
+                    return BadRequest("Debe proporcionar al menos un filtro.");
+                }
+                List<Expression<Func<ModuleDTO, bool>>> predicados = new List<Expression<Func<ModuleDTO, bool>>>();
+                foreach (var filter in filters)
+                {
+                    ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
+                    MemberExpression property = Expression.Property(param, filter.Key);
+                    ConstantExpression constant = Expression.Constant(filter.Value);
+                    BinaryExpression comparison = Expression.Equal(property, constant);
+                    Expression<Func<ModuleDTO, bool>> filterExpression = Expression.Lambda<Func<ModuleDTO, bool>>(comparison, param);
+                    predicados.Add(filterExpression);
+                }
+                var applications = await _service.GetAllAsync(predicados);
+                return Ok(applications);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener aplicaciones con múltiples filtros.");
+                return StatusCode(500, "Ocurrió un error interno.");
             }
         }
         [HttpPost]
