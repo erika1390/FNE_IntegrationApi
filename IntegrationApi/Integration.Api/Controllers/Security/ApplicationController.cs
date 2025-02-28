@@ -85,16 +85,27 @@ namespace Integration.Api.Controllers.Security
                 {
                     return BadRequest("Debe proporcionar un campo y un valor para filtrar.");
                 }
-
-                // Crear una expresión sobre ApplicationDTO en lugar de Application
+                var propertyInfo = typeof(ApplicationDTO).GetProperty(filterField);
+                if (propertyInfo == null)
+                {
+                    return BadRequest($"El campo '{filterField}' no existe en ApplicationDTO.");
+                }
+                object typedValue;
+                try
+                {
+                    typedValue = Convert.ChangeType(filterValue, propertyInfo.PropertyType);
+                }
+                catch (Exception)
+                {
+                    return BadRequest($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                }
                 ParameterExpression param = Expression.Parameter(typeof(ApplicationDTO), "dto");
                 MemberExpression property = Expression.Property(param, filterField);
-                ConstantExpression constant = Expression.Constant(filterValue);
+                ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<ApplicationDTO, bool>> filter = Expression.Lambda<Func<ApplicationDTO, bool>>(comparison, param);
-
-                var applications = await _service.GetAllAsync(filter);
-                return Ok(applications);
+                var result = await _service.GetAllAsync(new List<Expression<Func<ApplicationDTO, bool>>> { filter });
+                return Ok(ResponseApi<IEnumerable<ApplicationDTO>>.Success(result));
             }
             catch (Exception ex)
             {
@@ -102,8 +113,6 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, "Ocurrió un error interno.");
             }
         }
-
-
         [HttpGet("filters")]
         public async Task<IActionResult> GetApplications([FromQuery] Dictionary<string, string> filters)
         {
@@ -113,18 +122,32 @@ namespace Integration.Api.Controllers.Security
                 {
                     return BadRequest("Debe proporcionar al menos un filtro.");
                 }
-                List<Expression<Func<ApplicationDTO, bool>>> predicados = new List<Expression<Func<ApplicationDTO, bool>>>();
+                ParameterExpression param = Expression.Parameter(typeof(ApplicationDTO), "dto");
+                Expression finalExpression = null;
                 foreach (var filter in filters)
                 {
-                    ParameterExpression param = Expression.Parameter(typeof(ApplicationDTO), "dto");
-                    MemberExpression property = Expression.Property(param, filter.Key);
-                    ConstantExpression constant = Expression.Constant(filter.Value);
+                    var propertyInfo = typeof(ApplicationDTO).GetProperty(filter.Key);
+                    if (propertyInfo == null)
+                    {
+                        return BadRequest($"El campo '{filter.Key}' no existe en ApplicationDTO.");
+                    }
+                    object typedValue;
+                    try
+                    {
+                        typedValue = Convert.ChangeType(filter.Value, propertyInfo.PropertyType);
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                    }
+                    MemberExpression property = Expression.Property(param, propertyInfo);
+                    ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                     BinaryExpression comparison = Expression.Equal(property, constant);
-                    Expression<Func<ApplicationDTO, bool>> filterExpression = Expression.Lambda<Func<ApplicationDTO, bool>>(comparison, param);
-                    predicados.Add(filterExpression);
+                    finalExpression = finalExpression == null ? comparison : Expression.AndAlso(finalExpression, comparison);
                 }
-                var applications = await _service.GetAllAsync(predicados);
-                return Ok(applications);
+                var filterExpression = Expression.Lambda<Func<ApplicationDTO, bool>>(finalExpression, param);
+                var result = await _service.GetAllAsync(new List<Expression<Func<ApplicationDTO, bool>>> { filterExpression });
+                return Ok(ResponseApi<IEnumerable<ApplicationDTO>>.Success(result));
             }
             catch (Exception ex)
             {
@@ -132,9 +155,6 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, "Ocurrió un error interno.");
             }
         }
-
-
-
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] ApplicationDTO applicationDTO)
