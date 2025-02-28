@@ -79,15 +79,26 @@ namespace Integration.Api.Controllers.Security
                 {
                     return BadRequest("Debe proporcionar un campo y un valor para filtrar.");
                 }
-
-                // Crear una expresión sobre ModulesDTO en lugar de Modules
+                var propertyInfo = typeof(ModuleDTO).GetProperty(filterField);
+                if (propertyInfo == null)
+                {
+                    return BadRequest($"El campo '{filterField}' no existe en ModuleDTO.");
+                }
+                object typedValue;
+                try
+                {
+                    typedValue = Convert.ChangeType(filterValue, propertyInfo.PropertyType);
+                }
+                catch (Exception)
+                {
+                    return BadRequest($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                }
                 ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
                 MemberExpression property = Expression.Property(param, filterField);
-                ConstantExpression constant = Expression.Constant(filterValue);
+                ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<ModuleDTO, bool>> filter = Expression.Lambda<Func<ModuleDTO, bool>>(comparison, param);
-
-                var applications = await _service.GetAllAsync(filter);
+                var applications = await _service.GetAllAsync(new List<Expression<Func<ModuleDTO, bool>>> { filter });
                 return Ok(applications);
             }
             catch (Exception ex)
@@ -105,17 +116,31 @@ namespace Integration.Api.Controllers.Security
                 {
                     return BadRequest("Debe proporcionar al menos un filtro.");
                 }
-                List<Expression<Func<ModuleDTO, bool>>> predicados = new List<Expression<Func<ModuleDTO, bool>>>();
+                ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
+                Expression finalExpression = null;
                 foreach (var filter in filters)
                 {
-                    ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
-                    MemberExpression property = Expression.Property(param, filter.Key);
-                    ConstantExpression constant = Expression.Constant(filter.Value);
+                    var propertyInfo = typeof(ModuleDTO).GetProperty(filter.Key);
+                    if (propertyInfo == null)
+                    {
+                        return BadRequest($"El campo '{filter.Key}' no existe en ModuleDTO.");
+                    }
+                    object typedValue;
+                    try
+                    {
+                        typedValue = Convert.ChangeType(filter.Value, propertyInfo.PropertyType);
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                    }
+                    MemberExpression property = Expression.Property(param, propertyInfo);
+                    ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                     BinaryExpression comparison = Expression.Equal(property, constant);
-                    Expression<Func<ModuleDTO, bool>> filterExpression = Expression.Lambda<Func<ModuleDTO, bool>>(comparison, param);
-                    predicados.Add(filterExpression);
+                    finalExpression = finalExpression == null ? comparison : Expression.AndAlso(finalExpression, comparison);
                 }
-                var applications = await _service.GetAllAsync(predicados);
+                var filterExpression = Expression.Lambda<Func<ModuleDTO, bool>>(finalExpression, param);
+                var applications = await _service.GetAllAsync(new List<Expression<Func<ModuleDTO, bool>>> { filterExpression });
                 return Ok(applications);
             }
             catch (Exception ex)
