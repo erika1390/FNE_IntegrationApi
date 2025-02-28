@@ -18,6 +18,7 @@ namespace Integration.Core.Entities.Security
         public required string CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
         public bool IsActive { get; set; } = true;
+        public override string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
         public virtual Application? Application { get; set; }
         public virtual ICollection<RoleModule>? RoleModules { get; set; }
         public virtual ICollection<RolePermission>? RolePermissions { get; set; }

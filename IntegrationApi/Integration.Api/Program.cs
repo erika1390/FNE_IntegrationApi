@@ -34,6 +34,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(typeof(LogProfile)); 
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddAutoMapper(typeof(ModuleProfile));
+builder.Services.AddAutoMapper(typeof(PermissionProfile));
+builder.Services.AddAutoMapper(typeof(RoleProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
 

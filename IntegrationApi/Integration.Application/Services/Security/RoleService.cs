@@ -23,6 +23,7 @@ namespace Integration.Application.Services.Security
             try
             {
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
+                role.NormalizedName = role.Name.ToUpper();
                 var result = await _repository.CreateAsync(role);
                 _logger.LogInformation("Rol creado con éxito: {RoleId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<RoleDTO>(result);
