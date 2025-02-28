@@ -1,10 +1,8 @@
 ﻿using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using System.Linq.Expressions;
 namespace Integration.Infrastructure.Repositories.Security
 {
@@ -17,7 +15,6 @@ namespace Integration.Infrastructure.Repositories.Security
             _context = context;
             _logger = logger;
         }
-
         public async Task<Module> CreateAsync(Module module)
         {
             if (module == null)
@@ -43,7 +40,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
         public async Task<bool> DeleteAsync(int id)
         {
             try
@@ -75,7 +71,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 return false;
             }
         }
-
         public async Task<IEnumerable<Module>> GetAllActiveAsync()
         {
             try
@@ -91,7 +86,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 return Enumerable.Empty<Module>();
             }
         }
-
         public async Task<List<Module>> GetAllAsync(Expression<Func<Module, bool>> predicado)
         {
             try
@@ -107,7 +101,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
         public async Task<List<Module>> GetAllAsync(List<Expression<Func<Module, bool>>> predicados)
         {
             try
@@ -128,7 +121,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
         public async Task<Module> GetByIdAsync(int id)
         {
             try
@@ -150,7 +142,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 return null;
             }
         }
-
         public async Task<Module> UpdateAsync(Module module)
         {
             if (module == null)
