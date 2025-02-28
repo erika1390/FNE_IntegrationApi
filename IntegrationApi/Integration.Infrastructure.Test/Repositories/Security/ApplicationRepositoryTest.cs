@@ -8,7 +8,6 @@ namespace Integration.Infrastructure.Test.Repositories.Security
     public class ApplicationRepositoryTest
     {
         private Mock<IApplicationRepository> _mock;
-
         [SetUp]
         public void Setup()
         {
