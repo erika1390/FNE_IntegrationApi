@@ -122,7 +122,7 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rol con ID {permissionDTO}.", roleDTO.RoleId);
+                _logger.LogError(ex, "Error al actualizar el rol con ID {roleDTO}.", roleDTO.RoleId);
                 throw;
             }
         }
