@@ -75,14 +75,42 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<PermissionDTO>> GetAllAsync(Expression<Func<PermissionDTO, bool>> predicado)
+        public async Task<List<PermissionDTO>> GetAllAsync(Expression<Func<PermissionDTO, bool>> filterDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo todos los permisos y aplicando el filtro en memoria.");
+                var permissions = await _repository.GetAllAsync(a => true);
+                var permissionsDTOs = _mapper.Map<List<PermissionDTO>>(permissions);
+                var filteredApplications = permissionsDTOs.AsQueryable().Where(filterDto).ToList();
+                return filteredApplications;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en el servicio al obtener los permisos.");
+                throw;
+            }
         }
 
         public async Task<List<PermissionDTO>> GetAllAsync(List<Expression<Func<PermissionDTO, bool>>> predicados)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo todos los permisos y aplicando múltiples filtros en memoria.");
+                var permissions = await _repository.GetAllAsync(a => true);
+                var permissionDTOs = _mapper.Map<List<PermissionDTO>>(permissions);
+                IQueryable<PermissionDTO> query = permissionDTOs.AsQueryable();
+                foreach (var predicado in predicados)
+                {
+                    query = query.Where(predicado);
+                }
+                return query.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en el servicio al obtener los permisos con múltiples filtros.");
+                throw;
+            }
         }
 
         public async Task<PermissionDTO> GetByIdAsync(int id)

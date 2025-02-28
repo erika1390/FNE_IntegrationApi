@@ -92,9 +92,9 @@ namespace Integration.Infrastructure.Repositories.Security
             try
             {
                 _logger.LogInformation("Obteniendo permisos con un predicado específico.");
-                var roles = await _context.Permissions.Where(predicado).ToListAsync();
-                _logger.LogInformation("Se obtuvieron {Count} permisos.", roles.Count);
-                return roles;
+                var permissions = await _context.Permissions.Where(predicado).ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} permisos.", permissions.Count);
+                return permissions;
             }
             catch (Exception ex)
             {
@@ -113,9 +113,9 @@ namespace Integration.Infrastructure.Repositories.Security
                 {
                     query = query.Where(predicado);
                 }
-                var roles = await query.ToListAsync();
-                _logger.LogInformation("Se obtuvieron {Count} permisos tras aplicar múltiples predicados.", roles.Count);
-                return roles;
+                var permissions = await query.ToListAsync();
+                _logger.LogInformation("Se obtuvieron {Count} permisos tras aplicar múltiples predicados.", permissions.Count);
+                return permissions;
             }
             catch (Exception ex)
             {

@@ -3,6 +3,8 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
     [Route("api/[controller]")]
@@ -66,6 +68,85 @@ namespace Integration.Api.Controllers.Security
             {
                 _logger.LogError(ex, "Error al obtener el permiso con ID {PermissionId}.", id);
                 return StatusCode(500, ResponseApi<PermissionDTO>.Error("Error interno del servidor."));
+            }
+        }
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetPermissions([FromQuery] string filterField, [FromQuery] string filterValue)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
+                {
+                    return BadRequest("Debe proporcionar un campo y un valor para filtrar.");
+                }
+                var propertyInfo = typeof(PermissionDTO).GetProperty(filterField);
+                if (propertyInfo == null)
+                {
+                    return BadRequest($"El campo '{filterField}' no existe en PermissionDTO.");
+                }
+                object typedValue;
+                try
+                {
+                    typedValue = Convert.ChangeType(filterValue, propertyInfo.PropertyType);
+                }
+                catch (Exception)
+                {
+                    return BadRequest($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                }
+                ParameterExpression param = Expression.Parameter(typeof(PermissionDTO), "dto");
+                MemberExpression property = Expression.Property(param, filterField);
+                ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
+                BinaryExpression comparison = Expression.Equal(property, constant);
+                Expression<Func<PermissionDTO, bool>> filter = Expression.Lambda<Func<PermissionDTO, bool>>(comparison, param);
+                var result = await _service.GetAllAsync(new List<Expression<Func<PermissionDTO, bool>>> { filter });
+                return Ok(ResponseApi<IEnumerable<PermissionDTO>>.Success(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener aplicaciones con filtro.");
+                return StatusCode(500, "Ocurrió un error interno.");
+            }
+        }
+        [HttpGet("filters")]
+        public async Task<IActionResult> GetPermissions([FromQuery] Dictionary<string, string> filters)
+        {
+            try
+            {
+                if (filters == null || filters.Count == 0)
+                {
+                    return BadRequest("Debe proporcionar al menos un filtro.");
+                }
+                ParameterExpression param = Expression.Parameter(typeof(PermissionDTO), "dto");
+                Expression finalExpression = null;
+                foreach (var filter in filters)
+                {
+                    var propertyInfo = typeof(PermissionDTO).GetProperty(filter.Key);
+                    if (propertyInfo == null)
+                    {
+                        return BadRequest($"El campo '{filter.Key}' no existe en PermissionDTO.");
+                    }
+                    object typedValue;
+                    try
+                    {
+                        typedValue = Convert.ChangeType(filter.Value, propertyInfo.PropertyType);
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                    }
+                    MemberExpression property = Expression.Property(param, propertyInfo);
+                    ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
+                    BinaryExpression comparison = Expression.Equal(property, constant);
+                    finalExpression = finalExpression == null ? comparison : Expression.AndAlso(finalExpression, comparison);
+                }
+                var filterExpression = Expression.Lambda<Func<PermissionDTO, bool>>(finalExpression, param);
+                var result = await _service.GetAllAsync(new List<Expression<Func<PermissionDTO, bool>>> { filterExpression });
+                return Ok(ResponseApi<IEnumerable<PermissionDTO>>.Success(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener aplicaciones con múltiples filtros.");
+                return StatusCode(500, "Ocurrió un error interno.");
             }
         }
         [HttpPost]
