@@ -2,10 +2,7 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
 namespace Integration.Api.Controllers.Security
 {
     [Route("api/[controller]")]
@@ -33,9 +30,9 @@ namespace Integration.Api.Controllers.Security
                 }
 
                 // Simulación de autenticación (debería validarse contra la base de datos)
-                if (request.Username == "admin" && request.Password == "123456")
+                if (request.Username == "Administrador" && request.Password == "123456")
                 {
-                    var token = _jwtService.GenerateToken(request.Username, "Admin");
+                    var token = _jwtService.GenerateToken(request.Username, "Administrador");
                     return Ok(ResponseApi<string>.Success(token, "Autenticación exitosa."));
                 }
 
