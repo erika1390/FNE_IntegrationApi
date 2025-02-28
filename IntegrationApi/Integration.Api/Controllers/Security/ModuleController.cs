@@ -3,7 +3,6 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -23,17 +22,13 @@ namespace Integration.Api.Controllers.Security
         public async Task<IActionResult> GetAllActive()
         {
             _logger.LogInformation("Iniciando solicitud para obtener todas los modulos.");
-
             try
             {
                 var result = await _service.GetAllActiveAsync();
-
-                if (result == null || !result.Any())
-                {
+                if (result == null || !result.Any())                {
                     _logger.LogWarning("No se encontraron modulos.");
                     return NotFound(ResponseApi<IEnumerable<ModuleDTO>>.Error("No se encontraron modulos."));
                 }
-
                 _logger.LogInformation("{Count} modulos obtenidas correctamente.", result.Count());
                 return Ok(ResponseApi<IEnumerable<ModuleDTO>>.Success(result));
             }
@@ -60,7 +55,6 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se encontró la modulo con ID {ModuleId}.", id);
                     return NotFound(ResponseApi<ModuleDTO>.Error("Aplicación no encontrada."));
                 }
-
                 _logger.LogInformation("Modulo encontrada: ID={ModuleId}, Nombre={Name}", result.ModuleId, result.Name);
                 return Ok(ResponseApi<ModuleDTO>.Success(result));
             }
@@ -77,12 +71,12 @@ namespace Integration.Api.Controllers.Security
             {
                 if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
                 {
-                    return BadRequest("Debe proporcionar un campo y un valor para filtrar.");
+                    return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error("No se encontraron modulos."));
                 }
                 var propertyInfo = typeof(ModuleDTO).GetProperty(filterField);
                 if (propertyInfo == null)
                 {
-                    return BadRequest($"El campo '{filterField}' no existe en ModuleDTO.");
+                    return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error($"El campo '{filterField}' no existe en ModuleDTO."));
                 }
                 object typedValue;
                 try
@@ -91,20 +85,20 @@ namespace Integration.Api.Controllers.Security
                 }
                 catch (Exception)
                 {
-                    return BadRequest($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                    return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}."));
                 }
                 ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
                 MemberExpression property = Expression.Property(param, filterField);
                 ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<ModuleDTO, bool>> filter = Expression.Lambda<Func<ModuleDTO, bool>>(comparison, param);
-                var applications = await _service.GetAllAsync(new List<Expression<Func<ModuleDTO, bool>>> { filter });
-                return Ok(applications);
+                var result = await _service.GetAllAsync(new List<Expression<Func<ModuleDTO, bool>>> { filter });
+                return Ok(ResponseApi<IEnumerable<ModuleDTO>>.Success(result));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener modulos con filtro.");
-                return StatusCode(500, "Ocurrió un error interno.");
+                return StatusCode(500, ResponseApi<IEnumerable<ModuleDTO>>.Error("Error interno del servidor."));
             }
         }
         [HttpGet("filters")]
@@ -114,7 +108,7 @@ namespace Integration.Api.Controllers.Security
             {
                 if (filters == null || filters.Count == 0)
                 {
-                    return BadRequest("Debe proporcionar al menos un filtro.");
+                    return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error("Debe proporcionar al menos un filtro."));
                 }
                 ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
                 Expression finalExpression = null;
@@ -123,7 +117,7 @@ namespace Integration.Api.Controllers.Security
                     var propertyInfo = typeof(ModuleDTO).GetProperty(filter.Key);
                     if (propertyInfo == null)
                     {
-                        return BadRequest($"El campo '{filter.Key}' no existe en ModuleDTO.");
+                        return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error($"El campo '{filter.Key}' no existe en ModuleDTO."));
                     }
                     object typedValue;
                     try
@@ -132,7 +126,7 @@ namespace Integration.Api.Controllers.Security
                     }
                     catch (Exception)
                     {
-                        return BadRequest($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                        return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}."));
                     }
                     MemberExpression property = Expression.Property(param, propertyInfo);
                     ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
@@ -140,13 +134,13 @@ namespace Integration.Api.Controllers.Security
                     finalExpression = finalExpression == null ? comparison : Expression.AndAlso(finalExpression, comparison);
                 }
                 var filterExpression = Expression.Lambda<Func<ModuleDTO, bool>>(finalExpression, param);
-                var applications = await _service.GetAllAsync(new List<Expression<Func<ModuleDTO, bool>>> { filterExpression });
-                return Ok(applications);
+                var result = await _service.GetAllAsync(new List<Expression<Func<ModuleDTO, bool>>> { filterExpression });
+                return Ok(ResponseApi<IEnumerable<ModuleDTO>>.Success(result));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener modulos con múltiples filtros.");
-                return StatusCode(500, "Ocurrió un error interno.");
+                return StatusCode(500, ResponseApi<IEnumerable<ModuleDTO>>.Error("Error interno del servidor."));
             }
         }
         [HttpPost]

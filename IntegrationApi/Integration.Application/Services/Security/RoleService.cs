@@ -74,14 +74,42 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> predicado)
+        public async Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> filterDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo todos los roles y aplicando el filtro en memoria.");
+                var roles = await _repository.GetAllAsync(a => true);
+                var rolesDTOs = _mapper.Map<List<RoleDTO>>(roles);
+                var filteredApplications = rolesDTOs.AsQueryable().Where(filterDto).ToList();
+                return filteredApplications;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en el servicio al obtener los roles.");
+                throw;
+            }
         }
 
         public async Task<List<RoleDTO>> GetAllAsync(List<Expression<Func<RoleDTO, bool>>> predicados)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Obteniendo todos los roles y aplicando múltiples filtros en memoria.");
+                var roles = await _repository.GetAllAsync(a => true);
+                var rolesDTOs = _mapper.Map<List<RoleDTO>>(roles);
+                IQueryable<RoleDTO> query = rolesDTOs.AsQueryable();
+                foreach (var predicado in predicados)
+                {
+                    query = query.Where(predicado);
+                }
+                return query.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en el servicio al obtener los roles con múltiples filtros.");
+                throw;
+            }
         }
 
         public async Task<RoleDTO> GetByIdAsync(int id)

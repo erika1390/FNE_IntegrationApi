@@ -44,7 +44,6 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<IEnumerable<ApplicationDTO>>.Error("Error interno del servidor."));
             }
         }
-
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -53,19 +52,15 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió un ID no válido ({ApplicationId}) en la solicitud de búsqueda.", id);
                 return BadRequest(ResponseApi<ApplicationDTO>.Error("El ID debe ser mayor a 0."));
             }
-
             _logger.LogInformation("Buscando aplicación con ID: {ApplicationId}", id);
-
             try
             {
                 var result = await _service.GetByIdAsync(id);
-
                 if (result == null)
                 {
                     _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId}.", id);
                     return NotFound(ResponseApi<ApplicationDTO>.Error("Aplicación no encontrada."));
                 }
-
                 _logger.LogInformation("Aplicación encontrada: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
                 return Ok(ResponseApi<ApplicationDTO>.Success(result));
             }
@@ -82,12 +77,12 @@ namespace Integration.Api.Controllers.Security
             {
                 if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
                 {
-                    return BadRequest("Debe proporcionar un campo y un valor para filtrar.");
+                    return BadRequest(ResponseApi<IEnumerable<ApplicationDTO>>.Error("Debe proporcionar un campo y un valor para filtrar."));
                 }
                 var propertyInfo = typeof(ApplicationDTO).GetProperty(filterField);
                 if (propertyInfo == null)
                 {
-                    return BadRequest($"El campo '{filterField}' no existe en ApplicationDTO.");
+                    return BadRequest(ResponseApi<IEnumerable<ApplicationDTO>>.Error($"El campo '{filterField}' no existe en ApplicationDTO."));
                 }
                 object typedValue;
                 try
@@ -96,7 +91,7 @@ namespace Integration.Api.Controllers.Security
                 }
                 catch (Exception)
                 {
-                    return BadRequest($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                    return BadRequest(ResponseApi<IEnumerable<ApplicationDTO>>.Error($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}."));
                 }
                 ParameterExpression param = Expression.Parameter(typeof(ApplicationDTO), "dto");
                 MemberExpression property = Expression.Property(param, filterField);
@@ -109,7 +104,7 @@ namespace Integration.Api.Controllers.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener aplicaciones con filtro.");
-                return StatusCode(500, "Ocurrió un error interno.");
+                return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }
         [HttpGet("filters")]
@@ -119,7 +114,7 @@ namespace Integration.Api.Controllers.Security
             {
                 if (filters == null || filters.Count == 0)
                 {
-                    return BadRequest("Debe proporcionar al menos un filtro.");
+                    return BadRequest(ResponseApi<IEnumerable<ApplicationDTO>>.Error("Debe proporcionar al menos un filtro."));
                 }
                 ParameterExpression param = Expression.Parameter(typeof(ApplicationDTO), "dto");
                 Expression finalExpression = null;
@@ -128,7 +123,7 @@ namespace Integration.Api.Controllers.Security
                     var propertyInfo = typeof(ApplicationDTO).GetProperty(filter.Key);
                     if (propertyInfo == null)
                     {
-                        return BadRequest($"El campo '{filter.Key}' no existe en ApplicationDTO.");
+                        return BadRequest(ResponseApi<IEnumerable<ApplicationDTO>>.Error($"El campo '{filter.Key}' no existe en ApplicationDTO."));
                     }
                     object typedValue;
                     try
@@ -137,7 +132,7 @@ namespace Integration.Api.Controllers.Security
                     }
                     catch (Exception)
                     {
-                        return BadRequest($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}.");
+                        return BadRequest(ResponseApi<IEnumerable<ApplicationDTO>>.Error($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}."));
                     }
                     MemberExpression property = Expression.Property(param, propertyInfo);
                     ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
@@ -151,7 +146,7 @@ namespace Integration.Api.Controllers.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener aplicaciones con múltiples filtros.");
-                return StatusCode(500, "Ocurrió un error interno.");
+                return StatusCode(500, ResponseApi<IEnumerable<ApplicationDTO>>.Error("Error interno del servidor."));
             }
         }
         [HttpPost]
@@ -163,19 +158,15 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear una aplicación.");
                 return BadRequest(ResponseApi<ApplicationDTO>.Error("Datos de entrada inválidos."));
             }
-
             _logger.LogInformation("Creando nueva aplicación: {Name}", applicationDTO.Name);
-
             try
             {
                 var result = await _service.CreateAsync(applicationDTO);
-
                 if (result == null)
                 {
                     _logger.LogWarning("No se pudo crear la aplicación.");
                     return BadRequest(ResponseApi<ApplicationDTO>.Error("No se pudo crear la aplicación."));
                 }
-
                 _logger.LogInformation("Aplicación creada con éxito: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
                 return CreatedAtAction(nameof(GetById), new { id = result.ApplicationId },
                     ResponseApi<ApplicationDTO>.Success(result, "Aplicación creada con éxito."));
@@ -195,9 +186,7 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió una solicitud con datos inválidos para actualizar una aplicación.");
                 return BadRequest(ResponseApi<ApplicationDTO>.Error("Datos de entrada inválidos."));
             }
-
             _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.ApplicationId, applicationDTO.Name);
-
             try
             {
                 var result = await _service.UpdateAsync(applicationDTO);
@@ -226,19 +215,15 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió un ID no válido ({ApplicationId}) en la solicitud de eliminación.", id);
                 return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor a 0."));
             }
-
             _logger.LogInformation("Eliminando aplicación con ID: {ApplicationId}", id);
-
             try
             {
                 var result = await _service.DeleteAsync(id);
-
                 if (!result)
                 {
                     _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para eliminar.", id);
                     return NotFound(ResponseApi<bool>.Error("Aplicación no encontrada."));
                 }
-
                 _logger.LogInformation("Aplicación eliminada con éxito: ID={ApplicationId}", id);
                 return Ok(ResponseApi<bool>.Success(result, "Aplicación eliminada correctamente."));
             }
