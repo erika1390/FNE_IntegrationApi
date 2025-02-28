@@ -75,7 +75,6 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }
-
         [HttpGet("filter")]
         public async Task<IActionResult> GetApplications([FromQuery] string filterField, [FromQuery] string filterValue)
         {
