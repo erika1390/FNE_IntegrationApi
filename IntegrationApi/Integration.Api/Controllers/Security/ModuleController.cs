@@ -103,7 +103,7 @@ namespace Integration.Api.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener aplicaciones con filtro.");
+                _logger.LogError(ex, "Error al obtener modulos con filtro.");
                 return StatusCode(500, "Ocurrió un error interno.");
             }
         }
@@ -145,7 +145,7 @@ namespace Integration.Api.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener aplicaciones con múltiples filtros.");
+                _logger.LogError(ex, "Error al obtener modulos con múltiples filtros.");
                 return StatusCode(500, "Ocurrió un error interno.");
             }
         }
