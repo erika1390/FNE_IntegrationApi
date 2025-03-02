@@ -28,8 +28,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedApplicationDTO()
         {
-            var applicationDTO = new ApplicationDTO { ApplicationId = 1, Name = "TestApp", Code = "TST", CreatedBy = "User", IsActive = true };
-            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "TestApp", Code = "TST" };
+            var applicationDTO = new ApplicationDTO { ApplicationId = 1, Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true };
+            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" };
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Application>(applicationDTO)).Returns(application);
             _repositoryMock.Setup(r => r.CreateAsync(application)).ReturnsAsync(application);
@@ -65,8 +65,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnListOfApplicationDTOs()
         {
-            var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "TestApp", Code = "TST" } };
-            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { ApplicationId = 1, Name = "TestApp", Code = "TST", CreatedBy = "User", IsActive = true } };
+            var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" } };
+            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { ApplicationId = 1, Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true } };
 
             _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(applications);
             _mapperMock.Setup(m => m.Map<IEnumerable<ApplicationDTO>>(applications)).Returns(applicationDTOs);
@@ -80,8 +80,8 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetByIdAsync_ShouldReturnApplicationDTO_WhenApplicationExists()
         {
             int applicationId = 1;
-            var application = new Integration.Core.Entities.Security.Application { Id = applicationId, Name = "TestApp", Code = "TST" };
-            var applicationDTO = new ApplicationDTO { ApplicationId = applicationId, Name = "TestApp", Code = "TST", CreatedBy = "User", IsActive = true };
+            var application = new Integration.Core.Entities.Security.Application { Id = applicationId, Name = "Saga 2.0", Code = "APP0000001" };
+            var applicationDTO = new ApplicationDTO { ApplicationId = applicationId, Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(applicationId)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<ApplicationDTO>(application)).Returns(applicationDTO);
@@ -105,8 +105,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedApplicationDTO()
         {
-            var applicationDTO = new ApplicationDTO { ApplicationId = 1, Name = "UpdatedApp", Code = "UPD", CreatedBy = "User", IsActive = true };
-            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "UpdatedApp", Code = "UPD" };
+            var applicationDTO = new ApplicationDTO { ApplicationId = 1, Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "User", IsActive = true };
+            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" };
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Application>(applicationDTO)).Returns(application);
             _repositoryMock.Setup(r => r.UpdateAsync(application)).ReturnsAsync(application);
@@ -120,9 +120,9 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllAsync_WithSinglePredicate_ShouldReturnFilteredApplicationDTOs()
         {
-            var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "TestApp", Code = "TST" } };
-            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { ApplicationId = 1, Name = "TestApp", Code = "TST", CreatedBy = "User", IsActive = true } };
-            Expression<Func<ApplicationDTO, bool>> filter = dto => dto.Name == "TestApp";
+            var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" } };
+            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { ApplicationId = 1, Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true } };
+            Expression<Func<ApplicationDTO, bool>> filter = dto => dto.Name == "Saga 2.0";
 
             _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Application, bool>>>())).ReturnsAsync(applications);
             _mapperMock.Setup(m => m.Map<List<ApplicationDTO>>(applications)).Returns(applicationDTOs);
@@ -135,9 +135,9 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllAsync_WithMultiplePredicates_ShouldReturnFilteredApplicationDTOs()
         {
-            var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "TestApp", Code = "TST" } };
-            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { ApplicationId = 1, Name = "TestApp", Code = "TST", CreatedBy = "User", IsActive = true } };
-            var predicates = new List<Expression<Func<ApplicationDTO, bool>>> { dto => dto.Name == "TestApp", dto => dto.Code == "TST" };
+            var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" } };
+            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { ApplicationId = 1, Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true } };
+            var predicates = new List<Expression<Func<ApplicationDTO, bool>>> { dto => dto.Name == "Saga 2.0", dto => dto.Code == "APP0000001" };
 
             _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Application, bool>>>())).ReturnsAsync(applications);
             _mapperMock.Setup(m => m.Map<List<ApplicationDTO>>(applications)).Returns(applicationDTOs);
