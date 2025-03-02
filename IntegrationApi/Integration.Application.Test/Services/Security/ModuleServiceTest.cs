@@ -28,8 +28,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedModuleDTO()
         {
-            var moduleDTO = new ModuleDTO { ModuleId = 1, Name = "TestModule", Code = "TST", ApplicationId = 1, CreatedBy = "User", IsActive = true };
-            var module = new Integration.Core.Entities.Security.Module { Id = 1, Name = "TestModule", Code = "TST", ApplicationId = 1 };
+            var moduleDTO = new ModuleDTO { ModuleId = 1, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1, CreatedBy = "System", IsActive = true };
+            var module = new Integration.Core.Entities.Security.Module { Id = 1, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1 };
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Module>(moduleDTO)).Returns(module);
             _repositoryMock.Setup(r => r.CreateAsync(module)).ReturnsAsync(module);
@@ -65,8 +65,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnListOfModuleDTOs()
         {
-            var modules = new List<Integration.Core.Entities.Security.Module> { new Integration.Core.Entities.Security.Module { Id = 1, Name = "TestModule", Code = "TST", ApplicationId = 1 } };
-            var moduleDTOs = new List<ModuleDTO> { new ModuleDTO { ModuleId = 1, Name = "TestModule", Code = "TST", ApplicationId = 1, CreatedBy = "User", IsActive = true } };
+            var modules = new List<Integration.Core.Entities.Security.Module> { new Integration.Core.Entities.Security.Module { Id = 1, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1 } };
+            var moduleDTOs = new List<ModuleDTO> { new ModuleDTO { ModuleId = 1, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1, CreatedBy = "System", IsActive = true } };
 
             _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(modules);
             _mapperMock.Setup(m => m.Map<IEnumerable<ModuleDTO>>(modules)).Returns(moduleDTOs);
@@ -80,8 +80,8 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetByIdAsync_ShouldReturnModuleDTO_WhenModuleExists()
         {
             int moduleId = 1;
-            var module = new Integration.Core.Entities.Security.Module { Id = moduleId, Name = "TestModule", Code = "TST", ApplicationId = 1 };
-            var moduleDTO = new ModuleDTO { ModuleId = moduleId, Name = "TestModule", Code = "TST", ApplicationId = 1, CreatedBy = "User", IsActive = true };
+            var module = new Integration.Core.Entities.Security.Module { Id = moduleId, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1 };
+            var moduleDTO = new ModuleDTO { ModuleId = moduleId, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1, CreatedBy = "System", IsActive = true };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(moduleId)).ReturnsAsync(module);
             _mapperMock.Setup(m => m.Map<ModuleDTO>(module)).Returns(moduleDTO);
@@ -105,8 +105,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedModuleDTO()
         {
-            var moduleDTO = new ModuleDTO { ModuleId = 1, Name = "UpdatedModule", Code = "UPD", ApplicationId = 1, CreatedBy = "User", IsActive = true };
-            var module = new Integration.Core.Entities.Security.Module { Id = 1, Name = "UpdatedModule", Code = "UPD", ApplicationId = 1 };
+            var moduleDTO = new ModuleDTO { ModuleId = 1, Name = "Aplicaciones", Code = "UPD", ApplicationId = 1, CreatedBy = "System", IsActive = true };
+            var module = new Integration.Core.Entities.Security.Module { Id = 1, Name = "Aplicaciones", Code = "UPD", ApplicationId = 1 };
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Module>(moduleDTO)).Returns(module);
             _repositoryMock.Setup(r => r.UpdateAsync(module)).ReturnsAsync(module);
@@ -120,9 +120,9 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllAsync_WithSinglePredicate_ShouldReturnFilteredModuleDTOs()
         {
-            var modules = new List<Integration.Core.Entities.Security.Module> { new Integration.Core.Entities.Security.Module { Id = 1, Name = "TestModule", Code = "TST", ApplicationId = 1 } };
-            var moduleDTOs = new List<ModuleDTO> { new ModuleDTO { ModuleId = 1, Name = "TestModule", Code = "TST", ApplicationId = 1, CreatedBy = "User", IsActive = true } };
-            Expression<Func<ModuleDTO, bool>> filter = dto => dto.Name == "TestModule";
+            var modules = new List<Integration.Core.Entities.Security.Module> { new Integration.Core.Entities.Security.Module { Id = 1, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1 } };
+            var moduleDTOs = new List<ModuleDTO> { new ModuleDTO { ModuleId = 1, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1, CreatedBy = "System", IsActive = true } };
+            Expression<Func<ModuleDTO, bool>> filter = dto => dto.Name == "Aplicaciones";
 
             _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Module, bool>>>())).ReturnsAsync(modules);
             _mapperMock.Setup(m => m.Map<List<ModuleDTO>>(modules)).Returns(moduleDTOs);
@@ -135,9 +135,9 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllAsync_WithMultiplePredicates_ShouldReturnFilteredModuleDTOs()
         {
-            var modules = new List<Integration.Core.Entities.Security.Module> { new Integration.Core.Entities.Security.Module { Id = 1, Name = "TestModule", Code = "TST", ApplicationId = 1 } };
-            var moduleDTOs = new List<ModuleDTO> { new ModuleDTO { ModuleId = 1, Name = "TestModule", Code = "TST", ApplicationId = 1, CreatedBy = "User", IsActive = true } };
-            var predicates = new List<Expression<Func<ModuleDTO, bool>>> { dto => dto.Name == "TestModule", dto => dto.Code == "TST" };
+            var modules = new List<Integration.Core.Entities.Security.Module> { new Integration.Core.Entities.Security.Module { Id = 1, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1 } };
+            var moduleDTOs = new List<ModuleDTO> { new ModuleDTO { ModuleId = 1, Name = "Aplicaciones", Code = "MOD0000001", ApplicationId = 1, CreatedBy = "System", IsActive = true } };
+            var predicates = new List<Expression<Func<ModuleDTO, bool>>> { dto => dto.Name == "Aplicaciones", dto => dto.Code == "MOD0000001" };
 
             _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Module, bool>>>())).ReturnsAsync(modules);
             _mapperMock.Setup(m => m.Map<List<ModuleDTO>>(modules)).Returns(moduleDTOs);
