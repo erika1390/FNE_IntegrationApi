@@ -28,8 +28,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedPermissionDTO()
         {
-            var permissionDTO = new PermissionDTO { PermissionId = 1, Name = "TestPermission", Code = "TST", CreatedBy = "User", IsActive = true };
-            var permission = new Integration.Core.Entities.Security.Permission { Id = 1, Name = "TestPermission", Code = "TST" };
+            var permissionDTO = new PermissionDTO { PermissionId = 1, Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true };
+            var permission = new Integration.Core.Entities.Security.Permission { Id = 1, Name = "Consultar Aplicacion", Code = "PER0000001" };
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Permission>(permissionDTO)).Returns(permission);
             _repositoryMock.Setup(r => r.CreateAsync(permission)).ReturnsAsync(permission);
@@ -65,8 +65,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnListOfPermissionDTOs()
         {
-            var permissions = new List<Integration.Core.Entities.Security.Permission> { new Integration.Core.Entities.Security.Permission { Id = 1, Name = "TestPermission", Code = "TST" } };
-            var permissionDTOs = new List<PermissionDTO> { new PermissionDTO { PermissionId = 1, Name = "TestPermission", Code = "TST", CreatedBy = "User", IsActive = true } };
+            var permissions = new List<Integration.Core.Entities.Security.Permission> { new Integration.Core.Entities.Security.Permission { Id = 1, Name = "Consultar Aplicacion", Code = "PER0000001" } };
+            var permissionDTOs = new List<PermissionDTO> { new PermissionDTO { PermissionId = 1, Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true } };
 
             _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(permissions);
             _mapperMock.Setup(m => m.Map<IEnumerable<PermissionDTO>>(permissions)).Returns(permissionDTOs);
@@ -80,8 +80,8 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetByIdAsync_ShouldReturnPermissionDTO_WhenPermissionExists()
         {
             int permissionId = 1;
-            var permission = new Integration.Core.Entities.Security.Permission { Id = permissionId, Name = "TestPermission", Code = "TST" };
-            var permissionDTO = new PermissionDTO { PermissionId = permissionId, Name = "TestPermission", Code = "TST", CreatedBy = "User", IsActive = true };
+            var permission = new Integration.Core.Entities.Security.Permission { Id = permissionId, Name = "Consultar Aplicacion", Code = "PER0000001" };
+            var permissionDTO = new PermissionDTO { PermissionId = permissionId, Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(permissionId)).ReturnsAsync(permission);
             _mapperMock.Setup(m => m.Map<PermissionDTO>(permission)).Returns(permissionDTO);
@@ -120,9 +120,9 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllAsync_WithSinglePredicate_ShouldReturnFilteredPermissionDTOs()
         {
-            var permissions = new List<Integration.Core.Entities.Security.Permission> { new Integration.Core.Entities.Security.Permission { Id = 1, Name = "TestPermission", Code = "TST" } };
-            var permissionDTOs = new List<PermissionDTO> { new PermissionDTO { PermissionId = 1, Name = "TestPermission", Code = "TST", CreatedBy = "User", IsActive = true } };
-            Expression<Func<PermissionDTO, bool>> filter = dto => dto.Name == "TestPermission";
+            var permissions = new List<Integration.Core.Entities.Security.Permission> { new Integration.Core.Entities.Security.Permission { Id = 1, Name = "Consultar Aplicacion", Code = "PER0000001" } };
+            var permissionDTOs = new List<PermissionDTO> { new PermissionDTO { PermissionId = 1, Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true } };
+            Expression<Func<PermissionDTO, bool>> filter = dto => dto.Name == "Consultar Aplicacion";
 
             _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Permission, bool>>>())).ReturnsAsync(permissions);
             _mapperMock.Setup(m => m.Map<List<PermissionDTO>>(permissions)).Returns(permissionDTOs);
@@ -135,9 +135,9 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllAsync_WithMultiplePredicates_ShouldReturnFilteredPermissionDTOs()
         {
-            var permissions = new List<Integration.Core.Entities.Security.Permission> { new Integration.Core.Entities.Security.Permission { Id = 1, Name = "TestPermission", Code = "TST" } };
-            var permissionDTOs = new List<PermissionDTO> { new PermissionDTO { PermissionId = 1, Name = "TestPermission", Code = "TST", CreatedBy = "User", IsActive = true } };
-            var predicates = new List<Expression<Func<PermissionDTO, bool>>> { dto => dto.Name == "TestPermission", dto => dto.Code == "TST" };
+            var permissions = new List<Integration.Core.Entities.Security.Permission> { new Integration.Core.Entities.Security.Permission { Id = 1, Name = "Consultar Aplicacion", Code = "PER0000001" } };
+            var permissionDTOs = new List<PermissionDTO> { new PermissionDTO { PermissionId = 1, Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true } };
+            var predicates = new List<Expression<Func<PermissionDTO, bool>>> { dto => dto.Name == "Consultar Aplicacion", dto => dto.Code == "PER0000001" };
 
             _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Permission, bool>>>())).ReturnsAsync(permissions);
             _mapperMock.Setup(m => m.Map<List<PermissionDTO>>(permissions)).Returns(permissionDTOs);
