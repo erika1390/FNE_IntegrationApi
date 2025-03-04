@@ -57,7 +57,7 @@ namespace Integration.Api.Controllers.Security
                 if (result == null)
                 {
                     _logger.LogWarning("No se encontró el rol con ID {RoleId}.", id);
-                    return NotFound(ResponseApi<RoleDTO>.Error("Aplicación no encontrada."));
+                    return NotFound(ResponseApi<RoleDTO>.Error("Rol no encontrada."));
                 }
 
                 _logger.LogInformation("Rol encontrada: ID={RoleId}, Nombre={Name}", result.RoleId, result.Name);
@@ -196,7 +196,7 @@ namespace Integration.Api.Controllers.Security
                     return NotFound(ResponseApi<RoleDTO>.Error("Rol no encontrada."));
                 }
                 _logger.LogInformation("Rol actualizada con éxito: ID={RoleId}, Nombre={Name}", result.RoleId, result.Name);
-                return Ok(ResponseApi<RoleDTO>.Success(result, "Modulo actualizada correctamente."));
+                return Ok(ResponseApi<RoleDTO>.Success(result, "Rol actualizada correctamente."));
             }
             catch (Exception ex)
             {

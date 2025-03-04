@@ -53,7 +53,7 @@ namespace Integration.Api.Controllers.Security
                 if (result == null)
                 {
                     _logger.LogWarning("No se encontró la modulo con ID {ModuleId}.", id);
-                    return NotFound(ResponseApi<ModuleDTO>.Error("Aplicación no encontrada."));
+                    return NotFound(ResponseApi<ModuleDTO>.Error("Modulo no encontrada."));
                 }
                 _logger.LogInformation("Modulo encontrada: ID={ModuleId}, Nombre={Name}", result.ModuleId, result.Name);
                 return Ok(ResponseApi<ModuleDTO>.Success(result));
