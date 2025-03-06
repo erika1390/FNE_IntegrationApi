@@ -8,7 +8,7 @@ namespace Integration.Infrastructure.Data.Configurations.Security
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
             builder.ToTable("UserRoles", "Security");
-            builder.HasKey(e => new { e.UserId, e.RoleId, e.ApplicationId });
+            builder.HasKey(e => new { e.UserId, e.RoleId});
 
             builder.Property(e => e.CreatedAt)
                 .IsRequired();
