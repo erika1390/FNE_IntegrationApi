@@ -19,7 +19,6 @@ namespace Integration.Infrastructure.Data.Contexts
         public override DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RoleModule> RoleModules { get; set; }
-        public DbSet<RolePermission> RolePermissions { get; set; }
         public override DbSet<User> Users { get; set; }
         public override DbSet<UserRole> UserRoles { get; set; }
         public override DbSet<UserClaim> UserClaims { get; set; }

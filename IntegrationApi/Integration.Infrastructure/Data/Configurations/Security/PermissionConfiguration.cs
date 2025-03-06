@@ -23,11 +23,6 @@ namespace Integration.Infrastructure.Data.Configurations.Security
 
             builder.HasIndex(e => e.Code)
                 .IsUnique();
-
-            builder.HasMany(e => e.RolePermissions)
-                .WithOne(rp => rp.Permission)
-                .HasForeignKey(rp => rp.PermissionId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

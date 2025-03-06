@@ -19,7 +19,6 @@ namespace Integration.Application.Mappings.Security
                 .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
                 .ForMember(dest => dest.Application, opt => opt.Ignore())
                 .ForMember(dest => dest.RoleModules, opt => opt.Ignore())
-                .ForMember(dest => dest.RolePermissions, opt => opt.Ignore())
                 .ForMember(dest => dest.UserRoles, opt => opt.Ignore());
 
             CreateMap<Role, RoleDTO>()

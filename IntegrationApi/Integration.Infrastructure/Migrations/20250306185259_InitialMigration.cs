@@ -160,8 +160,8 @@ namespace Integration.Infrastructure.Migrations
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UpdatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -270,10 +270,10 @@ namespace Integration.Infrastructure.Migrations
                 schema: "Security",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     ModuleId = table.Column<int>(type: "int", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -282,7 +282,7 @@ namespace Integration.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleModules", x => x.Id);
+                    table.PrimaryKey("PK_RoleModules", x => new { x.RoleId, x.ModuleId, x.PermissionId });
                     table.ForeignKey(
                         name: "FK_RoleModules_Modules_ModuleId",
                         column: x => x.ModuleId,
@@ -291,12 +291,19 @@ namespace Integration.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_RoleModules_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalSchema: "Security",
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_RoleModules_Roles_RoleId",
                         column: x => x.RoleId,
                         principalSchema: "Security",
                         principalTable: "Roles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -306,7 +313,6 @@ namespace Integration.Infrastructure.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
-                    ApplicationId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -315,14 +321,7 @@ namespace Integration.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId, x.ApplicationId });
-                    table.ForeignKey(
-                        name: "FK_UserRoles_Applications_ApplicationId",
-                        column: x => x.ApplicationId,
-                        principalSchema: "Security",
-                        principalTable: "Applications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
                         name: "FK_UserRoles_Roles_RoleId",
                         column: x => x.RoleId,
@@ -337,48 +336,6 @@ namespace Integration.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RolePermissions",
-                schema: "Security",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    PermissionId = table.Column<int>(type: "int", nullable: false),
-                    RoleModuleId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RolePermissions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_Permissions_PermissionId",
-                        column: x => x.PermissionId,
-                        principalSchema: "Security",
-                        principalTable: "Permissions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_RoleModules_RoleModuleId",
-                        column: x => x.RoleModuleId,
-                        principalSchema: "Security",
-                        principalTable: "RoleModules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalSchema: "Security",
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -396,20 +353,20 @@ namespace Integration.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Modules_ApplicationId",
-                schema: "Security",
-                table: "Modules",
-                column: "ApplicationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Modules_Code",
+                name: "IDX_Modules_Code",
                 schema: "Security",
                 table: "Modules",
                 column: "Code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Permissions_Code",
+                name: "IX_Modules_ApplicationId",
+                schema: "Security",
+                table: "Modules",
+                column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IDX_Permissions_Code",
                 schema: "Security",
                 table: "Permissions",
                 column: "Code",
@@ -422,47 +379,36 @@ namespace Integration.Infrastructure.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IDX_RoleModules_RoleId_ModuleId_PermissionId",
+                schema: "Security",
+                table: "RoleModules",
+                columns: new[] { "RoleId", "ModuleId", "PermissionId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoleModules_ModuleId",
                 schema: "Security",
                 table: "RoleModules",
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleModules_RoleId",
+                name: "IX_RoleModules_PermissionId",
                 schema: "Security",
                 table: "RoleModules",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RolePermissions_PermissionId",
-                schema: "Security",
-                table: "RolePermissions",
                 column: "PermissionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RolePermissions_RoleId",
+                name: "IDX_Roles_Code",
                 schema: "Security",
-                table: "RolePermissions",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RolePermissions_RoleModuleId",
-                schema: "Security",
-                table: "RolePermissions",
-                column: "RoleModuleId");
+                table: "Roles",
+                column: "Code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_ApplicationId",
                 schema: "Security",
                 table: "Roles",
                 column: "ApplicationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Roles_Code",
-                schema: "Security",
-                table: "Roles",
-                column: "Code",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -473,22 +419,22 @@ namespace Integration.Infrastructure.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserClaims_UserId",
+                name: "IDX_UserClaims_UserId",
                 schema: "Security",
                 table: "UserClaims",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserLogins_UserId",
+                name: "IDX_UserLogins_UserId",
                 schema: "Security",
                 table: "UserLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRoles_ApplicationId",
+                name: "IDX_UserRoles_UserId_RoleId",
                 schema: "Security",
                 table: "UserRoles",
-                column: "ApplicationId");
+                columns: new[] { "UserId", "RoleId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
@@ -501,6 +447,29 @@ namespace Integration.Infrastructure.Migrations
                 schema: "Security",
                 table: "Users",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IDX_Users_Code",
+                schema: "Security",
+                table: "Users",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IDX_Users_Email",
+                schema: "Security",
+                table: "Users",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IDX_Users_UserName",
+                schema: "Security",
+                table: "Users",
+                column: "UserName",
+                unique: true,
+                filter: "[UserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -523,7 +492,7 @@ namespace Integration.Infrastructure.Migrations
                 schema: "Security");
 
             migrationBuilder.DropTable(
-                name: "RolePermissions",
+                name: "RoleModules",
                 schema: "Security");
 
             migrationBuilder.DropTable(
@@ -543,23 +512,19 @@ namespace Integration.Infrastructure.Migrations
                 schema: "Security");
 
             migrationBuilder.DropTable(
-                name: "Permissions",
-                schema: "Security");
-
-            migrationBuilder.DropTable(
-                name: "RoleModules",
-                schema: "Security");
-
-            migrationBuilder.DropTable(
-                name: "Users",
-                schema: "Security");
-
-            migrationBuilder.DropTable(
                 name: "Modules",
                 schema: "Security");
 
             migrationBuilder.DropTable(
+                name: "Permissions",
+                schema: "Security");
+
+            migrationBuilder.DropTable(
                 name: "Roles",
+                schema: "Security");
+
+            migrationBuilder.DropTable(
+                name: "Users",
                 schema: "Security");
 
             migrationBuilder.DropTable(

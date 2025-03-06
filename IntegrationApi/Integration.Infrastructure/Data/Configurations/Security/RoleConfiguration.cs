@@ -50,11 +50,6 @@ namespace Integration.Infrastructure.Data.Configurations.Security
                 .HasForeignKey(rm => rm.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(e => e.RolePermissions)
-                .WithOne(rp => rp.Role)
-                .HasForeignKey(rp => rp.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasMany(e => e.UserRoles)
                 .WithOne(ur => ur.Role)
                 .HasForeignKey(ur => ur.RoleId)

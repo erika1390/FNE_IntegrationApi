@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Integration.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250226095042_InitialMigration")]
+    [Migration("20250306185259_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -178,7 +178,8 @@ namespace Integration.Infrastructure.Migrations
                     b.HasIndex("ApplicationId");
 
                     b.HasIndex("Code")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("IDX_Modules_Code");
 
                     b.ToTable("Modules", "Security");
                 });
@@ -222,7 +223,8 @@ namespace Integration.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("IDX_Permissions_Code");
 
                     b.ToTable("Permissions", "Security");
                 });
@@ -245,6 +247,7 @@ namespace Integration.Infrastructure.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -279,7 +282,8 @@ namespace Integration.Infrastructure.Migrations
                     b.HasIndex("ApplicationId");
 
                     b.HasIndex("Code")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("IDX_Roles_Code");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -317,52 +321,14 @@ namespace Integration.Infrastructure.Migrations
 
             modelBuilder.Entity("Integration.Core.Entities.Security.RoleModule", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<int>("ModuleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int>("PermissionId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModuleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RoleModules", "Security");
-                });
-
-            modelBuilder.Entity("Integration.Core.Entities.Security.RolePermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -372,17 +338,11 @@ namespace Integration.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleModuleId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -391,15 +351,17 @@ namespace Integration.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("RoleId", "ModuleId", "PermissionId");
+
+                    b.HasIndex("ModuleId");
 
                     b.HasIndex("PermissionId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleId", "ModuleId", "PermissionId")
+                        .IsUnique()
+                        .HasDatabaseName("IDX_RoleModules_RoleId_ModuleId_PermissionId");
 
-                    b.HasIndex("RoleModuleId");
-
-                    b.ToTable("RolePermissions", "Security");
+                    b.ToTable("RoleModules", "Security");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.User", b =>
@@ -495,6 +457,15 @@ namespace Integration.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IDX_Users_Code");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("IDX_Users_Email")
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -502,6 +473,11 @@ namespace Integration.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("UserName")
+                        .IsUnique()
+                        .HasDatabaseName("IDX_Users_UserName")
+                        .HasFilter("[UserName] IS NOT NULL");
 
                     b.ToTable("Users", "Security");
                 });
@@ -527,7 +503,8 @@ namespace Integration.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IDX_UserClaims_UserId");
 
                     b.ToTable("UserClaims", "Security");
                 });
@@ -551,7 +528,8 @@ namespace Integration.Infrastructure.Migrations
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IDX_UserLogins_UserId");
 
                     b.ToTable("UserLogins", "Security");
                 });
@@ -562,9 +540,6 @@ namespace Integration.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ApplicationId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -585,11 +560,12 @@ namespace Integration.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("UserId", "RoleId", "ApplicationId");
-
-                    b.HasIndex("ApplicationId");
+                    b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId", "RoleId")
+                        .HasDatabaseName("IDX_UserRoles_UserId_RoleId");
 
                     b.ToTable("UserRoles", "Security");
                 });
@@ -654,42 +630,23 @@ namespace Integration.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Integration.Core.Entities.Security.Permission", "Permission")
+                        .WithMany("RoleModules")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Integration.Core.Entities.Security.Role", "Role")
                         .WithMany("RoleModules")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Module");
 
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Integration.Core.Entities.Security.RolePermission", b =>
-                {
-                    b.HasOne("Integration.Core.Entities.Security.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Integration.Core.Entities.Security.Role", "Role")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Integration.Core.Entities.Security.RoleModule", "RoleModule")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleModuleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Permission");
 
                     b.Navigation("Role");
-
-                    b.Navigation("RoleModule");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.UserClaim", b =>
@@ -712,12 +669,6 @@ namespace Integration.Infrastructure.Migrations
 
             modelBuilder.Entity("Integration.Core.Entities.Security.UserRole", b =>
                 {
-                    b.HasOne("Integration.Core.Entities.Security.Application", "Application")
-                        .WithMany()
-                        .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Integration.Core.Entities.Security.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
@@ -729,8 +680,6 @@ namespace Integration.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Application");
 
                     b.Navigation("Role");
 
@@ -760,21 +709,14 @@ namespace Integration.Infrastructure.Migrations
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Permission", b =>
                 {
-                    b.Navigation("RolePermissions");
+                    b.Navigation("RoleModules");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Role", b =>
                 {
                     b.Navigation("RoleModules");
 
-                    b.Navigation("RolePermissions");
-
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("Integration.Core.Entities.Security.RoleModule", b =>
-                {
-                    b.Navigation("RolePermissions");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.User", b =>

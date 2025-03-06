@@ -21,7 +21,6 @@ namespace Integration.Core.Entities.Security
         public override string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
         public virtual Application? Application { get; set; }
         public virtual ICollection<RoleModule>? RoleModules { get; set; }
-        public virtual ICollection<RolePermission>? RolePermissions { get; set; }
         public virtual ICollection<UserRole>? UserRoles { get; set; }
     }
 }
