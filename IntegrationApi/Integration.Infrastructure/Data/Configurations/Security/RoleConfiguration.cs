@@ -10,6 +10,10 @@ namespace Integration.Infrastructure.Data.Configurations.Security
             builder.ToTable("Roles", "Security");
             builder.HasKey(e => e.Id);
 
+            builder.HasIndex(r => r.Code)
+                .HasDatabaseName("IDX_Roles_Code")
+                .IsUnique();
+
             builder.Property(e => e.Code)
                 .IsRequired()
                 .HasMaxLength(10);

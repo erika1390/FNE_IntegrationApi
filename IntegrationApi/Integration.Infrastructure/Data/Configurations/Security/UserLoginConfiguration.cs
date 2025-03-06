@@ -10,6 +10,9 @@ namespace Integration.Infrastructure.Data.Configurations.Security
             builder.ToTable("UserLogins", "Security");
             builder.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
+            builder.HasIndex(ul => ul.UserId)
+                .HasDatabaseName("IDX_UserLogins_UserId");
+
             builder.Property(e => e.LoginProvider)
                 .IsRequired()
                 .HasMaxLength(255);

@@ -12,6 +12,10 @@ namespace Integration.Infrastructure.Data.Configurations.Security
             builder.ToTable("Modules", "Security");
             builder.HasKey(e => e.Id);
 
+            builder.HasIndex(m => m.Code)
+                .HasDatabaseName("IDX_Modules_Code")
+                .IsUnique();
+
             builder.Property(e => e.Code)
                 .IsRequired()
                 .HasMaxLength(10);

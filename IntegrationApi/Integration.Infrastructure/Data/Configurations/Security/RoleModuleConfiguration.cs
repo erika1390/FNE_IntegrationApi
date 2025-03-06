@@ -10,6 +10,9 @@ namespace Integration.Infrastructure.Data.Configurations.Security
             builder.ToTable("RoleModules", "Security");
             builder.HasKey(e => e.Id);
 
+            builder.HasIndex(rm => new { rm.RoleId, rm.ModuleId })
+                .HasDatabaseName("IDX_RoleModules_RoleId_ModuleId");
+
             builder.Property(e => e.Id)
                 .IsRequired();
 

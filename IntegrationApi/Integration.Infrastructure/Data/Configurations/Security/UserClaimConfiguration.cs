@@ -10,6 +10,9 @@ namespace Integration.Infrastructure.Data.Configurations.Security
             builder.ToTable("UserClaims", "Security");
             builder.HasKey(e => e.Id);
 
+            builder.HasIndex(uc => uc.UserId)
+                .HasDatabaseName("IDX_UserClaims_UserId");
+
             builder.Property(e => e.UserId)
                 .IsRequired();
 

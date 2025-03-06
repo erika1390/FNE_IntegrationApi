@@ -10,6 +10,18 @@ namespace Integration.Infrastructure.Data.Configurations.Security
             builder.ToTable("Users", "Security");
             builder.HasKey(e => e.Id);
 
+            builder.HasIndex(u => u.Code)
+                .HasDatabaseName("IDX_Users_Code")
+                .IsUnique();
+
+            builder.HasIndex(u => u.UserName)
+                .HasDatabaseName("IDX_Users_UserName")
+                .IsUnique();
+
+            builder.HasIndex(u => u.Email)
+                .HasDatabaseName("IDX_Users_Email")
+                .IsUnique();
+
             builder.Property(e => e.Code)
                 .IsRequired()
                 .HasMaxLength(10);
