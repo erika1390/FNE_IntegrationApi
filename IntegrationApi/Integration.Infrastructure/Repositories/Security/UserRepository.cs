@@ -46,15 +46,15 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var role = await _context.Roles.FindAsync(id);
-                if (role == null)
+                var user = await _context.Users.FindAsync(id);
+                if (user == null)
                 {
                     _logger.LogWarning("No se encontró el usuario con ID {UserId} para eliminar.", id);
                     return false;
                 }
-                role.IsActive = false;
-                role.UpdatedAt = DateTime.UtcNow;
-                _context.Roles.Update(role);
+                user.IsActive = false;
+                user.UpdatedAt = DateTime.UtcNow;
+                _context.Users.Update(user);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Usuario desactivado: {UserId}", id);
                 return true;
@@ -161,15 +161,17 @@ namespace Integration.Infrastructure.Repositories.Security
                     _logger.LogWarning("No se encontró el usuario con ID {UserId} para actualizar.", user.Id);
                     return null;
                 }
-
-                existingUser.Code = user.Code;
                 existingUser.FirstName = user.FirstName;
                 existingUser.LastName = user.LastName;
                 existingUser.DateOfBirth = user.DateOfBirth;
                 existingUser.UpdatedBy = user.UpdatedBy;
                 existingUser.UpdatedAt = DateTime.UtcNow;
+                existingUser.UserName = user.UserName;
+                existingUser.NormalizedUserName = user.NormalizedUserName;
+                existingUser.Email = user.Email;
+                existingUser.NormalizedEmail = user.NormalizedEmail;
+                existingUser.PhoneNumber = user.PhoneNumber;
                 existingUser.IsActive = user.IsActive;
-
                 _context.Users.Update(existingUser);
                 await _context.SaveChangesAsync();
 

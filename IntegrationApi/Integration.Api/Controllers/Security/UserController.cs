@@ -2,10 +2,8 @@
 using Integration.Core.Entities.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -171,7 +169,7 @@ namespace Integration.Api.Controllers.Security
                 }
                 _logger.LogInformation("Usuario creado con éxito: UserName={UserName}", result.UserName);
                 return CreatedAtAction(nameof(GetById), new { id = result.UserId },
-                    ResponseApi<UserDTO>.Success(result, "Rol creada con éxito."));
+                    ResponseApi<UserDTO>.Success(result, "Usuario creada con éxito."));
             }
             catch (Exception ex)
             {

@@ -6,6 +6,7 @@ using Integration.Application.Mappings.Security;
 using Integration.Application.Services.Audit;
 using Integration.Application.Services.Security;
 using Integration.Core.Entities.Security;
+using Integration.Core.MappingProfiles;
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Audit;
 using Integration.Infrastructure.Interfaces.Security;
@@ -36,6 +37,7 @@ builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddAutoMapper(typeof(ModuleProfile));
 builder.Services.AddAutoMapper(typeof(PermissionProfile));
 builder.Services.AddAutoMapper(typeof(RoleProfile));
+builder.Services.AddAutoMapper(typeof(UserProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
 
@@ -46,12 +48,14 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Configurar Identity
 builder.Services.AddIdentity<User, Role>(options =>
