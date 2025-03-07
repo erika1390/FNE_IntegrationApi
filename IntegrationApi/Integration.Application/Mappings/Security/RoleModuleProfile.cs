@@ -7,17 +7,13 @@ namespace Integration.Application.Mappings.Security
     {
         public RoleModuleProfile()
         {
-            CreateMap<RoleModuleDTO, RoleModule>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
-                .ForMember(dest => dest.ModuleId, opt => opt.MapFrom(src => src.ModuleId))
-                .ForMember(dest => dest.PermissionId, opt => opt.MapFrom(src => src.PermissionId))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt))
-                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
-                .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy));
-
+            CreateMap<Role, RoleDTO>();
+            CreateMap<Module, ModuleDTO>();
+            CreateMap<Permission, PermissionDTO>();
             CreateMap<RoleModule, RoleModuleDTO>()
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
+                .ForMember(dest => dest.Module, opt => opt.MapFrom(src => src.Module))
+                .ForMember(dest => dest.Permission, opt => opt.MapFrom(src => src.Permission))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
                 .ForMember(dest => dest.ModuleId, opt => opt.MapFrom(src => src.ModuleId))
@@ -25,7 +21,8 @@ namespace Integration.Application.Mappings.Security
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt))
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
-                .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy));
+                .ForMember(dest => dest.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
+                .ReverseMap();
         }
     }
 }
