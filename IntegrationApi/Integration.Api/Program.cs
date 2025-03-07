@@ -19,7 +19,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 using Serilog;
+
 using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -38,6 +40,7 @@ builder.Services.AddAutoMapper(typeof(ModuleProfile));
 builder.Services.AddAutoMapper(typeof(PermissionProfile));
 builder.Services.AddAutoMapper(typeof(RoleProfile));
 builder.Services.AddAutoMapper(typeof(UserProfile));
+builder.Services.AddAutoMapper(typeof(RoleModuleProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
 
@@ -56,6 +59,7 @@ builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleModuleRepository, RoleModuleRepository>();
 
 // Configurar Identity
 builder.Services.AddIdentity<User, Role>(options =>
