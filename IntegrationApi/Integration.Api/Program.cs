@@ -14,14 +14,11 @@ using Integration.Infrastructure.Interfaces.UnitOfWork;
 using Integration.Infrastructure.Repositories.Audit;
 using Integration.Infrastructure.Repositories.Security;
 using Integration.Infrastructure.Repositories.UnitOfWork;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 using Serilog;
-
 using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -52,6 +49,7 @@ builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleModuleService, RoleModuleService>();
 
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
