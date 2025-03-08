@@ -13,15 +13,20 @@ namespace Integration.Api.Controllers.Security
     {
         private readonly IPermissionService _service;
         private readonly ILogger<PermissionController> _logger;
+
         public PermissionController(IPermissionService service, ILogger<PermissionController> logger)
         {
             _service = service;
             _logger = logger;
         }
+
+        /// <summary>
+        /// Obtiene todas las permisos activos.
+        /// </summary>
         [HttpGet("active")]
         public async Task<IActionResult> GetAllActive()
         {
-            _logger.LogInformation("Iniciando solicitud para obtener todos los permisos.");
+            _logger.LogInformation("Iniciando solicitud para obtener todas las permisos activos.");
             try
             {
                 var result = await _service.GetAllActiveAsync();
@@ -30,41 +35,49 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se encontraron permisos.");
                     return NotFound(ResponseApi<IEnumerable<PermissionDTO>>.Error("No se encontraron permisos."));
                 }
-                _logger.LogInformation("{Count} permisos obtenidas correctamente.", result.Count());
+                _logger.LogInformation($"{result.Count()} permisos recuperados exitosamente.");
                 return Ok(ResponseApi<IEnumerable<PermissionDTO>>.Success(result));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todas los permisos.");
+                _logger.LogError(ex, "Error al recuperar todos los permisos activos.");
                 return StatusCode(500, ResponseApi<IEnumerable<PermissionDTO>>.Error("Error interno del servidor."));
             }
         }
+
+        /// <summary>
+        /// Obtiene un permiso por su ID.
+        /// </summary>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Se recibió un ID no válido ({PermissionId}) en la solicitud de búsqueda.", id);
-                return BadRequest(ResponseApi<PermissionDTO>.Error("El ID debe ser mayor a 0."));
+                _logger.LogWarning("ID no válido recibido ({PermissionId}) en la solicitud de búsqueda.", id);
+                return BadRequest(ResponseApi<PermissionDTO>.Error("El ID debe ser mayor que 0."));
             }
-            _logger.LogInformation("Buscando permisos con ID: {PermissionId}", id);
+            _logger.LogInformation("Buscando permiso con ID: {PermissionId}", id);
             try
             {
                 var result = await _service.GetByIdAsync(id);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId}.", id);
+                    _logger.LogWarning("Permiso con ID {PermissionId} no encontrado.", id);
                     return NotFound(ResponseApi<PermissionDTO>.Error("Permiso no encontrado."));
                 }
-                _logger.LogInformation("Permiso encontrada: ID={PermissionId}, Nombre={Name}", result.PermissionId, result.Name);
+                _logger.LogInformation("Permiso encontrado: ID={PermissionId}, Name={Name}", result.PermissionId, result.Name);
                 return Ok(ResponseApi<PermissionDTO>.Success(result));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el permiso con ID {PermissionId}.", id);
+                _logger.LogError(ex, "Error al recuperar permiso con ID {PermissionId}.", id);
                 return StatusCode(500, ResponseApi<PermissionDTO>.Error("Error interno del servidor."));
             }
         }
+
+        /// <summary>
+        /// Obtiene permisos basados en un solo filtro.
+        /// </summary>
         [HttpGet("filter")]
         public async Task<IActionResult> GetPermissions([FromQuery] string filterField, [FromQuery] string filterValue)
         {
@@ -72,7 +85,7 @@ namespace Integration.Api.Controllers.Security
             {
                 if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
                 {
-                    return BadRequest(ResponseApi<IEnumerable<PermissionDTO>>.Error("Debe proporcionar un campo y un valor para filtrar."));
+                    return BadRequest(ResponseApi<IEnumerable<PermissionDTO>>.Error("Los campos y valores de filtro son obligatorios."));
                 }
                 var propertyInfo = typeof(PermissionDTO).GetProperty(filterField);
                 if (propertyInfo == null)
@@ -86,7 +99,7 @@ namespace Integration.Api.Controllers.Security
                 }
                 catch (Exception)
                 {
-                    return BadRequest(ResponseApi<IEnumerable<PermissionDTO>>.Error($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}."));
+                    return BadRequest(ResponseApi<IEnumerable<PermissionDTO>>.Error($"El valor '{filterValue}' no puede convertirse a tipo {propertyInfo.PropertyType.Name}."));
                 }
                 ParameterExpression param = Expression.Parameter(typeof(PermissionDTO), "dto");
                 MemberExpression property = Expression.Property(param, filterField);
@@ -98,10 +111,14 @@ namespace Integration.Api.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener permisos con filtro.");
+                _logger.LogError(ex, "Error al recuperar permisos con filtro.");
                 return StatusCode(500, ResponseApi<IEnumerable<PermissionDTO>>.Error("Error interno del servidor."));
             }
         }
+
+        /// <summary>
+        /// Obtiene permisos basados en múltiples filtros.
+        /// </summary>
         [HttpGet("filters")]
         public async Task<IActionResult> GetPermissions([FromQuery] Dictionary<string, string> filters)
         {
@@ -109,7 +126,7 @@ namespace Integration.Api.Controllers.Security
             {
                 if (filters == null || filters.Count == 0)
                 {
-                    return BadRequest(ResponseApi<IEnumerable<PermissionDTO>>.Error("Debe proporcionar al menos un filtro."));
+                    return BadRequest(ResponseApi<IEnumerable<PermissionDTO>>.Error("Se requiere al menos un filtro."));
                 }
                 ParameterExpression param = Expression.Parameter(typeof(PermissionDTO), "dto");
                 Expression finalExpression = null;
@@ -127,7 +144,7 @@ namespace Integration.Api.Controllers.Security
                     }
                     catch (Exception)
                     {
-                        return BadRequest(ResponseApi<IEnumerable<PermissionDTO>>.Error($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}."));
+                        return BadRequest(ResponseApi<IEnumerable<PermissionDTO>>.Error($"El valor '{filter.Value}' no puede convertirse a tipo {propertyInfo.PropertyType.Name}."));
                     }
                     MemberExpression property = Expression.Property(param, propertyInfo);
                     ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
@@ -140,18 +157,22 @@ namespace Integration.Api.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener permisos con múltiples filtros.");
+                _logger.LogError(ex, "Error al recuperar permisos con múltiples filtros.");
                 return StatusCode(500, ResponseApi<IEnumerable<PermissionDTO>>.Error("Error interno del servidor."));
             }
         }
+
+        /// <summary>
+        /// Crea un nuevo permiso.
+        /// </summary>
         [HttpPost]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([FromBody] PermissionDTO permissionDTO)
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un permiso.");
-                return BadRequest(ResponseApi<PermissionDTO>.Error("Datos de entrada inválidos."));
+                _logger.LogWarning("Datos de entrada no válidos recibidos para crear un permiso.");
+                return BadRequest(ResponseApi<PermissionDTO>.Error("Datos de entrada no válidos."));
             }
             _logger.LogInformation("Creando nuevo permiso: {Name}", permissionDTO.Name);
             try
@@ -159,12 +180,12 @@ namespace Integration.Api.Controllers.Security
                 var result = await _service.CreateAsync(permissionDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo crear el permiso.");
-                    return BadRequest(ResponseApi<PermissionDTO>.Error("No se pudo crear la permiso."));
+                    _logger.LogWarning("Fallo al crear el permiso.");
+                    return BadRequest(ResponseApi<PermissionDTO>.Error("Fallo al crear el permiso."));
                 }
-                _logger.LogInformation("Permiso creado con éxito: ID={PermissionId}, Nombre={Name}", result.PermissionId, result.Name);
+                _logger.LogInformation("Permiso creado exitosamente: ID={PermissionId}, Name={Name}", result.PermissionId, result.Name);
                 return CreatedAtAction(nameof(GetById), new { id = result.PermissionId },
-                    ResponseApi<PermissionDTO>.Success(result, "Permiso creada con éxito."));
+                    ResponseApi<PermissionDTO>.Success(result, "Permiso creado exitosamente."));
             }
             catch (Exception ex)
             {
@@ -173,42 +194,48 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
+        /// <summary>
+        /// Actualiza un permiso existente.
+        /// </summary>
         [HttpPut]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update([FromBody] PermissionDTO permissionDTO)
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para actualizar un permiso.");
-                return BadRequest(ResponseApi<PermissionDTO>.Error("Datos de entrada inválidos."));
+                _logger.LogWarning("Datos de entrada no válidos recibidos para actualizar un permiso.");
+                return BadRequest(ResponseApi<PermissionDTO>.Error("Datos de entrada no válidos."));
             }
-            _logger.LogInformation("Actualizando pemiso con ID: {PermissionId}, Nombre: {Name}", permissionDTO.PermissionId, permissionDTO.Name);
+            _logger.LogInformation("Actualizando permiso con ID: {PermissionId}, Name: {Name}", permissionDTO.PermissionId, permissionDTO.Name);
             try
             {
                 var result = await _service.UpdateAsync(permissionDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar el permiso con ID {PermissionId}.", permissionDTO.PermissionId);
-                    return NotFound(ResponseApi<PermissionDTO>.Error("Permiso no encontrada."));
+                    _logger.LogWarning("Permiso con ID {PermissionId} no encontrado.", permissionDTO.PermissionId);
+                    return NotFound(ResponseApi<PermissionDTO>.Error("Permiso no encontrado."));
                 }
-                _logger.LogInformation("Permiso actualizada con éxito: ID={PermissionId}, Nombre={Name}", result.PermissionId, result.Name);
-                return Ok(ResponseApi<PermissionDTO>.Success(result, "Permiso actualizada correctamente."));
+                _logger.LogInformation("Permiso actualizado exitosamente: ID={PermissionId}, Name={Name}", result.PermissionId, result.Name);
+                return Ok(ResponseApi<PermissionDTO>.Success(result, "Permiso actualizado exitosamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el permiso con ID {PermissionId}.", permissionDTO.PermissionId);
+                _logger.LogError(ex, "Error al actualizar permiso con ID {PermissionId}.", permissionDTO.PermissionId);
                 return StatusCode(500, ResponseApi<PermissionDTO>.Error("Error interno del servidor."));
             }
         }
 
+        /// <summary>
+        /// Elimina un permiso por su ID.
+        /// </summary>
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Se recibió un ID no válido ({PermissionId}) en la solicitud de eliminación.", id);
-                return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor a 0."));
+                _logger.LogWarning("ID no válido recibido ({PermissionId}) en la solicitud de eliminación.", id);
+                return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor que 0."));
             }
             _logger.LogInformation("Eliminando permiso con ID: {PermissionId}", id);
             try
@@ -216,15 +243,15 @@ namespace Integration.Api.Controllers.Security
                 var result = await _service.DeleteAsync(id);
                 if (!result)
                 {
-                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId} para eliminar.", id);
-                    return NotFound(ResponseApi<bool>.Error("Permiso no encontrada."));
+                    _logger.LogWarning("Permiso con ID {PermissionId} no encontrado.", id);
+                    return NotFound(ResponseApi<bool>.Error("Permiso no encontrado."));
                 }
-                _logger.LogInformation("Pemiso eliminada con éxito: ID={PermissionId}", id);
-                return Ok(ResponseApi<bool>.Success(result, "Permiso eliminada correctamente."));
+                _logger.LogInformation("Permiso eliminado exitosamente: ID={PermissionId}", id);
+                return Ok(ResponseApi<bool>.Success(result, "Permiso eliminado exitosamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la permiso con ID {PermissionId}.", id);
+                _logger.LogError(ex, "Error al eliminar permiso con ID {PermissionId}.", id);
                 return StatusCode(500, ResponseApi<bool>.Error("Error interno del servidor."));
             }
         }

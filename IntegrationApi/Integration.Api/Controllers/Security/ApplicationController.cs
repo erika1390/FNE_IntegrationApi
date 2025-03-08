@@ -23,27 +23,25 @@ namespace Integration.Api.Controllers.Security
         [HttpGet("active")]
         public async Task<IActionResult> GetAllActive()
         {
-            _logger.LogInformation("Iniciando solicitud para obtener todas las aplicaciones.");
-
+            _logger.LogInformation("Iniciando solicitud para obtener todas las aplicaciones activas.");
             try
             {
                 var result = await _service.GetAllActiveAsync();
-
-                if (result == null || !result.Any())
+                if (!result.Any())
                 {
-                    _logger.LogWarning("No se encontraron aplicaciones.");
-                    return NotFound(ResponseApi<IEnumerable<ApplicationDTO>>.Error("No se encontraron aplicaciones."));
+                    _logger.LogWarning("No se encontraron aplicaciones activas.");
+                    return NotFound(ResponseApi<IEnumerable<ApplicationDTO>>.Error("No se encontraron aplicaciones activas."));
                 }
-
-                _logger.LogInformation("{Count} aplicaciones obtenidas correctamente.", result.Count());
+                _logger.LogInformation("{Count} aplicaciones activas obtenidas correctamente.", result.Count());
                 return Ok(ResponseApi<IEnumerable<ApplicationDTO>>.Success(result));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todas las aplicaciones.");
+                _logger.LogError(ex, "Error al obtener aplicaciones activas.");
                 return StatusCode(500, ResponseApi<IEnumerable<ApplicationDTO>>.Error("Error interno del servidor."));
             }
         }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -70,6 +68,7 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }
+
         [HttpGet("filter")]
         public async Task<IActionResult> GetApplications([FromQuery] string filterField, [FromQuery] string filterValue)
         {
@@ -104,9 +103,10 @@ namespace Integration.Api.Controllers.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener aplicaciones con filtro.");
-                return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
+                return StatusCode(500, ResponseApi<IEnumerable<ApplicationDTO>>.Error("Error interno del servidor."));
             }
         }
+
         [HttpGet("filters")]
         public async Task<IActionResult> GetApplications([FromQuery] Dictionary<string, string> filters)
         {
@@ -149,6 +149,7 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<IEnumerable<ApplicationDTO>>.Error("Error interno del servidor."));
             }
         }
+
         [HttpPost]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([FromBody] ApplicationDTO applicationDTO)
@@ -191,13 +192,11 @@ namespace Integration.Api.Controllers.Security
             try
             {
                 var result = await _service.UpdateAsync(applicationDTO);
-
                 if (result == null)
                 {
                     _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
                     return NotFound(ResponseApi<ApplicationDTO>.Error("Aplicación no encontrada."));
                 }
-
                 _logger.LogInformation("Aplicación actualizada con éxito: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
                 return Ok(ResponseApi<ApplicationDTO>.Success(result, "Aplicación actualizada correctamente."));
             }

@@ -1,5 +1,4 @@
 ﻿using Integration.Application.Interfaces.Security;
-using Integration.Core.Entities.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -19,61 +18,43 @@ namespace Integration.Api.Controllers.Security
             _service = service;
             _logger = logger;
         }
+
         [HttpGet("active")]
         public async Task<IActionResult> GetAllActive()
         {
-            _logger.LogInformation("Iniciando solicitud para obtener todos los usuarios.");
-
-            try
+            return await HandleRequest(async () =>
             {
                 var result = await _service.GetAllActiveAsync();
-
-                if (result == null || !result.Any())
+                if (!result.Any())
                 {
-                    _logger.LogWarning("No se encontraron usuarios.");
                     return NotFound(ResponseApi<IEnumerable<UserDTO>>.Error("No se encontraron usuarios."));
                 }
-
-                _logger.LogInformation("{Count} usuarios obtenidas correctamente.", result.Count());
                 return Ok(ResponseApi<IEnumerable<UserDTO>>.Success(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener todas los usuarios.");
-                return StatusCode(500, ResponseApi<IEnumerable<UserDTO>>.Error("Error interno del servidor."));
-            }
+            });
         }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            if (id <= 0)
+            return await HandleRequest(async () =>
             {
-                _logger.LogWarning("Se recibió un ID no válido ({UserId}) en la solicitud de búsqueda.", id);
-                return BadRequest(ResponseApi<UserDTO>.Error("El ID debe ser mayor a 0."));
-            }
-            _logger.LogInformation("Buscando usuario con ID: {UserId}", id);
-            try
-            {
+                if (id <= 0)
+                {
+                    return BadRequest(ResponseApi<UserDTO>.Error("El ID debe ser mayor a 0."));
+                }
                 var result = await _service.GetByIdAsync(id);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se encontró el usuario con ID {UserId}.", id);
-                    return NotFound(ResponseApi<UserDTO>.Error("Aplicación no encontrada."));
+                    return NotFound(ResponseApi<UserDTO>.Error("Usuario no encontrado."));
                 }
-
-                _logger.LogInformation("Usuario encontrada: UserName={UserName}", result.UserName);
                 return Ok(ResponseApi<UserDTO>.Success(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el usuario con ID {UserId}.", id);
-                return StatusCode(500, ResponseApi<UserDTO>.Error("Error interno del servidor."));
-            }
+            });
         }
+
         [HttpGet("filter")]
-        public async Task<IActionResult> GetRoles([FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetByFilter([FromQuery] string filterField, [FromQuery] string filterValue)
         {
-            try
+            return await HandleRequest(async () =>
             {
                 if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
                 {
@@ -100,17 +81,13 @@ namespace Integration.Api.Controllers.Security
                 Expression<Func<UserDTO, bool>> filter = Expression.Lambda<Func<UserDTO, bool>>(comparison, param);
                 var result = await _service.GetAllAsync(new List<Expression<Func<UserDTO, bool>>> { filter });
                 return Ok(ResponseApi<IEnumerable<UserDTO>>.Success(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener usuarios con filtro.");
-                return StatusCode(500, ResponseApi<IEnumerable<UserDTO>>.Error("Error interno del servidor."));
-            }
+            });
         }
+
         [HttpGet("filters")]
-        public async Task<IActionResult> GetRoles([FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetByFilters([FromQuery] Dictionary<string, string> filters)
         {
-            try
+            return await HandleRequest(async () =>
             {
                 if (filters == null || filters.Count == 0)
                 {
@@ -142,95 +119,77 @@ namespace Integration.Api.Controllers.Security
                 var filterExpression = Expression.Lambda<Func<UserDTO, bool>>(finalExpression, param);
                 var result = await _service.GetAllAsync(new List<Expression<Func<UserDTO, bool>>> { filterExpression });
                 return Ok(ResponseApi<IEnumerable<UserDTO>>.Success(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener usuario con múltiples filtros.");
-                return StatusCode(500, ResponseApi<IEnumerable<UserDTO>>.Error("Error interno del servidor."));
-            }
+            });
         }
+
         [HttpPost]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> Create([FromBody] UserDTO permissionDTO)
+        public async Task<IActionResult> Create([FromBody] UserDTO userDTO)
         {
-            if (!ModelState.IsValid)
+            return await HandleRequest(async () =>
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un usuario.");
-                return BadRequest(ResponseApi<UserDTO>.Error("Datos de entrada inválidos."));
-            }
-            _logger.LogInformation("Creando nuevo usuario: {UserName}", permissionDTO.UserName);
-            try
-            {
-                var result = await _service.CreateAsync(permissionDTO);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ResponseApi<UserDTO>.Error("Datos de entrada inválidos."));
+                }
+                var result = await _service.CreateAsync(userDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo crear el usuario.");
                     return BadRequest(ResponseApi<UserDTO>.Error("No se pudo crear el usuario."));
                 }
-                _logger.LogInformation("Usuario creado con éxito: UserName={UserName}", result.UserName);
                 return CreatedAtAction(nameof(GetById), new { id = result.UserId },
-                    ResponseApi<UserDTO>.Success(result, "Usuario creada con éxito."));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al crear la usuario.");
-                return StatusCode(500, ResponseApi<UserDTO>.Error("Error interno del servidor."));
-            }
+                    ResponseApi<UserDTO>.Success(result, "Usuario creado con éxito."));
+            });
         }
 
         [HttpPut]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update([FromBody] UserDTO userDTO)
         {
-            if (!ModelState.IsValid)
+            return await HandleRequest(async () =>
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para actualizar un usuario.");
-                return BadRequest(ResponseApi<UserDTO>.Error("Datos de entrada inválidos."));
-            }
-            _logger.LogInformation("Actualizando usuario con ID: {UserId}, UserName: {UserName}", userDTO.UserId, userDTO.UserName);
-            try
-            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ResponseApi<UserDTO>.Error("Datos de entrada inválidos."));
+                }
                 var result = await _service.UpdateAsync(userDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar el usuario con ID {UserId}.", userDTO.UserId);
-                    return NotFound(ResponseApi<UserDTO>.Error("Usuario no encontrada."));
+                    return NotFound(ResponseApi<UserDTO>.Error("Usuario no encontrado."));
                 }
-                _logger.LogInformation("Usuario actualizada con éxito: ID={UserId}, UserName={UserName}", result.UserId, result.UserName);
-                return Ok(ResponseApi<UserDTO>.Success(result, "Usuario actualizada correctamente."));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al actualizar el usuario con ID {UserId}.", userDTO.UserId);
-                return StatusCode(500, ResponseApi<UserDTO>.Error("Error interno del servidor."));
-            }
+                return Ok(ResponseApi<UserDTO>.Success(result, "Usuario actualizado correctamente."));
+            });
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (id <= 0)
+            return await HandleRequest(async () =>
             {
-                _logger.LogWarning("Se recibió un ID no válido ({UserId}) en la solicitud de eliminación.", id);
-                return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor a 0."));
-            }
-            _logger.LogInformation("Eliminando usuario con ID: {UserId}", id);
-            try
-            {
+                if (id <= 0)
+                {
+                    return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor a 0."));
+                }
                 var result = await _service.DeleteAsync(id);
                 if (!result)
                 {
-                    _logger.LogWarning("No se encontró el usuario con ID {UserId} para eliminar.", id);
-                    return NotFound(ResponseApi<bool>.Error("Usuario no encontrada."));
+                    return NotFound(ResponseApi<bool>.Error("Usuario no encontrado."));
                 }
-                _logger.LogInformation("Usuario eliminada con éxito: ID={UserId}", id);
-                return Ok(ResponseApi<bool>.Success(result, "Usuario eliminada correctamente."));
+                return Ok(ResponseApi<bool>.Success(result, "Usuario eliminado correctamente."));
+            });
+        }
+
+        private async Task<IActionResult> HandleRequest(Func<Task<IActionResult>> action)
+        {
+            try
+            {
+                return await action();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el usuario con ID {UserId}.", id);
-                return StatusCode(500, ResponseApi<bool>.Error("Error interno del servidor."));
+                _logger.LogError(ex, "Ocurrió un error.");
+                return StatusCode(500, ResponseApi<object>.Error("Error interno del servidor."));
             }
         }
     }
