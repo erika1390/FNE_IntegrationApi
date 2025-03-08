@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Text;
 namespace Integration.Api.Middlewares
 {
-    public class C
+    public class LoggingMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<LoggingMiddleware> _logger;
