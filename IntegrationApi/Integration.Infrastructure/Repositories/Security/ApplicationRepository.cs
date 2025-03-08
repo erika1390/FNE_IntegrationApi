@@ -79,12 +79,12 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Application>> GetAllAsync(Expression<Func<Application, bool>> predicado)
+        public async Task<List<Application>> GetAllAsync(Expression<Func<Application, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo aplicaciones con un predicado específico.");
-                var applications = await _context.Applications.Where(predicado).ToListAsync();
+                var applications = await _context.Applications.Where(predicate).ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} aplicaciones.", applications.Count);
                 return applications;
             }
@@ -95,13 +95,13 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Application>> GetAllAsync(List<Expression<Func<Application, bool>>> predicados)
+        public async Task<List<Application>> GetAllAsync(List<Expression<Func<Application, bool>>> predicates)
         {
             try
             {
                 _logger.LogInformation("Obteniendo aplicaciones con múltiples predicados.");
                 var query = _context.Applications.AsQueryable();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     query = query.Where(predicado);
                 }

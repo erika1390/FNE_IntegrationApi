@@ -87,12 +87,12 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Permission>> GetAllAsync(Expression<Func<Permission, bool>> predicado)
+        public async Task<List<Permission>> GetAllAsync(Expression<Func<Permission, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo permisos con un predicado específico.");
-                var permissions = await _context.Permissions.Where(predicado).ToListAsync();
+                var permissions = await _context.Permissions.Where(predicate).ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} permisos.", permissions.Count);
                 return permissions;
             }
@@ -103,13 +103,13 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Permission>> GetAllAsync(List<Expression<Func<Permission, bool>>> predicados)
+        public async Task<List<Permission>> GetAllAsync(List<Expression<Func<Permission, bool>>> predicates)
         {
             try
             {
                 _logger.LogInformation("Obteniendo permisos con múltiples predicados.");
                 var query = _context.Permissions.AsQueryable();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     query = query.Where(predicado);
                 }

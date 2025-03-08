@@ -87,12 +87,12 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<User>> GetAllAsync(Expression<Func<User, bool>> predicado)
+        public async Task<List<User>> GetAllAsync(Expression<Func<User, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo usuarios con un predicado específico.");
-                var users = await _context.Users.Where(predicado).ToListAsync();
+                var users = await _context.Users.Where(predicate).ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} usuarios.", users.Count);
                 return users;
             }
@@ -103,13 +103,13 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<User>> GetAllAsync(List<Expression<Func<User, bool>>> predicados)
+        public async Task<List<User>> GetAllAsync(List<Expression<Func<User, bool>>> predicates)
         {
             try
             {
                 _logger.LogInformation("Obteniendo usuarios con múltiples predicados.");
                 var query = _context.Users.AsQueryable();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     query = query.Where(predicado);
                 }

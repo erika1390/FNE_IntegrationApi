@@ -8,7 +8,7 @@ namespace Integration.Infrastructure.Data.Configurations.Security
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
             builder.ToTable("UserRoles", "Security");
-            builder.HasKey(e => new { e.UserId, e.RoleId});
+            builder.HasKey(e => new { e.Id});
             builder.HasIndex(e => new { e.UserId, e.RoleId }).HasDatabaseName("IDX_UserRoles_UserId_RoleId");
             builder.Property(e => e.CreatedAt).IsRequired();
             builder.Property(e => e.UpdatedAt);

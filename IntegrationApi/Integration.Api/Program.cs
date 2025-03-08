@@ -38,6 +38,7 @@ builder.Services.AddAutoMapper(typeof(PermissionProfile));
 builder.Services.AddAutoMapper(typeof(RoleProfile));
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddAutoMapper(typeof(RoleModuleProfile));
+builder.Services.AddAutoMapper(typeof(UserRoleProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
 

@@ -86,12 +86,12 @@ namespace Integration.Infrastructure.Repositories.Security
                 return Enumerable.Empty<Module>();
             }
         }
-        public async Task<List<Module>> GetAllAsync(Expression<Func<Module, bool>> predicado)
+        public async Task<List<Module>> GetAllAsync(Expression<Func<Module, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo modulos con un predicado específico.");
-                var modules = await _context.Modules.Where(predicado).ToListAsync();
+                var modules = await _context.Modules.Where(predicate).ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} modulos.", modules.Count);
                 return modules;
             }
@@ -101,13 +101,13 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-        public async Task<List<Module>> GetAllAsync(List<Expression<Func<Module, bool>>> predicados)
+        public async Task<List<Module>> GetAllAsync(List<Expression<Func<Module, bool>>> predicates)
         {
             try
             {
                 _logger.LogInformation("Obteniendo modulos con múltiples predicados.");
                 var query = _context.Modules.AsQueryable();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     query = query.Where(predicado);
                 }

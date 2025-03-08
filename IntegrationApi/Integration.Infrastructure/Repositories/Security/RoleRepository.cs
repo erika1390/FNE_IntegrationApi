@@ -88,12 +88,12 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Role>> GetAllAsync(Expression<Func<Role, bool>> predicado)
+        public async Task<List<Role>> GetAllAsync(Expression<Func<Role, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo roles con un predicado específico.");
-                var roles = await _context.Roles.Where(predicado).ToListAsync();
+                var roles = await _context.Roles.Where(predicate).ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} roles.", roles.Count);
                 return roles;
             }
@@ -104,13 +104,13 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Role>> GetAllAsync(List<Expression<Func<Role, bool>>> predicados)
+        public async Task<List<Role>> GetAllAsync(List<Expression<Func<Role, bool>>> predicates)
         {
             try
             {
                 _logger.LogInformation("Obteniendo roles con múltiples predicados.");
                 var query = _context.Roles.AsQueryable();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     query = query.Where(predicado);
                 }
