@@ -11,7 +11,7 @@
 
         public bool State { get; set; }
         public string? Message { get; set; }
-        public T? Data { get; set; }
+        public T? Data { get; } 
         public static ResponseApi<T> Success(T data, string message = "Operación exitosa")
         {
             return new ResponseApi<T>(data, true, message);

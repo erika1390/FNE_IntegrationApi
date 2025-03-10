@@ -1,21 +1,17 @@
 ﻿using Newtonsoft.Json;
-
 using System.Diagnostics;
 using System.Text;
-
 namespace Integration.Api.Middlewares
 {
     public class LoggingMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<LoggingMiddleware> _logger;
-
         public LoggingMiddleware(RequestDelegate next, ILogger<LoggingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
         }
-
         public async Task Invoke(HttpContext context)
         {
             var stopwatch = Stopwatch.StartNew();
@@ -33,8 +29,7 @@ namespace Integration.Api.Middlewares
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al procesar la solicitud");
-                context.Response.StatusCode = 500; // Asegúrate de establecer el código de estado en caso de error
-                await context.Response.WriteAsync("Error interno del servidor."); // Escribe un mensaje de error en la respuesta
+                throw;
             }
             finally
             {
