@@ -22,17 +22,17 @@ namespace Integration.Application.Services.Security
 
         public async Task<RoleModuleDTO> CreateAsync(RoleModuleDTO roleModuleDTO)
         {
-            _logger.LogInformation("Creando RolModuleId: {RolModuleId}", roleModuleDTO.Id);
+            _logger.LogInformation("Creando RolModuleId: {RolModuleId}", roleModuleDTO.RoleModuleId);
             try
             {
                 var roleModule = _mapper.Map<Integration.Core.Entities.Security.RoleModule>(roleModuleDTO);
                 var result = await _repository.CreateAsync(roleModule);
-                _logger.LogInformation("RolModule creado con éxito: {RolModuleId}", roleModuleDTO.Id);
+                _logger.LogInformation("RolModule creado con éxito: {RolModuleId}", roleModuleDTO.RoleModuleId);
                 return _mapper.Map<RoleModuleDTO>(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear el RolModuleId: {RolModuleId}", roleModuleDTO.Id);
+                _logger.LogError(ex, "Error al crear el RolModuleId: {RolModuleId}", roleModuleDTO.RoleModuleId);
                 throw;
             }
         }
@@ -138,14 +138,14 @@ namespace Integration.Application.Services.Security
 
         public async Task<RoleModuleDTO> UpdateAsync(RoleModuleDTO roleModuleDTO)
         {
-            _logger.LogInformation("Actualizando roleModule con ID: {RoleModuleId}", roleModuleDTO.Id);
+            _logger.LogInformation("Actualizando roleModule con ID: {RoleModuleId}", roleModuleDTO.RoleModuleId);
             try
             {
                 var roleModule = _mapper.Map<Integration.Core.Entities.Security.RoleModule>(roleModuleDTO);
                 var updatedRoleModule = await _repository.UpdateAsync(roleModule);
                 if (updatedRoleModule == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar el roleModule con ID {RoleModuleId}.", roleModuleDTO.Id);
+                    _logger.LogWarning("No se pudo actualizar el roleModule con ID {RoleModuleId}.", roleModuleDTO.RoleModuleId);
                     return null;
                 }
                 _logger.LogInformation("RoleModule actualizado con éxito: {RoleModuleId}", updatedRoleModule.Id);
@@ -153,7 +153,7 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el roleModule con ID {RoleModuleId}.", roleModuleDTO.Id);
+                _logger.LogError(ex, "Error al actualizar el roleModule con ID {RoleModuleId}.", roleModuleDTO.RoleModuleId);
                 throw;
             }
         }

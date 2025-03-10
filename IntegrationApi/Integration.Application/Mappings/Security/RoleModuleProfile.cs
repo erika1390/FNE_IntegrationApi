@@ -14,7 +14,7 @@ namespace Integration.Application.Mappings.Security
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
                 .ForMember(dest => dest.Module, opt => opt.MapFrom(src => src.Module))
                 .ForMember(dest => dest.Permission, opt => opt.MapFrom(src => src.Permission))
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.RoleModuleId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
                 .ForMember(dest => dest.ModuleId, opt => opt.MapFrom(src => src.ModuleId))
                 .ForMember(dest => dest.PermissionId, opt => opt.MapFrom(src => src.PermissionId))

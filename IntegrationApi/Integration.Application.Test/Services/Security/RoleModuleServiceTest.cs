@@ -28,7 +28,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task CreateAsync_ShouldReturnCreatedRoleModuleDTO()
         {
             var roleModuleDTO = new RoleModuleDTO {                
-                Id = 1,
+                RoleModuleId = 1,
                 RoleId = 1,
                 ModuleId = 1,
                 PermissionId = 1,
@@ -90,7 +90,7 @@ namespace Integration.Application.Test.Services.Security
             };
             var roleModuleDTOs = new List<RoleModuleDTO> { 
                 new RoleModuleDTO {
-                    Id = 1,
+                    RoleModuleId = 1,
                     RoleId = 1,
                     ModuleId = 1,
                     PermissionId = 1,
@@ -122,7 +122,7 @@ namespace Integration.Application.Test.Services.Security
                 IsActive = true
             };
             var roleModuleDTO = new RoleModuleDTO {
-                Id = 1,
+                RoleModuleId = 1,
                 RoleId = 1,
                 ModuleId = 1,
                 PermissionId = 1,
@@ -154,7 +154,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task UpdateAsync_ShouldReturnUpdatedRoleModuleDTO()
         {
             var roleModuleDTO = new RoleModuleDTO {
-                Id = 1,
+                RoleModuleId = 1,
                 RoleId = 1,
                 ModuleId = 1,
                 PermissionId = 1,
@@ -196,7 +196,7 @@ namespace Integration.Application.Test.Services.Security
             };
             var roleModuleDTOs = new List<RoleModuleDTO> { 
                 new RoleModuleDTO {
-                    Id = 1,
+                    RoleModuleId = 1,
                     RoleId = 1,
                     ModuleId = 1,
                     PermissionId = 1,
@@ -231,7 +231,7 @@ namespace Integration.Application.Test.Services.Security
             };
             var roleModuleDTOs = new List<RoleModuleDTO> { 
                 new RoleModuleDTO {
-                    Id = 1,
+                    RoleModuleId = 1,
                     RoleId = 1,
                     ModuleId = 1,
                     PermissionId = 1,

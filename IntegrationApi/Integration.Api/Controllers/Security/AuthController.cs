@@ -12,16 +12,16 @@ namespace Integration.Api.Controllers.Security
         private readonly IJwtService _jwtService;
         private readonly ILogger<AuthController> _logger;
         private readonly IConfiguration _configuration;
-
-        public AuthController(IJwtService jwtService, ILogger<AuthController> logger, IConfiguration configuration)
+        private readonly IUserService _userService;
+        public AuthController(IJwtService jwtService, ILogger<AuthController> logger, IConfiguration configuration, IUserService userService)
         {
             _jwtService = jwtService;
             _logger = logger;
             _configuration = configuration;
+            _userService = userService;
         }
-
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequestDTO request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
             try
             {
@@ -30,18 +30,13 @@ namespace Integration.Api.Controllers.Security
                 {
                     throw new ValidationException("El usuario y la contraseña son obligatorios.");
                 }
-
-                // Obtener las credenciales seguras de la configuración
-                var adminUsername = _configuration["AdminUsername"];
-                var adminPassword = _configuration["AdminPassword"];
-
-                // Simulación de autenticación (debería validarse contra la base de datos)
-                if (request.Username == adminUsername && request.Password == adminPassword)
-                {
-                    var token = _jwtService.GenerateToken(request.Username, "Administrador");
-                    return Ok(ResponseApi<string>.Success(token, "Autenticación exitosa."));
-                }
-                throw new UnauthorizedException("Usuario o contraseña incorrectos.");
+                _logger.LogInformation($"Intento de inicio de sesión para el usuario: {request.Username}");
+                // Buscar usuario en la base de datos usando GetAllAsync con filtro
+                var users = await _userService.GetAllAsync(u => u.UserName == request.Username && u.IsActive == true);
+                var usuario = users.FirstOrDefault();
+                // Generar el token con el rol del usuario
+                var token = _jwtService.GenerateToken(usuario.UserName, "Administrador");
+                return Ok(ResponseApi<string>.Success(token, "Autenticación exitosa."));
             }
             catch (ValidationException ve)
             {

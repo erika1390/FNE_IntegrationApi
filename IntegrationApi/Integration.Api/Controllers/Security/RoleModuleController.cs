@@ -65,7 +65,7 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("roleModule con ID {RoleModuleId} no encontrado.", id);
                     return NotFound(ResponseApi<RoleModuleDTO>.Error("roleModule no encontrado."));
                 }
-                _logger.LogInformation("roleModule encontrado: ID={RoleModuleId}", result.Id);
+                _logger.LogInformation("roleModule encontrado: ID={RoleModuleId}", result.RoleModuleId);
                 return Ok(ResponseApi<RoleModuleDTO>.Success(result));
             }
             catch (Exception ex)
@@ -174,7 +174,7 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Datos de entrada no válidos recibidos para crear un roleModule.");
                 return BadRequest(ResponseApi<RoleModuleDTO>.Error("Datos de entrada no válidos."));
             }
-            _logger.LogInformation("Creando nuevo roleModule: {RoleModuleId}", roleModuleDTO.Id);
+            _logger.LogInformation("Creando nuevo roleModule: {RoleModuleId}", roleModuleDTO.RoleModuleId);
             try
             {
                 var result = await _service.CreateAsync(roleModuleDTO);
@@ -183,8 +183,8 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("Fallo al crear el roleModule.");
                     return BadRequest(ResponseApi<RoleModuleDTO>.Error("Fallo al crear el roleModule."));
                 }
-                _logger.LogInformation("roleModule creado exitosamente: ID={RoleModuleId}", result.Id);
-                return CreatedAtAction(nameof(GetById), new { id = result.Id },
+                _logger.LogInformation("roleModule creado exitosamente: ID={RoleModuleId}", result.RoleModuleId);
+                return CreatedAtAction(nameof(GetById), new { id = result.RoleModuleId },
                     ResponseApi<RoleModuleDTO>.Success(result, "roleModule creado exitosamente."));
             }
             catch (Exception ex)
@@ -206,21 +206,21 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Datos de entrada no válidos recibidos para actualizar un roleModule.");
                 return BadRequest(ResponseApi<RoleModuleDTO>.Error("Datos de entrada no válidos."));
             }
-            _logger.LogInformation("Actualizando roleModule con ID: {RoleModuleId}", roleModuleDTO.Id);
+            _logger.LogInformation("Actualizando roleModule con ID: {RoleModuleId}", roleModuleDTO.RoleModuleId);
             try
             {
                 var result = await _service.UpdateAsync(roleModuleDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("roleModule con ID {RoleModuleId} no encontrado.", roleModuleDTO.Id);
+                    _logger.LogWarning("roleModule con ID {RoleModuleId} no encontrado.", roleModuleDTO.RoleModuleId);
                     return NotFound(ResponseApi<RoleModuleDTO>.Error("roleModule no encontrado."));
                 }
-                _logger.LogInformation("roleModule actualizado exitosamente: ID={RoleModuleId}", result.Id);
+                _logger.LogInformation("roleModule actualizado exitosamente: ID={RoleModuleId}", result.RoleModuleId);
                 return Ok(ResponseApi<RoleModuleDTO>.Success(result, "roleModule actualizado exitosamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar roleModule con ID {RoleModuleId}.", roleModuleDTO.Id);
+                _logger.LogError(ex, "Error al actualizar roleModule con ID {RoleModuleId}.", roleModuleDTO.RoleModuleId);
                 return StatusCode(500, ResponseApi<RoleModuleDTO>.Error("Error interno del servidor."));
             }
         }
