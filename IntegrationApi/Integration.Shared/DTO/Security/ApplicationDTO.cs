@@ -2,7 +2,6 @@
 {
     public class ApplicationDTO
     {
-        public int ApplicationId { get; set; }
         public required string Code { get; set; }
         public required string Name { get; set; }
         public DateTime CreatedAt { get; set; } 

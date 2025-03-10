@@ -68,7 +68,22 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var applications = await _context.Applications.Where(a => a.IsActive == true).ToListAsync();
+                var applications = await _context.Applications
+                    .Include(a => a.Modules)
+                    .Include(a => a.Roles)
+                    .Where(a => a.IsActive)
+                    .AsNoTracking()
+                    .ToListAsync();
+                if (applications == null || !applications.Any())
+                {
+                    _logger.LogWarning("No se encontraron aplicaciones activas en la base de datos.");
+                    return Enumerable.Empty<Application>();
+                }
+                foreach (var app in applications)
+                {
+                    app.Modules ??= new List<Module>();
+                    app.Roles ??= new List<Role>();
+                }
                 _logger.LogInformation("Se obtuvieron {Count} aplicaciones de la base de datos.", applications.Count);
                 return applications;
             }
@@ -78,13 +93,14 @@ namespace Integration.Infrastructure.Repositories.Security
                 return Enumerable.Empty<Application>();
             }
         }
-
         public async Task<List<Application>> GetAllAsync(Expression<Func<Application, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo aplicaciones con un predicado específico.");
-                var applications = await _context.Applications.Where(predicate).ToListAsync();
+                var applications = await _context.Applications.Where(predicate)
+                    .AsNoTracking()
+                    .ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} aplicaciones.", applications.Count);
                 return applications;
             }
@@ -103,7 +119,9 @@ namespace Integration.Infrastructure.Repositories.Security
                 var query = _context.Applications.AsQueryable();
                 foreach (var predicado in predicates)
                 {
-                    query = query.Where(predicado);
+                    query = query
+                        .AsNoTracking()
+                        .Where(predicado);
                 }
                 var modules = await query.ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} aplicaciones tras aplicar múltiples predicados.", modules.Count);
@@ -120,7 +138,8 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var application = await _context.Applications.FindAsync(id);
+                var application = await _context.Applications
+                    .FindAsync(id);
                 if (application == null)
                 {
                     _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId}.", id);

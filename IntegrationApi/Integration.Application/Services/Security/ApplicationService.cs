@@ -132,14 +132,14 @@ namespace Integration.Application.Services.Security
 
         public async Task<ApplicationDTO> UpdateAsync(ApplicationDTO applicationDTO)
         {
-            _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.ApplicationId, applicationDTO.Name);
+            _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.Code, applicationDTO.Name);
             try
             {
                 var application = _mapper.Map<Integration.Core.Entities.Security.Application>(applicationDTO);
                 var updatedApplication = await _repository.UpdateAsync(application);
                 if (updatedApplication == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
+                    _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.Code);
                     return null;
                 }
                 _logger.LogInformation("Aplicación actualizada con éxito: {ApplicationId}, Nombre: {Name}", updatedApplication.Id, updatedApplication.Name);
@@ -147,7 +147,7 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
+                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", applicationDTO.Code);
                 throw;
             }
         }

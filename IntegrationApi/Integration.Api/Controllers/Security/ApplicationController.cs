@@ -59,7 +59,7 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId}.", id);
                     return NotFound(ResponseApi<ApplicationDTO>.Error("Aplicación no encontrada."));
                 }
-                _logger.LogInformation("Aplicación encontrada: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
+                _logger.LogInformation("Aplicación encontrada: ID={ApplicationId}, Nombre={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<ApplicationDTO>.Success(result));
             }
             catch (Exception ex)
@@ -168,8 +168,8 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se pudo crear la aplicación.");
                     return BadRequest(ResponseApi<ApplicationDTO>.Error("No se pudo crear la aplicación."));
                 }
-                _logger.LogInformation("Aplicación creada con éxito: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
-                return CreatedAtAction(nameof(GetById), new { id = result.ApplicationId },
+                _logger.LogInformation("Aplicación creada con éxito: ID={ApplicationId}, Nombre={Name}", result.Code, result.Name);
+                return CreatedAtAction(nameof(GetById), new { id = result.Code },
                     ResponseApi<ApplicationDTO>.Success(result, "Aplicación creada con éxito."));
             }
             catch (Exception ex)
@@ -188,21 +188,21 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió una solicitud con datos inválidos para actualizar una aplicación.");
                 return BadRequest(ResponseApi<ApplicationDTO>.Error("Datos de entrada inválidos."));
             }
-            _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.ApplicationId, applicationDTO.Name);
+            _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.Code, applicationDTO.Name);
             try
             {
                 var result = await _service.UpdateAsync(applicationDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
+                    _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.Code);
                     return NotFound(ResponseApi<ApplicationDTO>.Error("Aplicación no encontrada."));
                 }
-                _logger.LogInformation("Aplicación actualizada con éxito: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
+                _logger.LogInformation("Aplicación actualizada con éxito: ID={ApplicationId}, Nombre={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<ApplicationDTO>.Success(result, "Aplicación actualizada correctamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
+                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", applicationDTO.Code);
                 return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }
