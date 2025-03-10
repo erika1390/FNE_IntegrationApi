@@ -23,7 +23,8 @@ namespace Integration.Core.MappingProfiles
                 .ForMember(dest => dest.LockoutEnd, opt => opt.MapFrom(src => src.LockoutEnd))
                 .ForMember(dest => dest.LockoutEnabled, opt => opt.MapFrom(src => src.LockoutEnabled))
                 .ForMember(dest => dest.AccessFailedCount, opt => opt.MapFrom(src => src.AccessFailedCount))
-                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth));
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
+                .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src => src.UserRoles));
 
             CreateMap<UserDTO, User>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId))
@@ -41,7 +42,8 @@ namespace Integration.Core.MappingProfiles
                 .ForMember(dest => dest.LockoutEnd, opt => opt.MapFrom(src => src.LockoutEnd))
                 .ForMember(dest => dest.LockoutEnabled, opt => opt.MapFrom(src => src.LockoutEnabled))
                 .ForMember(dest => dest.AccessFailedCount, opt => opt.MapFrom(src => src.AccessFailedCount))
-                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth));
+                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
+                .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src => src.UserRoles));
         }
     }
 }
