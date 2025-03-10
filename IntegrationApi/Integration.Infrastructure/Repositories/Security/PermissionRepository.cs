@@ -124,6 +124,31 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
+        public async Task<Permission> GetByCodeAsync(string code)
+        {
+            try
+            {
+                var permission = await _context.Permissions
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+                if (permission == null)
+                {
+                    _logger.LogWarning("No se encontró el permiso con PermissionCode {PermissionCode}.", code);
+                    return null;
+                }
+
+                _logger.LogInformation("Permiso encontrado: PermissionCode: {PermissionCode}, Nombre: {Name}", permission.Code, permission.Name);
+
+                return permission;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el permiso con PermissionCode {PermissionCode}.", code);
+                return null;
+            }
+        }
+
         public async Task<Permission> GetByIdAsync(int id)
         {
             try

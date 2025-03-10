@@ -105,15 +105,18 @@ namespace Integration.Infrastructure.Repositories.Security
                 return new List<UserRole>();
             }
         }
-        public async Task<List<UserRole>> GetAllAsync(List<Expression<Func<UserRole, bool>>> predicates)
+
+        public Task<List<UserRole>> GetAllAsync(List<Expression<Func<UserRole, bool>>> predicates)
         {
             throw new NotImplementedException();
         }
-        public async Task<UserRole> GetByIdAsync(int id)
+
+        public Task<UserRole> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
-        public async Task<UserRole> UpdateAsync(UserRole userRole)
+
+        public Task<UserRole> UpdateAsync(UserRole userRole)
         {
             throw new NotImplementedException();
         }

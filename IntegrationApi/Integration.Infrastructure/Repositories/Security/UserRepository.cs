@@ -126,6 +126,31 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
+        public async Task<User> GetByCodeAsync(string code)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    _logger.LogWarning("No se encontró el usuario con UserCode {UserCode}.", code);
+                    return null;
+                }
+
+                _logger.LogInformation("Rol encontrado: UserCode: {UserCode}, Nombre: {Name}", user.Code, user.UserName);
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el usuario con UserCode {UserCode}.", code);
+                return null;
+            }
+        }
+
         public async Task<User> GetByIdAsync(int id)
         {
             try

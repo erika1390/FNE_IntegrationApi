@@ -121,6 +121,32 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
+
+        public async Task<Module> GetByCodeAsync(string code)
+        {
+            try
+            {
+                var module = await _context.Modules
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+                if (module == null)
+                {
+                    _logger.LogWarning("No se encontró el módulo con ModuleCode {ModuleCode}.", code);
+                    return null;
+                }
+
+                _logger.LogInformation("Módulo encontrado: ModuleCode: {ModuleCode}, Nombre: {Name}", module.Code, module.Name);
+
+                return module;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el módulo con ModuleCode {ModuleCode}.", code);
+                return null;
+            }
+        }
+
         public async Task<Module> GetByIdAsync(int id)
         {
             try

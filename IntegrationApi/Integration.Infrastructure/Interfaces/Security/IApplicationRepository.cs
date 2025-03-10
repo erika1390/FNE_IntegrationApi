@@ -4,6 +4,7 @@ namespace Integration.Infrastructure.Interfaces.Security
 {
     public interface IApplicationRepository : IRepositoryBase<Application>
     {
+        Task<Application> GetByCodeAsync(string code);
         Task<IEnumerable<Application>> GetAllActiveAsync();
     }
 }

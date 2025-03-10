@@ -125,6 +125,31 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
+        public async Task<Role> GetByCodeAsync(string code)
+        {
+            try
+            {
+                var role = await _context.Roles
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+                if (role == null)
+                {
+                    _logger.LogWarning("No se encontró el rol con RolCode {RolCode}.", code);
+                    return null;
+                }
+
+                _logger.LogInformation("Rol encontrado: RolCode: {RolCode}, Nombre: {Name}", role.Code, role.Name);
+
+                return role;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el rol con RolCode {RolCode}.", code);
+                return null;
+            }
+        }
+
         public async Task<Role> GetByIdAsync(int id)
         {
             try

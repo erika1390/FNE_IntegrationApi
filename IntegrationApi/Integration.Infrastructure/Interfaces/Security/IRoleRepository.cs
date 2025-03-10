@@ -10,6 +10,7 @@ namespace Integration.Infrastructure.Interfaces.Security
         Task<List<Role>> GetAllAsync(Expression<Func<Role, bool>> predicado);
         Task<List<Role>> GetAllAsync(List<Expression<Func<Role, bool>>> predicados);
         Task<Role> GetByIdAsync(int id);
+        Task<Role> GetByCodeAsync(string code);
         Task<Role> UpdateAsync(Role role);
     }
 }

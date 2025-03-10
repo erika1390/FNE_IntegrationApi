@@ -115,6 +115,31 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
+        public async Task<Application> GetByCodeAsync(string code)
+        {
+            try
+            {
+                var application = await _context.Applications
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+                if (application == null)
+                {
+                    _logger.LogWarning("No se encontró la aplicación con ApplicationeCode {ApplicationeCode}.", code);
+                }
+                else
+                {
+                    _logger.LogInformation("Aplicación encontrada ApplicationeCode: {ApplicationeCode}, Nombre: {Name}",
+                        application.Id, application.Name);
+                }
+                return application;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener la aplicación con ApplicationeCode {ApplicationeCode}.", code);
+                return null;
+            }
+        }
 
         public async Task<Application> GetByIdAsync(int id)
         {
