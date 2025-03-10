@@ -75,11 +75,7 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var users = await _context.Users.Include(u => u.UserRoles!)
-                                            .ThenInclude(ur => ur.Role)
-                                            .Where(r => r.IsActive == true)
-                                            .AsNoTracking()
-                                            .ToListAsync();
+                var users = await _context.Users.ToListAsync();
 
                 _logger.LogInformation("Se obtuvieron {Count} usuarios de la base de datos.", users.Count);
                 return users;
@@ -97,8 +93,6 @@ namespace Integration.Infrastructure.Repositories.Security
             {
                 _logger.LogInformation("Obteniendo usuarios con un predicado específico.");
                 var users = await _context.Users
-                    .Include(u => u.UserRoles!)
-                        .ThenInclude(ur => ur.Role)
                     .Where(predicate)
                     .ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} usuarios.", users.Count);
@@ -119,9 +113,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 var query = _context.Users.AsQueryable();
                 foreach (var predicado in predicates)
                 {
-                    query = query.Include(u => u.UserRoles!)
-                                .ThenInclude(ur => ur.Role)
-                                .Where(predicado);
+                    query = query.Where(predicado);
                 }
                 var users = await query.ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} usuarios tras aplicar múltiples predicados.", users.Count);
@@ -138,10 +130,7 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var user = await _context.Users.Include(u => u.UserRoles!)
-                                            .ThenInclude(ur => ur.Role)
-                                            .AsNoTracking()
-                                            .FirstOrDefaultAsync(r => r.Id == id);
+                var user = await _context.Users.FirstOrDefaultAsync(r => r.Id == id);
                 if (user == null)
                 {
                     _logger.LogWarning("No se encontró el usuario con ID {UserId}.", id);
