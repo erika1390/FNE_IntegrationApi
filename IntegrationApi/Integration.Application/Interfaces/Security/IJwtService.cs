@@ -1,7 +1,8 @@
-﻿namespace Integration.Application.Interfaces.Security
+﻿using Integration.Shared.DTO.Security;
+namespace Integration.Application.Interfaces.Security
 {
     public interface IJwtService
     {
-        string GenerateToken(string username, string role);
+        Task<string> GenerateTokenAsync(LoginRequestDTO request);        
     }
 }

@@ -2,6 +2,8 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 namespace Integration.Api.Controllers.Security
 {
@@ -26,16 +28,13 @@ namespace Integration.Api.Controllers.Security
             try
             {
                 // Validación de entrada
-                if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+                if (string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))
                 {
                     throw new ValidationException("El usuario y la contraseña son obligatorios.");
                 }
-                _logger.LogInformation($"Intento de inicio de sesión para el usuario: {request.Username}");
-                // Buscar usuario en la base de datos usando GetAllAsync con filtro
-                var users = await _userService.GetAllAsync(u => u.UserName == request.Username && u.IsActive == true);
-                var usuario = users.FirstOrDefault();
-                // Generar el token con el rol del usuario
-                var token = _jwtService.GenerateToken(usuario.UserName, "Administrador");
+                _logger.LogInformation($"Intento de inicio de sesión para el usuario: {request.UserName}");
+
+                var token = await _jwtService.GenerateTokenAsync(request); 
                 return Ok(ResponseApi<string>.Success(token, "Autenticación exitosa."));
             }
             catch (ValidationException ve)
