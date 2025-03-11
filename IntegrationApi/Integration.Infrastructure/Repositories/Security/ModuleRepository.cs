@@ -40,14 +40,17 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string code)
         {
             try
             {
-                var module = await _context.Modules.FindAsync(id);
+                var module = await _context.Modules
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (module == null)
                 {
-                    _logger.LogWarning("No se encontró el módulo con ID {ModuleId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el módulo con ModuleCode {ModuleCode} para eliminar.", code);
                     return false;
                 }
 
@@ -57,17 +60,17 @@ namespace Integration.Infrastructure.Repositories.Security
                 _context.Modules.Update(module);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Módulo desactivado: {ModuleId}", id);
+                _logger.LogInformation("Módulo desactivado: {ModuleCode}", code);
                 return true;
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error de base de datos al eliminar el módulo con ID {ModuleId}.", id);
+                _logger.LogError(ex, "Error de base de datos al eliminar el módulo con ModuleCode {ModuleCode}.", code);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al eliminar el módulo con ID {ModuleId}.", id);
+                _logger.LogError(ex, "Error de base de datos al eliminar el módulo con ModuleCode {ModuleCode}.", code);
                 return false;
             }
         }

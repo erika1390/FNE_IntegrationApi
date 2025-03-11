@@ -34,25 +34,25 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string code)
         {
-            _logger.LogInformation("Eliminando aplicación con ID: {ApplicationId}", id);
+            _logger.LogInformation("Eliminando aplicación con ApplicationCode: {ApplicationCode}", code);
             try
             {
-                bool success = await _repository.DeleteAsync(id);
+                bool success = await _repository.DeleteAsync(code);
                 if (success)
                 {
-                    _logger.LogInformation("Aplicación con ID {ApplicationId} eliminada correctamente.", id);
+                    _logger.LogInformation("Aplicación con ApplicationCode {ApplApplicationCodeicationId} eliminada correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para eliminar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la aplicación con ID {ApplicationId}.", id);
+                _logger.LogError(ex, "Error al eliminar la aplicación con ApplicationCode {ApplicationCode}.", code);
                 throw;
             }
         }
@@ -109,45 +109,46 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-        public async Task<ApplicationDTO> GetByIdAsync(int id)
+
+        public async Task<ApplicationDTO> GetByCodeAsync(string code)
         {
-            _logger.LogInformation("Buscando aplicación con ID: {ApplicationId}", id);
+            _logger.LogInformation("Buscando aplicación con ApplicationCode: {ApplicationCode}", code);
             try
             {
-                var application = await _repository.GetByIdAsync(id);
+                var application = await _repository.GetByCodeAsync(code);
                 if (application == null)
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId}.", id);
+                    _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode}.", code);
                     return null;
                 }
-                _logger.LogInformation("Aplicación encontrada: {ApplicationId}, Nombre: {Name}", application.Id, application.Name);
+                _logger.LogInformation("Aplicación encontrada: {ApplicationCode}, Nombre: {Name}", application.Code, application.Name);
                 return _mapper.Map<ApplicationDTO>(application);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener la aplicación con ID {ApplicationId}.", id);
+                _logger.LogError(ex, "Error al obtener la aplicación con ApplicationCode {ApplicationCode}.", code);
                 throw;
             }
         }
 
         public async Task<ApplicationDTO> UpdateAsync(ApplicationDTO applicationDTO)
         {
-            _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.ApplicationId, applicationDTO.Name);
+            _logger.LogInformation("Actualizando aplicación con ApplicatioCode: {ApplicatioCode}, Nombre: {Name}", applicationDTO.Code, applicationDTO.Name);
             try
             {
                 var application = _mapper.Map<Integration.Core.Entities.Security.Application>(applicationDTO);
                 var updatedApplication = await _repository.UpdateAsync(application);
                 if (updatedApplication == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
+                    _logger.LogWarning("No se pudo actualizar la aplicación con ApplicatioCode {ApplicatioCode}.", applicationDTO.Code);
                     return null;
                 }
-                _logger.LogInformation("Aplicación actualizada con éxito: {ApplicationId}, Nombre: {Name}", updatedApplication.Id, updatedApplication.Name);
+                _logger.LogInformation("Aplicación actualizada con éxito: {ApplicatioCode}, Nombre: {Name}", updatedApplication.Code, updatedApplication.Name);
                 return _mapper.Map<ApplicationDTO>(updatedApplication);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
+                _logger.LogError(ex, "Error al actualizar la aplicación con Code {ApplicatioCode}.", applicationDTO.Code);
                 throw;
             }
         }

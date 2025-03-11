@@ -14,19 +14,6 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             _mock = new Mock<IModuleRepository>();
         }
         [Test]
-        public async Task GetByIdAsync_ShouldReturnModule()
-        {
-            // Arrange
-            var module = new Module { Id = 1, Code = "MOD0000001", Name = "Aplicaciones",
-                ApplicationId = 1, IsActive = true };
-            _mock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(module);
-            // Act
-            var result = await _mock.Object.GetByIdAsync(1);
-            // Assert
-            Assert.NotNull(result);
-            Assert.AreEqual(1, result.Id);
-        }
-        [Test]
         public async Task GetAllAsync_WithPredicate_ShouldReturnFilteredModules()
         {
             // Arrange
@@ -97,9 +84,9 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task DeleteAsync_ShouldReturnTrue()
         {
             // Arrange
-            _mock.Setup(repo => repo.DeleteAsync(1)).ReturnsAsync(true);
+            _mock.Setup(repo => repo.DeleteAsync("MOD0000001")).ReturnsAsync(true);
             // Act
-            var result = await _mock.Object.DeleteAsync(1);
+            var result = await _mock.Object.DeleteAsync("MOD0000001");
             // Assert
             Assert.IsTrue(result);
         }

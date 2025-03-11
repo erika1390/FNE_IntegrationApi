@@ -39,14 +39,17 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string code)
         {
             try
             {
-                var application = await _context.Applications.FindAsync(id);
+                var application = await _context.Applications
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (application == null)
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para eliminar.", code);
                     return false;
                 }
 
@@ -54,12 +57,12 @@ namespace Integration.Infrastructure.Repositories.Security
                 application.UpdatedAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Aplicación desactivada: {ApplicationId}", id);
+                _logger.LogInformation("Aplicación desactivada: {ApplicationId}", code);
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la aplicación con ID {ApplicationId}.", id);
+                _logger.LogError(ex, "Error al eliminar la aplicación con ID {ApplicationId}.", code);
                 return false;
             }
         }
@@ -168,10 +171,13 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var applicationEntity = await _context.Applications.FindAsync(application.Id);
+                var applicationEntity = await _context.Applications
+                    .Where(a => a.Code == application.Code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (applicationEntity == null)
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para actualizar.", application.Id);
+                    _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para actualizar.", application.Code);
                     return null;
                 }
 
@@ -183,14 +189,14 @@ namespace Integration.Infrastructure.Repositories.Security
                 _context.Applications.Update(applicationEntity);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Aplicación actualizada: {ApplicationId}, Nombre: {Name}",
-                    application.Id, application.Name);
+                _logger.LogInformation("Aplicación actualizada: {ApplicationCode}, Nombre: {Name}",
+                    application.Code, application.Name);
 
                 return applicationEntity;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", application.Id);
+                _logger.LogError(ex, "Error al actualizar la aplicación con ApplicationCode {ApplicationCode}.", application.Code);
                 return null;
             }
         }

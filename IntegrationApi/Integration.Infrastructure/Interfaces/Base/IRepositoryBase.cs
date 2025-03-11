@@ -4,11 +4,12 @@ namespace Integration.Infrastructure.Interfaces.Base
 {
     public interface IRepositoryBase<T> where T : BaseEntity
     {
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByCodeAsync(string code);
         Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
         Task<List<T>> GetAllAsync(List<Expression<Func<T, bool>>> predicate);
+        Task<IEnumerable<T>> GetAllActiveAsync();
         Task<T> CreateAsync(T entidad);
         Task<T> UpdateAsync(T entidad);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(string code);
     }
 }

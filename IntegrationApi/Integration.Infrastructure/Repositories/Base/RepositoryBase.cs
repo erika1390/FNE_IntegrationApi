@@ -2,6 +2,7 @@
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+
 using System.Linq.Expressions;
 namespace Integration.Infrastructure.Repositories.Base
 {
@@ -23,15 +24,20 @@ namespace Integration.Infrastructure.Repositories.Base
             return entidad;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string code)
         {
-            var entity = await _dbSet.FindAsync(id);
+            var entity = await _dbSet.FindAsync(code);
             if (entity == null)
                 return false;
 
             _dbSet.Remove(entity);
             await _applicationDbContext.SaveChangesAsync();
             return true;
+        }
+
+        public Task<IEnumerable<T>> GetAllActiveAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicado)
@@ -47,6 +53,11 @@ namespace Integration.Infrastructure.Repositories.Base
                 query.Where(item);
             }
             return await query.ToListAsync();
+        }
+
+        public Task<T> GetByCodeAsync(string code)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<T> GetByIdAsync(int id)

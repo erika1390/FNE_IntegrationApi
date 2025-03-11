@@ -3,6 +3,8 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -45,35 +47,7 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
-        /// <summary>
-        /// Obtiene un módulo por su ID.
-        /// </summary>
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            if (id <= 0)
-            {
-                _logger.LogWarning("ID no válido recibido ({ModuleId}) en la solicitud de búsqueda.", id);
-                return BadRequest(ResponseApi<ModuleDTO>.Error("El ID debe ser mayor que 0."));
-            }
-            _logger.LogInformation("Buscando módulo con ID: {ModuleId}", id);
-            try
-            {
-                var result = await _service.GetByIdAsync(id);
-                if (result == null)
-                {
-                    _logger.LogWarning("Módulo con ID {ModuleId} no encontrado.", id);
-                    return NotFound(ResponseApi<ModuleDTO>.Error("Módulo no encontrado."));
-                }
-                _logger.LogInformation("Módulo encontrado: ID={ModuleId}, Name={Name}", result.ModuleId, result.Name);
-                return Ok(ResponseApi<ModuleDTO>.Success(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al recuperar módulo con ID {ModuleId}.", id);
-                return StatusCode(500, ResponseApi<ModuleDTO>.Error("Error interno del servidor."));
-            }
-        }
+        
 
         /// <summary>
         /// Obtiene módulos basados en un solo filtro.
@@ -162,6 +136,34 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode(string code)
+        {
+            if (code.IsNullOrEmpty())
+            {
+                _logger.LogWarning("Se recibió un ModuleCode no válido ({ModuleCode}) en la solicitud de búsqueda.", code);
+                return BadRequest(ResponseApi<ModuleDTO>.Error("El ModuleCode no debe ser nulo o vacio"));
+            }
+            _logger.LogInformation("Buscando modulo con ModuleCode: {ModuleCode}", code);
+            try
+            {
+                var result = await _service.GetByCodeAsync(code);
+                if (result == null)
+                {
+                    _logger.LogWarning("No se encontró el modulo con ModuleCode {ModuleCode}.", code);
+                    return NotFound(ResponseApi<ModuleDTO>.Error("Modulo no encontrada."));
+                }
+                _logger.LogInformation("|Modulo encontrada: ModuleCode={ModuleCode}, Nombre={Name}", result.Code, result.Name);
+                return Ok(ResponseApi<ModuleDTO>.Success(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el modulo con ModuleCode {ModuleCode}.", code);
+                return StatusCode(500, ResponseApi<ModuleDTO>.Error("Error interno del servidor."));
+            }
+        }
+
+
         /// <summary>
         /// Crea un nuevo módulo.
         /// </summary>
@@ -183,8 +185,8 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("Fallo al crear el módulo.");
                     return BadRequest(ResponseApi<ModuleDTO>.Error("Fallo al crear el módulo."));
                 }
-                _logger.LogInformation("Módulo creado exitosamente: ID={ModuleId}, Name={Name}", result.ModuleId, result.Name);
-                return CreatedAtAction(nameof(GetById), new { id = result.ModuleId },
+                _logger.LogInformation("Módulo creado exitosamente: ModuleCode={ModuleCode}, Name={Name}", result.Code, result.Name);
+                return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
                     ResponseApi<ModuleDTO>.Success(result, "Módulo creado exitosamente."));
             }
             catch (Exception ex)
@@ -206,21 +208,21 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Datos de entrada no válidos recibidos para actualizar un módulo.");
                 return BadRequest(ResponseApi<ModuleDTO>.Error("Datos de entrada no válidos."));
             }
-            _logger.LogInformation("Actualizando módulo con ID: {ModuleId}, Name: {Name}", moduleDTO.ModuleId, moduleDTO.Name);
+            _logger.LogInformation("Actualizando módulo con ModuleCode: {ModuleCode}, Name: {Name}", moduleDTO.Code, moduleDTO.Name);
             try
             {
                 var result = await _service.UpdateAsync(moduleDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("Módulo con ID {ModuleId} no encontrado.", moduleDTO.ModuleId);
+                    _logger.LogWarning("Módulo con ModuleCode {ModuleCode} no encontrado.", moduleDTO.Code);
                     return NotFound(ResponseApi<ModuleDTO>.Error("Módulo no encontrado."));
                 }
-                _logger.LogInformation("Módulo actualizado exitosamente: ID={ModuleId}, Name={Name}", result.ModuleId, result.Name);
+                _logger.LogInformation("Módulo creado exitosamente: ModuleCode={ModuleCode}, Name={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<ModuleDTO>.Success(result, "Módulo actualizado exitosamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar módulo con ID {ModuleId}.", moduleDTO.ModuleId);
+                _logger.LogError(ex, "Error al actualizar módulo con ModuleCode {ModuleCode}.", moduleDTO.Code);
                 return StatusCode(500, ResponseApi<ModuleDTO>.Error("Error interno del servidor."));
             }
         }
@@ -228,30 +230,30 @@ namespace Integration.Api.Controllers.Security
         /// <summary>
         /// Elimina un módulo por su ID.
         /// </summary>
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{code}")]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string code)
         {
-            if (id <= 0)
+            if (code.IsNullOrEmpty())
             {
-                _logger.LogWarning("ID no válido recibido ({ModuleId}) en la solicitud de eliminación.", id);
-                return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor que 0."));
+                _logger.LogWarning("Code no válido recibido ({ModuleCode}) en la solicitud de eliminación.", code);
+                return BadRequest(ResponseApi<bool>.Error("El ModuleCode debe ser nulo o vacio."));
             }
-            _logger.LogInformation("Eliminando módulo con ID: {ModuleId}", id);
+            _logger.LogInformation("Eliminando módulo con ModuleCode: {ModuleCode}", code);
             try
             {
-                var result = await _service.DeleteAsync(id);
+                var result = await _service.DeleteAsync(code);
                 if (!result)
                 {
-                    _logger.LogWarning("Módulo con ID {ModuleId} no encontrado.", id);
+                    _logger.LogWarning("Módulo con ModuleCode {ModuleCode} no encontrado.", code);
                     return NotFound(ResponseApi<bool>.Error("Módulo no encontrado."));
                 }
-                _logger.LogInformation("Módulo eliminado exitosamente: ID={ModuleId}", id);
+                _logger.LogInformation("Módulo eliminado exitosamente: ModuleCode={ModuleCode}", code);
                 return Ok(ResponseApi<bool>.Success(result, "Módulo eliminado exitosamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar módulo con ID {ModuleId}.", id);
+                _logger.LogError(ex, "Error al eliminar módulo con ModuleCode {ModuleCode}.", code);
                 return StatusCode(500, ResponseApi<bool>.Error("Error interno del servidor."));
             }
         }

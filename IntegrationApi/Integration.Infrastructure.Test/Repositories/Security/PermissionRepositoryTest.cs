@@ -14,24 +14,6 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             _mock = new Mock<IPermissionRepository>();
         }
         [Test]
-        public async Task GetByIdAsync_ShouldReturnPermission()
-        {
-            // Arrange
-            var Permission = new Permission
-            {
-                Id = 1,
-                Code = "PER0000001",
-                Name = "Consultar Aplicacion",
-                IsActive = true
-            };
-            _mock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(Permission);
-            // Act
-            var result = await _mock.Object.GetByIdAsync(1);
-            // Assert
-            Assert.NotNull(result);
-            Assert.AreEqual(1, result.Id);
-        }
-        [Test]
         public async Task GetAllAsync_WithPredicate_ShouldReturnFilteredPermissions()
         {
             // Arrange
@@ -102,9 +84,9 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task DeleteAsync_ShouldReturnTrue()
         {
             // Arrange
-            _mock.Setup(repo => repo.DeleteAsync(1)).ReturnsAsync(true);
+            _mock.Setup(repo => repo.DeleteAsync("PER0000001")).ReturnsAsync(true);
             // Act
-            var result = await _mock.Object.DeleteAsync(1);
+            var result = await _mock.Object.DeleteAsync("PER0000001");
             // Assert
             Assert.IsTrue(result);
         }

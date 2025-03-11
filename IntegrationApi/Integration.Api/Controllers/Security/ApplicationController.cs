@@ -3,6 +3,7 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -42,29 +43,29 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode(string code)
         {
-            if (id <= 0)
+            if (code.IsNullOrEmpty())
             {
-                _logger.LogWarning("Se recibió un ID no válido ({ApplicationId}) en la solicitud de búsqueda.", id);
-                return BadRequest(ResponseApi<ApplicationDTO>.Error("El ID debe ser mayor a 0."));
+                _logger.LogWarning("Se recibió un ApplicationCode no válido ({ApplicationCode}) en la solicitud de búsqueda.", code);
+                return BadRequest(ResponseApi<ApplicationDTO>.Error("El ApplicationCode no debe ser nulo o vacio"));
             }
-            _logger.LogInformation("Buscando aplicación con ID: {ApplicationId}", id);
+            _logger.LogInformation("Buscando aplicación con ApplicationCode: {ApplicationCode}", code);
             try
             {
-                var result = await _service.GetByIdAsync(id);
+                var result = await _service.GetByCodeAsync(code);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId}.", id);
+                    _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode}.", code);
                     return NotFound(ResponseApi<ApplicationDTO>.Error("Aplicación no encontrada."));
                 }
-                _logger.LogInformation("Aplicación encontrada: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
+                _logger.LogInformation("Aplicación encontrada: ApplicationCode={ApplicationCode}, Nombre={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<ApplicationDTO>.Success(result));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener la aplicación con ID {ApplicationId}.", id);
+                _logger.LogError(ex, "Error al obtener la aplicación con ApplicationCode {ApplicationCode}.", code);
                 return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }
@@ -168,8 +169,8 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se pudo crear la aplicación.");
                     return BadRequest(ResponseApi<ApplicationDTO>.Error("No se pudo crear la aplicación."));
                 }
-                _logger.LogInformation("Aplicación creada con éxito: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
-                return CreatedAtAction(nameof(GetById), new { id = result.ApplicationId },
+                _logger.LogInformation("Aplicación creada con éxito: ApplicatioCode={ApplicatioCode}, Nombre={Name}", result.Code, result.Name);
+                return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
                     ResponseApi<ApplicationDTO>.Success(result, "Aplicación creada con éxito."));
             }
             catch (Exception ex)
@@ -188,49 +189,49 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió una solicitud con datos inválidos para actualizar una aplicación.");
                 return BadRequest(ResponseApi<ApplicationDTO>.Error("Datos de entrada inválidos."));
             }
-            _logger.LogInformation("Actualizando aplicación con ID: {ApplicationId}, Nombre: {Name}", applicationDTO.ApplicationId, applicationDTO.Name);
+            _logger.LogInformation("Actualizando aplicación con ApplicatioCode: {ApplicatioCode}, Nombre: {Name}", applicationDTO.Code, applicationDTO.Name);
             try
             {
                 var result = await _service.UpdateAsync(applicationDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
+                    _logger.LogWarning("No se pudo actualizar la aplicación con ApplicatioCode {ApplicatioCode}.", applicationDTO.Code);
                     return NotFound(ResponseApi<ApplicationDTO>.Error("Aplicación no encontrada."));
                 }
-                _logger.LogInformation("Aplicación actualizada con éxito: ID={ApplicationId}, Nombre={Name}", result.ApplicationId, result.Name);
+                _logger.LogInformation("Aplicación actualizada con éxito: ApplicatioCode={ApplicatioCode}, Nombre={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<ApplicationDTO>.Success(result, "Aplicación actualizada correctamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la aplicación con ID {ApplicationId}.", applicationDTO.ApplicationId);
+                _logger.LogError(ex, "Error al actualizar la aplicación con ApplicatioCode {ApplicatioCode}.", applicationDTO.Code);
                 return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{code}")]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string code)
         {
-            if (id <= 0)
+            if (code.IsNullOrEmpty())
             {
-                _logger.LogWarning("Se recibió un ID no válido ({ApplicationId}) en la solicitud de eliminación.", id);
-                return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor a 0."));
+                _logger.LogWarning("Se recibió un Code no válido ({ApplicationCode}) en la solicitud de eliminación.", code);
+                return BadRequest(ResponseApi<bool>.Error("El Code debe ser nulo o vacio"));
             }
-            _logger.LogInformation("Eliminando aplicación con ID: {ApplicationId}", id);
+            _logger.LogInformation("Eliminando aplicación con Code: {ApplicationCode}", code);
             try
             {
-                var result = await _service.DeleteAsync(id);
+                var result = await _service.DeleteAsync(code);
                 if (!result)
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para eliminar.", code);
                     return NotFound(ResponseApi<bool>.Error("Aplicación no encontrada."));
                 }
-                _logger.LogInformation("Aplicación eliminada con éxito: ID={ApplicationId}", id);
+                _logger.LogInformation("Aplicación eliminada con éxito: ApplicationCode={ApplicationCode}", code);
                 return Ok(ResponseApi<bool>.Success(result, "Aplicación eliminada correctamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la aplicación con ID {ApplicationId}.", id);
+                _logger.LogError(ex, "Error al eliminar la aplicación con ApplicationCode {ApplicationCode}.", code);
                 return StatusCode(500, ResponseApi<bool>.Error("Error interno del servidor."));
             }
         }

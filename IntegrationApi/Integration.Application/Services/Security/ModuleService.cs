@@ -38,25 +38,25 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string code)
         {
-            _logger.LogInformation("Eliminando modulo con ID: {ModuleId}", id);
+            _logger.LogInformation("Eliminando modulo con ModuleCode: {ModuleCode}", code);
             try
             {
-                bool success = await _repository.DeleteAsync(id);
+                bool success = await _repository.DeleteAsync(code);
                 if (success)
                 {
-                    _logger.LogInformation("Modulo con ID {ModuleId} eliminada correctamente.", id);
+                    _logger.LogInformation("Modulo con ModuleCode {ModuleCode} eliminada correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el modulo con ID {ModuleId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el modulo con ModuleCode {ModuleCode} para eliminar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el modulo con ID {ModuleId}.", id);
+                _logger.LogError(ex, "Error al eliminar el modulo con ModuleCode {ModuleCode}.", code);
                 throw;
             }
         }
@@ -116,45 +116,45 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<ModuleDTO> GetByIdAsync(int id)
+        public async Task<ModuleDTO> GetByCodeAsync(string code)
         {
-            _logger.LogInformation("Buscando modulos con ID: {ModuleId}", id);
+            _logger.LogInformation("Buscando aplicación con ModuleCode: {ModuleCode}", code);
             try
             {
-                var molule = await _repository.GetByIdAsync(id);
-                if (molule == null)
+                var module = await _repository.GetByCodeAsync(code);
+                if (module == null)
                 {
-                    _logger.LogWarning("No se encontró el modulo con ID {ModuleId}.", id);
+                    _logger.LogWarning("No se encontró la modulo con ModuleCode {ModuleCode}.", code);
                     return null;
                 }
-                _logger.LogInformation("Modulo encontrada: {ModuleId}, Nombre: {Name}", molule.Id, molule.Name);
-                return _mapper.Map<ModuleDTO>(molule);
+                _logger.LogInformation("Modulo encontrada: {ModuleCode}, Nombre: {Name}", module.Code, module.Name);
+                return _mapper.Map<ModuleDTO>(module);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el modulo con ID {ModuleId}.", id);
+                _logger.LogError(ex, "Error al obtener el modulo con ModuleCode {ModuleCode}.", code);
                 throw;
             }
         }
 
         public async Task<ModuleDTO> UpdateAsync(ModuleDTO moduleDTO)
         {
-            _logger.LogInformation("Actualizando modulo con ID: {ModuleId}, Nombre: {Name}", moduleDTO.ModuleId, moduleDTO.Name);
+            _logger.LogInformation("Módulo creado exitosamente: ModuleCode={ModuleCode}, Name={Name}", moduleDTO.Code, moduleDTO.Name);
             try
             {
                 var module = _mapper.Map<Integration.Core.Entities.Security.Module>(moduleDTO);
                 var updatedModule = await _repository.UpdateAsync(module);
                 if (updatedModule == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar el modulo con ID {ModuleId}.", moduleDTO.ModuleId);
+                    _logger.LogWarning("Módulo con ModuleCode {ModuleCode} no encontrado.", moduleDTO.Code);
                     return null;
                 }
-                _logger.LogInformation("Modulo actualizado con éxito: {ModuleId}, Nombre: {Name}", updatedModule.Id, updatedModule.Name);
+                _logger.LogInformation("Modulo actualizado con éxito: ModuleCode: {ModuleCode}, Nombre: {Name}", updatedModule.Code, updatedModule.Name);
                 return _mapper.Map<ModuleDTO>(updatedModule);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el modulo con ID {ModuleDTO}.", moduleDTO.ModuleId);
+                _logger.LogError(ex, "Error al actualizar módulo con ModuleCode {ModuleCode}.", moduleDTO.Code);
                 throw;
             }
         }

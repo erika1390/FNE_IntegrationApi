@@ -4,7 +4,5 @@ namespace Integration.Infrastructure.Interfaces.Security
 {
     public interface IPermissionRepository : IRepositoryBase<Permission>
     {
-        Task<Permission> GetByCodeAsync(string code);
-        Task<IEnumerable<Permission>> GetAllActiveAsync();
     }
 }

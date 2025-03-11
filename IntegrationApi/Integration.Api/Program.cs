@@ -50,7 +50,7 @@ builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IRoleModuleService, RoleModuleService>();
+//builder.Services.AddScoped<IRoleModuleService, RoleModuleService>();
 
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
@@ -58,7 +58,7 @@ builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRoleModuleRepository, RoleModuleRepository>();
+//builder.Services.AddScoped<IRoleModuleRepository, RoleModuleRepository>();
 
 // Configurar Identity
 builder.Services.AddIdentity<User, Role>(options =>

@@ -13,18 +13,6 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         {
             _mock = new Mock<IApplicationRepository>();
         }
-         [Test]
-        public async Task GetByIdAsync_ShouldReturnApplication()
-        {
-            // Arrange
-            var application = new Application { Id = 1, Code = "APP0000001", Name = "Saga 2.0", IsActive = true };
-            _mock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(application);
-            // Act
-            var result = await _mock.Object.GetByIdAsync(1);
-            // Assert
-            Assert.NotNull(result);
-            Assert.AreEqual(1, result.Id);
-        }
         [Test]
         public async Task GetAllAsync_WithPredicate_ShouldReturnFilteredApplications()
         {
@@ -97,10 +85,10 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task DeleteAsync_ShouldReturnTrue()
         {
             // Arrange
-            _mock.Setup(repo => repo.DeleteAsync(1))
+            _mock.Setup(repo => repo.DeleteAsync("APP0000001"))
                 .ReturnsAsync(true);
             // Act
-            var result = await _mock.Object.DeleteAsync(1);
+            var result = await _mock.Object.DeleteAsync("APP0000001");
             // Assert
             Assert.IsTrue(result);
         }

@@ -35,25 +35,25 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string code)
         {
-            _logger.LogInformation("Eliminando permiso con ID: {PermissionId}", id);
+            _logger.LogInformation("Eliminando permiso con PermissionId: {PermissionId}", code);
             try
             {
-                bool success = await _repository.DeleteAsync(id);
+                bool success = await _repository.DeleteAsync(code);
                 if (success)
                 {
-                    _logger.LogInformation("Permiso con ID {PermissionId} eliminada correctamente.", id);
+                    _logger.LogInformation("Permiso con ID {PermissionId} eliminada correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el permiso con PermissionId {PermissionId} para eliminar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el permiso con ID {PermissionId}.", id);
+                _logger.LogError(ex, "Error al eliminar el permiso con PermissionId {PermissionId}.", code);
                 throw;
             }
         }
@@ -113,45 +113,45 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<PermissionDTO> GetByIdAsync(int id)
+        public async Task<PermissionDTO> GetByCodeAsync(string code)
         {
-            _logger.LogInformation("Buscando permisos con ID: {PermissionId}", id);
+            _logger.LogInformation("Buscando pemiso con PermissionCode: {PermissionCode}", code);
             try
             {
-                var permission = await _repository.GetByIdAsync(id);
+                var permission = await _repository.GetByCodeAsync(code);
                 if (permission == null)
                 {
-                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId}.", id);
+                    _logger.LogWarning("No se encontró el permiso con PermissionCode {PermissionCode}.", code);
                     return null;
                 }
-                _logger.LogInformation("Permiso encontrada: {PermissionId}, Nombre: {Name}", permission.Id, permission.Name);
+                _logger.LogInformation("Permiso encontrada: PermissionCode: {PermissionCode}, Nombre: {Name}", permission.Code, permission.Name);
                 return _mapper.Map<PermissionDTO>(permission);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el permiso con ID {PermissionId}.", id);
+                _logger.LogError(ex, "Error al obtener el permiso con PermissionCode {PermissionCode}.", code);
                 throw;
             }
         }
 
         public async Task<PermissionDTO> UpdateAsync(PermissionDTO permissionDTO)
         {
-            _logger.LogInformation("Actualizando permiso con ID: {PermissionId}, Nombre: {Name}", permissionDTO.PermissionId, permissionDTO.Name);
+            _logger.LogInformation("Permiso creado exitosamente: PermissionCode={PermissionCode}, Name={Name}", permissionDTO.Code, permissionDTO.Name);
             try
             {
                 var permission = _mapper.Map<Integration.Core.Entities.Security.Permission>(permissionDTO);
                 var updatedPermission = await _repository.UpdateAsync(permission);
                 if (updatedPermission == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar el permiso con ID {PermissionId}.", permissionDTO.PermissionId);
+                    _logger.LogWarning("No se pudo actualizar el permiso con PermissionCode {PermissionCode}.", permissionDTO.Code);
                     return null;
                 }
-                _logger.LogInformation("Permiso actualizado con éxito: {PermissionId}, Nombre: {Name}", updatedPermission.Id, updatedPermission.Name);
+                _logger.LogInformation("Permiso actualizado con éxito: PermissionCode: {PermissionCode}, Nombre: {Name}", updatedPermission.Code, updatedPermission.Name);
                 return _mapper.Map<PermissionDTO>(updatedPermission);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el permiso con ID {permissionDTO}.", permissionDTO.PermissionId);
+                _logger.LogError(ex, "Error al actualizar el permiso con PermissionCode {PermissionCode}.", permissionDTO.Code);
                 throw;
             }
         }

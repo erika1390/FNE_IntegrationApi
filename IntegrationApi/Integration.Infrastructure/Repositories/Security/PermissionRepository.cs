@@ -42,31 +42,34 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string code)
         {
             try
             {
-                var permission = await _context.Permissions.FindAsync(id);
+                var permission = await _context.Permissions
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (permission == null)
                 {
-                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el permiso con PermissionCode {PermissionCode} para eliminar.", code);
                     return false;
                 }
                 permission.IsActive = false;
                 permission.UpdatedAt = DateTime.UtcNow;
                 _context.Permissions.Update(permission);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Permiso desactivado: {PermissionId}", id);
+                _logger.LogInformation("Permiso desactivado: {PermissionCode}", code);
                 return true;
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error de base de datos al eliminar el pemiso con ID {PermissionId}.", id);
+                _logger.LogError(ex, "Error de base de datos al eliminar el pemiso con PermissionCode {PermissionCode}.", code);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al eliminar el permiso con ID {PermissionId}.", id);
+                _logger.LogError(ex, "Error inesperado al eliminar el permiso con PermissionCode {PermissionCode}.", code);
                 return false;
             }
         }
