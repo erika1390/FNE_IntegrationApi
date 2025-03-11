@@ -143,29 +143,6 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<Application> GetByIdAsync(int id)
-        {
-            try
-            {
-                var application = await _context.Applications.FindAsync(id);
-                if (application == null)
-                {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId}.", id);
-                }
-                else
-                {
-                    _logger.LogInformation("Aplicación encontrada: {ApplicationId}, Nombre: {Name}",
-                        application.Id, application.Name);
-                }
-                return application;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener la aplicación con ID {ApplicationId}.", id);
-                return null;
-            }
-        }
-
         public async Task<Application> UpdateAsync(Application application)
         {
             try

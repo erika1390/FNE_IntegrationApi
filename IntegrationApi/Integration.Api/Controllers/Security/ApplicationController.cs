@@ -209,7 +209,7 @@ namespace Integration.Api.Controllers.Security
 
         [HttpDelete("{code}")]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> Delete(string code)
+        public async Task<IActionResult> Deactivate(string code)
         {
             if (string.IsNullOrEmpty(code))
             {
@@ -219,7 +219,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Eliminando aplicación con Code: {ApplicationCode}", code);
             try
             {
-                var result = await _service.DeleteAsync(code);
+                var result = await _service.DeactivateAsync(code);
                 if (!result)
                 {
                     _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para eliminar.", code);

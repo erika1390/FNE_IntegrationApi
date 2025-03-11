@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
@@ -11,12 +12,14 @@ namespace Integration.Application.Services.Security
         private readonly IApplicationRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<ApplicationService> _logger;
+
         public ApplicationService(IApplicationRepository repository, IMapper mapper, ILogger<ApplicationService> logger)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
         }
+
         public async Task<ApplicationDTO> CreateAsync(ApplicationDTO applicationDTO)
         {
             _logger.LogInformation("Creando aplicación: {Name}", applicationDTO.Name);
@@ -30,54 +33,55 @@ namespace Integration.Application.Services.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear la aplicación: {Name}", applicationDTO.Name);
-                throw;
+                throw new Exception("Error al crear la aplicación", ex);
             }
         }
 
-        public async Task<bool> DeleteAsync(string code)
+        public async Task<bool> DeactivateAsync(string code)
         {
-            _logger.LogInformation("Eliminando aplicación con ApplicationCode: {ApplicationCode}", code);
+            _logger.LogInformation("Desactivando aplicación con ApplicationCode: {ApplicationCode}", code);
             try
             {
                 bool success = await _repository.DeactivateAsync(code);
                 if (success)
                 {
-                    _logger.LogInformation("Aplicación con ApplicationCode {ApplicationCode} eliminada correctamente.", code);
+                    _logger.LogInformation("Aplicación con ApplicationCode {ApplicationCode} desactivada correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para eliminar.", code);
+                    _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para desactivar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la aplicación con ApplicationCode {ApplicationCode}.", code);
-                throw;
+                _logger.LogError(ex, "Error al desactivar la aplicación con ApplicationCode {ApplicationCode}.", code);
+                throw new Exception("Error al desactivar la aplicación", ex);
             }
         }
 
         public async Task<IEnumerable<ApplicationDTO>> GetAllActiveAsync()
         {
-            _logger.LogInformation("Obteniendo todas las aplicaciones.");
+            _logger.LogInformation("Obteniendo todas las aplicaciones activas.");
             try
             {
                 var applications = await _repository.GetAllActiveAsync();
                 var applicationsDTO = _mapper.Map<IEnumerable<ApplicationDTO>>(applications);
-                _logger.LogInformation("{Count} aplicaciones obtenidas con éxito.", applicationsDTO.Count());
+                _logger.LogInformation("{Count} aplicaciones activas obtenidas con éxito.", applicationsDTO.Count());
                 return applicationsDTO;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todas las aplicaciones.");
-                throw;
+                _logger.LogError(ex, "Error al obtener todas las aplicaciones activas.");
+                throw new Exception("Error al obtener todas las aplicaciones activas", ex);
             }
         }
+
         public async Task<List<ApplicationDTO>> GetAllAsync(Expression<Func<ApplicationDTO, bool>> filterDto)
         {
+            _logger.LogInformation("Obteniendo todas las aplicaciones y aplicando el filtro en memoria.");
             try
             {
-                _logger.LogInformation("Obteniendo todas las aplicaciones y aplicando el filtro en memoria.");
                 var applications = await _repository.GetAllAsync(a => true);
                 var applicationDTOs = _mapper.Map<List<ApplicationDTO>>(applications);
                 var filteredApplications = applicationDTOs.AsQueryable().Where(filterDto).ToList();
@@ -85,15 +89,16 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en el servicio al obtener aplicaciones.");
-                throw;
+                _logger.LogError(ex, "Error al obtener aplicaciones con filtro.");
+                throw new Exception("Error al obtener aplicaciones con filtro", ex);
             }
         }
+
         public async Task<List<ApplicationDTO>> GetAllAsync(List<Expression<Func<ApplicationDTO, bool>>> predicados)
         {
+            _logger.LogInformation("Obteniendo todas las aplicaciones y aplicando múltiples filtros en memoria.");
             try
             {
-                _logger.LogInformation("Obteniendo todas las aplicaciones y aplicando múltiples filtros en memoria.");
                 var applications = await _repository.GetAllAsync(a => true);
                 var applicationDTOs = _mapper.Map<List<ApplicationDTO>>(applications);
                 IQueryable<ApplicationDTO> query = applicationDTOs.AsQueryable();
@@ -105,8 +110,8 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en el servicio al obtener aplicaciones con múltiples filtros.");
-                throw;
+                _logger.LogError(ex, "Error al obtener aplicaciones con múltiples filtros.");
+                throw new Exception("Error al obtener aplicaciones con múltiples filtros", ex);
             }
         }
 
@@ -127,7 +132,7 @@ namespace Integration.Application.Services.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener la aplicación con ApplicationCode {ApplicationCode}.", code);
-                throw;
+                throw new Exception("Error al obtener la aplicación", ex);
             }
         }
 
@@ -148,8 +153,8 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar la aplicación con Code {ApplicatioCode}.", applicationDTO.Code);
-                throw;
+                _logger.LogError(ex, "Error al actualizar la aplicación con ApplicatioCode {ApplicatioCode}.", applicationDTO.Code);
+                throw new Exception("Error al actualizar la aplicación", ex);
             }
         }
     }

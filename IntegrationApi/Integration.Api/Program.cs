@@ -43,7 +43,8 @@ builder.Services.AddAutoMapper(typeof(UserRoleProfile));
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
 
 // Si el servicio no es genérico, registra la implementación específica
-builder.Services.AddSingleton<IJwtService, JwtService>(); 
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ILogService, LogService>(); 
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IModuleService, ModuleService>();
