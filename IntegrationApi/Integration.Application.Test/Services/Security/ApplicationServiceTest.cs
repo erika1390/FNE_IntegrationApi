@@ -46,7 +46,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task DeleteAsync_ShouldReturnTrue_WhenApplicationIsDeleted()
         {
             string applicationCode = "APP0000001";
-            _repositoryMock.Setup(r => r.DeleteAsync(applicationCode)).ReturnsAsync(true);
+            _repositoryMock.Setup(r => r.DeactivateAsync(applicationCode)).ReturnsAsync(true);
 
             var result = await _applicationService.DeleteAsync(applicationCode);
 
@@ -57,7 +57,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task DeleteAsync_ShouldReturnFalse_WhenApplicationIsNotFound()
         {
             string applicationCode  = "APP0000001";
-            _repositoryMock.Setup(r => r.DeleteAsync(applicationCode)).ReturnsAsync(false);
+            _repositoryMock.Setup(r => r.DeactivateAsync(applicationCode)).ReturnsAsync(false);
 
             var result = await _applicationService.DeleteAsync(applicationCode);
 

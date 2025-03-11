@@ -40,7 +40,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Eliminando permiso con PermissionId: {PermissionId}", code);
             try
             {
-                bool success = await _repository.DeleteAsync(code);
+                bool success = await _repository.DeactivateAsync(code);
                 if (success)
                 {
                     _logger.LogInformation("Permiso con ID {PermissionId} eliminada correctamente.", code);

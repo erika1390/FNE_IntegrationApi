@@ -44,7 +44,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task DeleteAsync_ShouldReturnTrue_WhenModuleIsDeleted()
         {
             string moduleCode = "MOD0000001";
-            _repositoryMock.Setup(r => r.DeleteAsync(moduleCode)).ReturnsAsync(true);
+            _repositoryMock.Setup(r => r.DeactivateAsync(moduleCode)).ReturnsAsync(true);
 
             var result = await _moduleService.DeleteAsync(moduleCode);
 
@@ -55,7 +55,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task DeleteAsync_ShouldReturnFalse_WhenModuleIsNotFound()
         {
             string moduleCode = "MOD0000001";
-            _repositoryMock.Setup(r => r.DeleteAsync(moduleCode)).ReturnsAsync(false);
+            _repositoryMock.Setup(r => r.DeactivateAsync(moduleCode)).ReturnsAsync(false);
 
             var result = await _moduleService.DeleteAsync(moduleCode);
 

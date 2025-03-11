@@ -40,7 +40,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-        public async Task<bool> DeleteAsync(string code)
+        public async Task<bool> DeactivateAsync(string code)
         {
             try
             {

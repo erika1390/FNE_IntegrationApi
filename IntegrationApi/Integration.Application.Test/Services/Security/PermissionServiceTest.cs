@@ -44,7 +44,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task DeleteAsync_ShouldReturnTrue_WhenPermissionIsDeleted()
         {
             string permissionCode = "PER0000001";
-            _repositoryMock.Setup(r => r.DeleteAsync(permissionCode)).ReturnsAsync(true);
+            _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode)).ReturnsAsync(true);
 
             var result = await _permissionService.DeleteAsync(permissionCode);
 
@@ -55,7 +55,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task DeleteAsync_ShouldReturnFalse_WhenPermissionIsNotFound()
         {
             string permissionCode = "";
-            _repositoryMock.Setup(r => r.DeleteAsync(permissionCode)).ReturnsAsync(false);
+            _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode)).ReturnsAsync(false);
 
             var result = await _permissionService.DeleteAsync(permissionCode);
 

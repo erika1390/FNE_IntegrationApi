@@ -38,31 +38,30 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
-        public async Task<bool> DeleteAsync(string code)
+        public async Task<bool> DeactivateAsync(string code)
         {
             try
             {
                 var application = await _context.Applications
-                    .Where(a => a.Code == code)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(a => a.Code == code);
+
                 if (application == null)
                 {
-                    _logger.LogWarning("No se encontró la aplicación con ID {ApplicationId} para eliminar.", code);
+                    _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para desactivar.", code);
                     return false;
                 }
 
                 application.IsActive = false;
+                application.UpdatedBy = "System";
                 application.UpdatedAt = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Aplicación desactivada: {ApplicationId}", code);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Aplicación desactivada: {ApplicationCode}", code);
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la aplicación con ID {ApplicationId}.", code);
+                _logger.LogError(ex, "Error al desactivar la aplicación con ApplicationCode {ApplicationCode}.", code);
                 return false;
             }
         }

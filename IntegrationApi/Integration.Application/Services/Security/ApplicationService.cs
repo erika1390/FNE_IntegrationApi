@@ -39,10 +39,10 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Eliminando aplicación con ApplicationCode: {ApplicationCode}", code);
             try
             {
-                bool success = await _repository.DeleteAsync(code);
+                bool success = await _repository.DeactivateAsync(code);
                 if (success)
                 {
-                    _logger.LogInformation("Aplicación con ApplicationCode {ApplApplicationCodeicationId} eliminada correctamente.", code);
+                    _logger.LogInformation("Aplicación con ApplicationCode {ApplicationCode} eliminada correctamente.", code);
                 }
                 else
                 {

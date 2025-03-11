@@ -43,7 +43,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Eliminando modulo con ModuleCode: {ModuleCode}", code);
             try
             {
-                bool success = await _repository.DeleteAsync(code);
+                bool success = await _repository.DeactivateAsync(code);
                 if (success)
                 {
                     _logger.LogInformation("Modulo con ModuleCode {ModuleCode} eliminada correctamente.", code);

@@ -84,9 +84,9 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task DeleteAsync_ShouldReturnTrue()
         {
             // Arrange
-            _mock.Setup(repo => repo.DeleteAsync("PER0000001")).ReturnsAsync(true);
+            _mock.Setup(repo => repo.DeactivateAsync("PER0000001")).ReturnsAsync(true);
             // Act
-            var result = await _mock.Object.DeleteAsync("PER0000001");
+            var result = await _mock.Object.DeactivateAsync("PER0000001");
             // Assert
             Assert.IsTrue(result);
         }

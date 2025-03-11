@@ -3,7 +3,6 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -46,10 +45,10 @@ namespace Integration.Api.Controllers.Security
         [HttpGet("{code}")]
         public async Task<IActionResult> GetByCode(string code)
         {
-            if (code.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(code))
             {
                 _logger.LogWarning("Se recibió un ApplicationCode no válido ({ApplicationCode}) en la solicitud de búsqueda.", code);
-                return BadRequest(ResponseApi<ApplicationDTO>.Error("El ApplicationCode no debe ser nulo o vacio"));
+                return BadRequest(ResponseApi<ApplicationDTO>.Error("El ApplicationCode no debe ser nulo o vacío"));
             }
             _logger.LogInformation("Buscando aplicación con ApplicationCode: {ApplicationCode}", code);
             try
@@ -212,10 +211,10 @@ namespace Integration.Api.Controllers.Security
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(string code)
         {
-            if (code.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(code))
             {
                 _logger.LogWarning("Se recibió un Code no válido ({ApplicationCode}) en la solicitud de eliminación.", code);
-                return BadRequest(ResponseApi<bool>.Error("El Code debe ser nulo o vacio"));
+                return BadRequest(ResponseApi<bool>.Error("El Code debe ser nulo o vacío"));
             }
             _logger.LogInformation("Eliminando aplicación con Code: {ApplicationCode}", code);
             try
