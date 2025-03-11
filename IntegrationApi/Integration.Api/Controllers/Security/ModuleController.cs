@@ -80,7 +80,7 @@ namespace Integration.Api.Controllers.Security
                 ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<ModuleDTO, bool>> filter = Expression.Lambda<Func<ModuleDTO, bool>>(comparison, param);
-                var result = await _service.GetAllAsync(new List<Expression<Func<ModuleDTO, bool>>> { filter });
+                var result = await _service.GetAllAsync(filter);
                 return Ok(ResponseApi<IEnumerable<ModuleDTO>>.Success(result));
             }
             catch (Exception ex)
@@ -168,7 +168,6 @@ namespace Integration.Api.Controllers.Security
         /// Crea un nuevo módulo.
         /// </summary>
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([FromBody] ModuleDTO moduleDTO)
         {
             if (!ModelState.IsValid)

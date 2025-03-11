@@ -78,8 +78,11 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var modules = await _context.Modules.Where(m => m.IsActive == true).AsNoTracking().ToListAsync();
-
+                var modules = await _context.Modules
+                    .Where(m => m.IsActive == true)
+                    .Include(a => a.Application)
+                    .AsNoTracking()
+                    .ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} módulos de la base de datos.", modules.Count);
                 return modules;
             }
@@ -94,7 +97,11 @@ namespace Integration.Infrastructure.Repositories.Security
             try
             {
                 _logger.LogInformation("Obteniendo modulos con un predicado específico.");
-                var modules = await _context.Modules.Where(predicate).ToListAsync();
+                var modules = await _context.Modules
+                    .Where(predicate)
+                    .Include(a => a.Application)
+                    .AsNoTracking()
+                    .ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} modulos.", modules.Count);
                 return modules;
             }
@@ -112,7 +119,10 @@ namespace Integration.Infrastructure.Repositories.Security
                 var query = _context.Modules.AsQueryable();
                 foreach (var predicado in predicates)
                 {
-                    query = query.Where(predicado);
+                    query = query
+                        .Where(predicado)
+                        .Include(a => a.Application)
+                        .AsNoTracking();
                 }
                 var modules = await query.ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} modulos tras aplicar múltiples predicados.", modules.Count);
@@ -124,15 +134,15 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
         public async Task<Module> GetByCodeAsync(string code)
         {
             try
             {
                 var module = await _context.Modules
-                    .Where(a => a.Code == code)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync();
+                .Where(a => a.Code == code)
+                .Include(a => a.Application)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
                 if (module == null)
                 {
                     _logger.LogWarning("No se encontró el módulo con ModuleCode {ModuleCode}.", code);
@@ -146,28 +156,6 @@ namespace Integration.Infrastructure.Repositories.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener el módulo con ModuleCode {ModuleCode}.", code);
-                return null;
-            }
-        }
-
-        public async Task<Module> GetByIdAsync(int id)
-        {
-            try
-            {
-                var module = await _context.Modules.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
-                if (module == null)
-                {
-                    _logger.LogWarning("No se encontró el módulo con ID {ModuleId}.", id);
-                    return null;
-                }
-
-                _logger.LogInformation("Módulo encontrado: Módulo: {ModuleId}, Nombre: {Name}", module.Id, module.Name);
-
-                return module;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el módulo con ID {ModuleId}.", id);
                 return null;
             }
         }

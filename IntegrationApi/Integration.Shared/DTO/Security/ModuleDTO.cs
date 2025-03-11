@@ -10,6 +10,6 @@ namespace Integration.Shared.DTO.Security
         public required string CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
         public bool IsActive { get; set; }
-        public ApplicationDTO Application { get; set; }
+        public ApplicationDTO? Application { get; set; }
     }
 }
