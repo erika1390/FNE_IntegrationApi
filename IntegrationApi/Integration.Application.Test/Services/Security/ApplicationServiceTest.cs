@@ -3,8 +3,6 @@ using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
-
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
@@ -24,7 +22,7 @@ namespace Integration.Application.Test.Services.Security
             _repositoryMock = new Mock<IApplicationRepository>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<ApplicationService>>();
-            _applicationService = new ApplicationService(_repositoryMock.Object,_mapperMock.Object, _loggerMock.Object);
+            _applicationService = new ApplicationService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object);
         }
 
         [Test]
@@ -43,23 +41,23 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task DeleteAsync_ShouldReturnTrue_WhenApplicationIsDeleted()
+        public async Task DeactivateAsync_ShouldReturnTrue_WhenApplicationIsDeactivated()
         {
             string applicationCode = "APP0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(applicationCode)).ReturnsAsync(true);
 
-            var result = await _applicationService.DeleteAsync(applicationCode);
+            var result = await _applicationService.DeactivateAsync(applicationCode);
 
             Assert.IsTrue(result);
         }
 
         [Test]
-        public async Task DeleteAsync_ShouldReturnFalse_WhenApplicationIsNotFound()
+        public async Task DeactivateAsync_ShouldReturnFalse_WhenApplicationIsNotFound()
         {
-            string applicationCode  = "APP0000001";
+            string applicationCode = "APP0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(applicationCode)).ReturnsAsync(false);
 
-            var result = await _applicationService.DeleteAsync(applicationCode);
+            var result = await _applicationService.DeactivateAsync(applicationCode);
 
             Assert.IsFalse(result);
         }
@@ -76,21 +74,6 @@ namespace Integration.Application.Test.Services.Security
             var result = await _applicationService.GetAllActiveAsync();
 
             Assert.AreEqual(applicationDTOs, result);
-        }       
-
-        [Test]
-        public async Task UpdateAsync_ShouldReturnUpdatedApplicationDTO()
-        {
-            var applicationDTO = new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "User", IsActive = true };
-            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" };
-
-            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Application>(applicationDTO)).Returns(application);
-            _repositoryMock.Setup(r => r.UpdateAsync(application)).ReturnsAsync(application);
-            _mapperMock.Setup(m => m.Map<ApplicationDTO>(application)).Returns(applicationDTO);
-
-            var result = await _applicationService.UpdateAsync(applicationDTO);
-
-            Assert.AreEqual(applicationDTO, result);
         }
 
         [Test]
@@ -121,6 +104,45 @@ namespace Integration.Application.Test.Services.Security
             var result = await _applicationService.GetAllAsync(predicates);
 
             Assert.AreEqual(applicationDTOs, result);
+        }
+
+        [Test]
+        public async Task GetByCodeAsync_ShouldReturnApplicationDTO_WhenApplicationExists()
+        {
+            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" };
+            var applicationDTO = new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true };
+
+            _repositoryMock.Setup(r => r.GetByCodeAsync("APP0000001")).ReturnsAsync(application);
+            _mapperMock.Setup(m => m.Map<ApplicationDTO>(application)).Returns(applicationDTO);
+
+            var result = await _applicationService.GetByCodeAsync("APP0000001");
+
+            Assert.AreEqual(applicationDTO, result);
+        }
+
+        [Test]
+        public async Task GetByCodeAsync_ShouldReturnNull_WhenApplicationDoesNotExist()
+        {
+            _repositoryMock.Setup(r => r.GetByCodeAsync("APP0000001")).ReturnsAsync((Integration.Core.Entities.Security.Application)null);
+
+            var result = await _applicationService.GetByCodeAsync("APP0000001");
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task UpdateAsync_ShouldReturnUpdatedApplicationDTO()
+        {
+            var applicationDTO = new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "User", IsActive = true };
+            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" };
+
+            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Application>(applicationDTO)).Returns(application);
+            _repositoryMock.Setup(r => r.UpdateAsync(application)).ReturnsAsync(application);
+            _mapperMock.Setup(m => m.Map<ApplicationDTO>(application)).Returns(applicationDTO);
+
+            var result = await _applicationService.UpdateAsync(applicationDTO);
+
+            Assert.AreEqual(applicationDTO, result);
         }
     }
 }
