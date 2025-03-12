@@ -112,5 +112,18 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             Assert.NotNull(result);
             Assert.IsTrue(result.All(app => app.IsActive));
         }
+        [Test]
+        public async Task CreateAsync_ShouldReturnCreatedApplication()
+        {
+            // Arrange
+            var application = new Application { Id = 1, Code = "APP0000001", Name = "Integration", IsActive = true };
+            _mock.Setup(repo => repo.CreateAsync(application))
+                .ReturnsAsync(application);
+            // Act
+            var result = await _mock.Object.CreateAsync(application);
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Id);
+        }
     }
 }

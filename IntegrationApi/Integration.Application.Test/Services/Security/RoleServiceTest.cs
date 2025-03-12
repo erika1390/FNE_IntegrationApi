@@ -46,7 +46,7 @@ namespace Integration.Application.Test.Services.Security
             int RoleId = 1;
             _repositoryMock.Setup(r => r.DeleteAsync(RoleId)).ReturnsAsync(true);
 
-            var result = await _RoleService.DeleteAsync(RoleId);
+            var result = await _RoleService.DeactivateAsync(RoleId);
 
             Assert.IsTrue(result);
         }
@@ -57,7 +57,7 @@ namespace Integration.Application.Test.Services.Security
             int RoleId = 1;
             _repositoryMock.Setup(r => r.DeleteAsync(RoleId)).ReturnsAsync(false);
 
-            var result = await _RoleService.DeleteAsync(RoleId);
+            var result = await _RoleService.DeactivateAsync(RoleId);
 
             Assert.IsFalse(result);
         }

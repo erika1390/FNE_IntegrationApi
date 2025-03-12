@@ -46,7 +46,7 @@ namespace Integration.Application.Test.Services.Security
             string permissionCode = "PER0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode)).ReturnsAsync(true);
 
-            var result = await _permissionService.DeleteAsync(permissionCode);
+            var result = await _permissionService.DeactivateAsync(permissionCode);
 
             Assert.IsTrue(result);
         }
@@ -57,7 +57,7 @@ namespace Integration.Application.Test.Services.Security
             string permissionCode = "";
             _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode)).ReturnsAsync(false);
 
-            var result = await _permissionService.DeleteAsync(permissionCode);
+            var result = await _permissionService.DeactivateAsync(permissionCode);
 
             Assert.IsFalse(result);
         }

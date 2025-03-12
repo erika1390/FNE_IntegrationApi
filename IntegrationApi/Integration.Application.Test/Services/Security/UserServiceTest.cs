@@ -95,7 +95,7 @@ namespace Integration.Application.Test.Services.Security
             int userId = 1;
             _repositoryMock.Setup(r => r.DeleteAsync(userId)).ReturnsAsync(true);
 
-            var result = await _userService.DeleteAsync(userId);
+            var result = await _userService.DeactivateAsync(userId);
 
             Assert.IsTrue(result);
         }
@@ -106,7 +106,7 @@ namespace Integration.Application.Test.Services.Security
             int userId = 1;
             _repositoryMock.Setup(r => r.DeleteAsync(userId)).ReturnsAsync(false);
 
-            var result = await _userService.DeleteAsync(userId);
+            var result = await _userService.DeactivateAsync(userId);
 
             Assert.IsFalse(result);
         }
