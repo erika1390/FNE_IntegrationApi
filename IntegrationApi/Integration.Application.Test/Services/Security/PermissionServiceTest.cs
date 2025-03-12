@@ -75,6 +75,29 @@ namespace Integration.Application.Test.Services.Security
 
             Assert.AreEqual(permissionDTOs, result);
         }
+        [Test]
+        public async Task GetByCodeAsync_ShouldReturnModuleDTO_WhenPermissionExists()
+        {
+            var permission = new Integration.Core.Entities.Security.Permission { Id = 1, Name = "Consultar", Code = "PER0000001" };
+            var permissionDTO = new PermissionDTO { Name = "Consultar", Code = "PER0000001", CreatedBy = "System", IsActive = true};
+
+            _repositoryMock.Setup(r => r.GetByCodeAsync("PER0000001")).ReturnsAsync(permission);
+            _mapperMock.Setup(m => m.Map<PermissionDTO>(permission)).Returns(permissionDTO);
+
+            var result = await _permissionService.GetByCodeAsync("PER0000001");
+
+            Assert.AreEqual(permissionDTO, result);
+        }
+
+        [Test]
+        public async Task GetByCodeAsync_ShouldReturnNull_WhenPermissionDoesNotExist()
+        {
+            _repositoryMock.Setup(r => r.GetByCodeAsync("PER0000001")).ReturnsAsync((Integration.Core.Entities.Security.Permission)null);
+
+            var result = await _permissionService.GetByCodeAsync("PER0000001");
+
+            Assert.IsNull(result);
+        }
 
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedPermissionDTO()
