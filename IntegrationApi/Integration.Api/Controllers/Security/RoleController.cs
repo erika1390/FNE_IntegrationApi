@@ -153,7 +153,6 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([FromBody] RoleDTO roleDTO)
         {
             if (!ModelState.IsValid)
@@ -182,7 +181,6 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPut]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update([FromBody] RoleDTO roleDTO)
         {
             if (!ModelState.IsValid)
@@ -210,7 +208,6 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpDelete("{code}")]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(string code)
         {
             if (code.IsNullOrEmpty())

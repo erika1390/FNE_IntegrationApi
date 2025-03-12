@@ -125,7 +125,6 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([FromBody] UserDTO userDTO)
         {
             return await HandleRequest(async () =>
@@ -145,7 +144,6 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPut]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update([FromBody] UserDTO userDTO)
         {
             return await HandleRequest(async () =>
@@ -164,7 +162,6 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpDelete("{code}")]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(string code)
         {
             return await HandleRequest(async () =>
