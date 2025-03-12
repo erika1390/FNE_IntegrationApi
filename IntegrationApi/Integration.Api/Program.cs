@@ -73,7 +73,7 @@ builder.Services.AddIdentity<User, Role>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 // Configurar autenticación JWT
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -88,9 +88,9 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
         ValidateLifetime = true
     };
 });
