@@ -3,6 +3,8 @@ using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
+
+using System.Linq;
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
@@ -94,23 +96,17 @@ namespace Integration.Application.Services.Security
                     if (application == null)
                     {
                         _logger.LogWarning("No se encontró la aplicación con código: {ApplicationCode}", applicationCode);
-                        return new List<ModuleDTO>(); // Si no existe la aplicación, devolver lista vacía
+                        return new List<ModuleDTO>();
                     }
-
                     applicationId = application.Id;
                     moduleFilter = a => a.ApplicationId == applicationId.Value;
                 }
-
-                // Obtener módulos filtrados en la base de datos
                 var modules = await _moduleRepository.GetAllAsync(moduleFilter);
                 var modulesDTOs = _mapper.Map<List<ModuleDTO>>(modules);
-
-                // Si el filtro proporcionado es diferente de ApplicationCode, aplicarlo en memoria
                 if (predicado != null && !IsFilteringByApplicationCode(predicado, out _))
                 {
                     modulesDTOs = modulesDTOs.AsQueryable().Where(predicado).ToList();
                 }
-
                 return modulesDTOs;
             }
             catch (Exception ex)
@@ -119,8 +115,6 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-
-        // Método auxiliar para detectar si el filtro contiene ApplicationCode y extraer su valor
         private bool IsFilteringByApplicationCode(Expression<Func<ModuleDTO, bool>> predicado, out string applicationCode)
         {
             applicationCode = null;
@@ -137,25 +131,56 @@ namespace Integration.Application.Services.Security
 
             return false;
         }
-
-
         public async Task<List<ModuleDTO>> GetAllAsync(List<Expression<Func<ModuleDTO, bool>>> predicados)
         {
             try
             {
-                _logger.LogInformation("Obteniendo todos los modulos y aplicando múltiples filtros en memoria.");
-                var modules = await _moduleRepository.GetAllAsync(a => true);
-                var moduleDTOs = _mapper.Map<List<ModuleDTO>>(modules);
-                IQueryable<ModuleDTO> query = moduleDTOs.AsQueryable();
+                _logger.LogInformation("Obteniendo todos los módulos y aplicando múltiples filtros.");
+
+                int? applicationId = null;
+                string applicationCode = null;
+                List<Expression<Func<ModuleDTO, bool>>> otherFilters = new List<Expression<Func<ModuleDTO, bool>>>();
                 foreach (var predicado in predicados)
                 {
-                    query = query.Where(predicado);
+                    if (IsFilteringByApplicationCode(predicado, out string extractedCode))
+                    {
+                        if (string.IsNullOrEmpty(applicationCode))
+                        {
+                            applicationCode = extractedCode;
+                        }
+                    }
+                    else
+                    {
+                        otherFilters.Add(predicado);
+                    }
                 }
-                return query.ToList();
+                if (!string.IsNullOrEmpty(applicationCode))
+                {
+                    _logger.LogInformation("Buscando ID de la aplicación con código: {ApplicationCode}", applicationCode);
+                    var application = await _applicationRepository.GetByCodeAsync(applicationCode);
+                    if (application == null)
+                    {
+                        _logger.LogWarning("No se encontró la aplicación con código: {ApplicationCode}", applicationCode);
+                        return new List<ModuleDTO>();
+                    }
+                    applicationId = application.Id;
+                }
+                Expression<Func<Integration.Core.Entities.Security.Module, bool>> moduleFilter = a => true;
+                if (applicationId.HasValue)
+                {
+                    moduleFilter = a => a.ApplicationId == applicationId.Value;
+                }
+                var modules = await _moduleRepository.GetAllAsync(moduleFilter);
+                var moduleDTOs = _mapper.Map<List<ModuleDTO>>(modules);
+                foreach (var filter in otherFilters)
+                {
+                    moduleDTOs = moduleDTOs.Where(filter.Compile()).ToList();
+                }
+                return moduleDTOs;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en el servicio al obtener los modulos con múltiples filtros.");
+                _logger.LogError(ex, "Error en el servicio al obtener los módulos con múltiples filtros.");
                 throw;
             }
         }
@@ -186,7 +211,11 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Módulo creado exitosamente: ModuleCode={ModuleCode}, Name={Name}", moduleDTO.Code, moduleDTO.Name);
             try
             {
+                var application = await _applicationRepository.GetByCodeAsync(moduleDTO.ApplicationCode);
+                var moduleExist = await _moduleRepository.GetByCodeAsync(moduleDTO.Code); 
                 var module = _mapper.Map<Integration.Core.Entities.Security.Module>(moduleDTO);
+                module.ApplicationId = application.Id;
+                module.Id = moduleExist.Id;
                 var updatedModule = await _moduleRepository.UpdateAsync(module);
                 if (updatedModule == null)
                 {

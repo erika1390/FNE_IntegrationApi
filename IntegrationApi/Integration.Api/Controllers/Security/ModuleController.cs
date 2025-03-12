@@ -98,35 +98,47 @@ namespace Integration.Api.Controllers.Security
         {
             try
             {
-                if (filters == null || filters.Count == 0)
+                if (filters == null || !filters.Any())
                 {
                     return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error("Se requiere al menos un filtro."));
                 }
-                ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
-                Expression finalExpression = null;
+
+                List<Expression<Func<ModuleDTO, bool>>> filterExpressions = new();
+
                 foreach (var filter in filters)
                 {
-                    var propertyInfo = typeof(ModuleDTO).GetProperty(filter.Key);
+                    string filterField = filter.Key;
+                    string filterValue = filter.Value;
+
+                    var propertyInfo = typeof(ModuleDTO).GetProperty(filterField);
                     if (propertyInfo == null)
                     {
-                        return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error($"El campo '{filter.Key}' no existe en ModuleDTO."));
+                        return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error($"El campo '{filterField}' no existe en ModuleDTO."));
                     }
+
                     object typedValue;
                     try
                     {
-                        typedValue = Convert.ChangeType(filter.Value, propertyInfo.PropertyType);
+                        typedValue = Convert.ChangeType(filterValue, propertyInfo.PropertyType);
                     }
                     catch (Exception)
                     {
-                        return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error($"El valor '{filter.Value}' no puede convertirse a tipo {propertyInfo.PropertyType.Name}."));
+                        return BadRequest(ResponseApi<IEnumerable<ModuleDTO>>.Error($"El valor '{filterValue}' no puede convertirse a tipo {propertyInfo.PropertyType.Name}."));
                     }
-                    MemberExpression property = Expression.Property(param, propertyInfo);
+
+                    // Crear expresión de filtro
+                    ParameterExpression param = Expression.Parameter(typeof(ModuleDTO), "dto");
+                    MemberExpression property = Expression.Property(param, filterField);
                     ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                     BinaryExpression comparison = Expression.Equal(property, constant);
-                    finalExpression = finalExpression == null ? comparison : Expression.AndAlso(finalExpression, comparison);
+                    Expression<Func<ModuleDTO, bool>> filterExpression = Expression.Lambda<Func<ModuleDTO, bool>>(comparison, param);
+
+                    filterExpressions.Add(filterExpression);
                 }
-                var filterExpression = Expression.Lambda<Func<ModuleDTO, bool>>(finalExpression, param);
-                var result = await _service.GetAllAsync(new List<Expression<Func<ModuleDTO, bool>>> { filterExpression });
+
+                // Llamar al servicio con múltiples filtros
+                var result = await _service.GetAllAsync(filterExpressions);
+
                 return Ok(ResponseApi<IEnumerable<ModuleDTO>>.Success(result));
             }
             catch (Exception ex)
@@ -199,7 +211,6 @@ namespace Integration.Api.Controllers.Security
         /// Actualiza un módulo existente.
         /// </summary>
         [HttpPut]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update([FromBody] ModuleDTO moduleDTO)
         {
             if (!ModelState.IsValid)
@@ -230,7 +241,6 @@ namespace Integration.Api.Controllers.Security
         /// Elimina un módulo por su ID.
         /// </summary>
         [HttpDelete("{code}")]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(string code)
         {
             if (code.IsNullOrEmpty())
