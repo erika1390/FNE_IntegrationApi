@@ -8,14 +8,16 @@ namespace Integration.Application.Services.Security
 {
     public class RoleService : IRoleService
     {
-        private readonly IRoleRepository _repository;
+        private readonly IRoleRepository _roleRrepository;
         private readonly IMapper _mapper;
         private readonly ILogger<RoleService> _logger;
-        public RoleService(IRoleRepository repository, IMapper mapper, ILogger<RoleService> logger)
+        private readonly IApplicationRepository _applicationRepository;
+        public RoleService(IRoleRepository roleRepository, IMapper mapper, ILogger<RoleService> logger, IApplicationRepository applicationRepository)
         {
-            _repository = repository;
+            _roleRrepository = roleRepository;
             _mapper = mapper;
             _logger = logger;
+            _applicationRepository = applicationRepository;
         }
         public async Task<RoleDTO> CreateAsync(RoleDTO roleDTO)
         {
@@ -24,7 +26,7 @@ namespace Integration.Application.Services.Security
             {
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
                 role.NormalizedName = role.Name.ToUpper();
-                var result = await _repository.CreateAsync(role);
+                var result = await _roleRrepository.CreateAsync(role);
                 _logger.LogInformation("Rol creado con éxito: {RoleId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<RoleDTO>(result);
             }
@@ -40,7 +42,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Eliminando rol con RoleCode: {RoleCode}", code);
             try
             {
-                bool success = await _repository.DeactivateAsync(code);
+                bool success = await _roleRrepository.DeactivateAsync(code);
                 if (success)
                 {
                     _logger.LogInformation("Rol con RoleCode {RoleCode} eliminada correctamente.", code);
@@ -63,7 +65,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Obteniendo todos los roles.");
             try
             {
-                var roles = await _repository.GetAllActiveAsync();
+                var roles = await _roleRrepository.GetAllActiveAsync();
                 var roleDTO = _mapper.Map<IEnumerable<RoleDTO>>(roles);
                 _logger.LogInformation("{Count} roles obtenidos con éxito.", roleDTO.Count());
                 return roleDTO;
@@ -75,40 +77,106 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> filterDto)
+        public async Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> predicado)
         {
             try
             {
-                _logger.LogInformation("Obteniendo todos los roles y aplicando el filtro en memoria.");
-                var roles = await _repository.GetAllAsync(a => true);
-                var rolesDTOs = _mapper.Map<List<RoleDTO>>(roles);
-                var filteredApplications = rolesDTOs.AsQueryable().Where(filterDto).ToList();
-                return filteredApplications;
+                _logger.LogInformation("Obteniendo todos los roles y aplicando el filtro.");
+                int? applicationId = null;
+                Expression<Func<Integration.Core.Entities.Security.Role, bool>> roleFilter = a => true;
+                if (predicado != null && IsFilteringByApplicationCode(predicado, out string applicationCode))
+                {
+                    _logger.LogInformation("Buscando ID de la aplicación con código: {ApplicationCode}", applicationCode);
+                    var application = await _applicationRepository.GetByCodeAsync(applicationCode);
+
+                    if (application == null)
+                    {
+                        _logger.LogWarning("No se encontró la aplicación con código: {ApplicationCode}", applicationCode);
+                        return new List<RoleDTO>();
+                    }
+                    applicationId = application.Id;
+                    roleFilter = a => a.ApplicationId == applicationId.Value;
+                }
+                var modules = await _roleRrepository.GetAllAsync(roleFilter);
+                var modulesDTOs = _mapper.Map<List<RoleDTO>>(modules);
+                if (predicado != null && !IsFilteringByApplicationCode(predicado, out _))
+                {
+                    modulesDTOs = modulesDTOs.AsQueryable().Where(predicado).ToList();
+                }
+                return modulesDTOs;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en el servicio al obtener los roles.");
+                _logger.LogError(ex, "Error en el servicio al obtener roles.");
                 throw;
             }
         }
+        private bool IsFilteringByApplicationCode(Expression<Func<RoleDTO, bool>> predicado, out string applicationCode)
+        {
+            applicationCode = null;
 
+            if (predicado.Body is BinaryExpression binaryExp)
+            {
+                if (binaryExp.Left is MemberExpression member && member.Member.Name == "ApplicationCode" &&
+                    binaryExp.Right is ConstantExpression constant)
+                {
+                    applicationCode = constant.Value?.ToString();
+                    return !string.IsNullOrEmpty(applicationCode);
+                }
+            }
+
+            return false;
+        }
         public async Task<List<RoleDTO>> GetAllAsync(List<Expression<Func<RoleDTO, bool>>> predicados)
         {
             try
             {
-                _logger.LogInformation("Obteniendo todos los roles y aplicando múltiples filtros en memoria.");
-                var roles = await _repository.GetAllAsync(a => true);
-                var rolesDTOs = _mapper.Map<List<RoleDTO>>(roles);
-                IQueryable<RoleDTO> query = rolesDTOs.AsQueryable();
+                _logger.LogInformation("Obteniendo todos los roles y aplicando múltiples filtros.");
+
+                int? applicationId = null;
+                string applicationCode = null;
+                List<Expression<Func<RoleDTO, bool>>> otherFilters = new List<Expression<Func<RoleDTO, bool>>>();
                 foreach (var predicado in predicados)
                 {
-                    query = query.Where(predicado);
+                    if (IsFilteringByApplicationCode(predicado, out string extractedCode))
+                    {
+                        if (string.IsNullOrEmpty(applicationCode))
+                        {
+                            applicationCode = extractedCode;
+                        }
+                    }
+                    else
+                    {
+                        otherFilters.Add(predicado);
+                    }
                 }
-                return query.ToList();
+                if (!string.IsNullOrEmpty(applicationCode))
+                {
+                    _logger.LogInformation("Buscando ID de la aplicación con código: {ApplicationCode}", applicationCode);
+                    var application = await _applicationRepository.GetByCodeAsync(applicationCode);
+                    if (application == null)
+                    {
+                        _logger.LogWarning("No se encontró la aplicación con código: {ApplicationCode}", applicationCode);
+                        return new List<RoleDTO>();
+                    }
+                    applicationId = application.Id;
+                }
+                Expression<Func<Integration.Core.Entities.Security.Role, bool>> roleFilter = a => true;
+                if (applicationId.HasValue)
+                {
+                    roleFilter = a => a.ApplicationId == applicationId.Value;
+                }
+                var roles = await _roleRrepository.GetAllAsync(roleFilter);
+                var roleDTOs = _mapper.Map<List<RoleDTO>>(roles);
+                foreach (var filter in otherFilters)
+                {
+                    roleDTOs = roleDTOs.Where(filter.Compile()).ToList();
+                }
+                return roleDTOs;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en el servicio al obtener los roles con múltiples filtros.");
+                _logger.LogError(ex, "Error en el servicio al obtener los módulos con múltiples filtros.");
                 throw;
             }
         }
@@ -118,7 +186,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Buscando rol con RoleCode: {RoleCode}", code);
             try
             {
-                var permission = await _repository.GetByCodeAsync(code);
+                var permission = await _roleRrepository.GetByCodeAsync(code);
                 if (permission == null)
                 {
                     _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode}.", code);
@@ -140,7 +208,7 @@ namespace Integration.Application.Services.Security
             try
             {
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
-                var updatedRole = await _repository.UpdateAsync(role);
+                var updatedRole = await _roleRrepository.UpdateAsync(role);
                 if (updatedRole == null)
                 {
                     _logger.LogWarning("No se pudo actualizar el rol con ID {RoleId}.", roleDTO.RoleId);

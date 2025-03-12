@@ -48,8 +48,6 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
-
-
         /// <summary>
         /// Obtiene módulos basados en un solo filtro.
         /// </summary>

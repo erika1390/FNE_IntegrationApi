@@ -3,8 +3,6 @@ using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
-
-using System.Linq;
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {

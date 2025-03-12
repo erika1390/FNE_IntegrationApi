@@ -72,6 +72,9 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
+        /// <summary>
+        /// Obtiene roles basados en un solo filtro.
+        /// </summary>
         [HttpGet("filter")]
         public async Task<IActionResult> GetRoles([FromQuery] string filterField, [FromQuery] string filterValue)
         {
@@ -79,12 +82,12 @@ namespace Integration.Api.Controllers.Security
             {
                 if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
                 {
-                    return BadRequest(ResponseApi<RoleDTO>.Error("Debe proporcionar un campo y un valor para filtrar."));
+                    return BadRequest(ResponseApi<IEnumerable<RoleDTO>>.Error("Los campos y valores de filtro son obligatorios."));
                 }
                 var propertyInfo = typeof(RoleDTO).GetProperty(filterField);
                 if (propertyInfo == null)
                 {
-                    return BadRequest(ResponseApi<RoleDTO>.Error($"El campo '{filterField}' no existe en RoleDTO."));
+                    return BadRequest(ResponseApi<IEnumerable<RoleDTO>>.Error($"El campo '{filterField}' no existe en RoleDTO."));
                 }
                 object typedValue;
                 try
@@ -93,62 +96,77 @@ namespace Integration.Api.Controllers.Security
                 }
                 catch (Exception)
                 {
-                    return BadRequest(ResponseApi<RoleDTO>.Error($"El valor '{filterValue}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}."));
+                    return BadRequest(ResponseApi<IEnumerable<RoleDTO>>.Error($"El valor '{filterValue}' no puede convertirse a tipo {propertyInfo.PropertyType.Name}."));
                 }
                 ParameterExpression param = Expression.Parameter(typeof(RoleDTO), "dto");
                 MemberExpression property = Expression.Property(param, filterField);
                 ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<RoleDTO, bool>> filter = Expression.Lambda<Func<RoleDTO, bool>>(comparison, param);
-                var result = await _service.GetAllAsync(new List<Expression<Func<RoleDTO, bool>>> { filter });
+                var result = await _service.GetAllAsync(filter);
                 return Ok(ResponseApi<IEnumerable<RoleDTO>>.Success(result));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener roles con filtro.");
+                _logger.LogError(ex, "Error al recuperar roles con filtro.");
                 return StatusCode(500, ResponseApi<IEnumerable<RoleDTO>>.Error("Error interno del servidor."));
             }
         }
 
+        /// <summary>
+        /// Obtiene roles basados en múltiples filtros.
+        /// </summary>
         [HttpGet("filters")]
         public async Task<IActionResult> GetRoles([FromQuery] Dictionary<string, string> filters)
         {
             try
             {
-                if (filters == null || filters.Count == 0)
+                if (filters == null || !filters.Any())
                 {
-                    return BadRequest(ResponseApi<RoleDTO>.Error("Debe proporcionar al menos un filtro."));
+                    return BadRequest(ResponseApi<IEnumerable<RoleDTO>>.Error("Se requiere al menos un filtro."));
                 }
-                ParameterExpression param = Expression.Parameter(typeof(RoleDTO), "dto");
-                Expression finalExpression = null;
+
+                List<Expression<Func<RoleDTO, bool>>> filterExpressions = new();
+
                 foreach (var filter in filters)
                 {
-                    var propertyInfo = typeof(RoleDTO).GetProperty(filter.Key);
+                    string filterField = filter.Key;
+                    string filterValue = filter.Value;
+
+                    var propertyInfo = typeof(RoleDTO).GetProperty(filterField);
                     if (propertyInfo == null)
                     {
-                        return BadRequest(ResponseApi<RoleDTO>.Error($"El campo '{filter.Key}' no existe en RoleDTO."));
+                        return BadRequest(ResponseApi<IEnumerable<RoleDTO>>.Error($"El campo '{filterField}' no existe en RoleDTO."));
                     }
+
                     object typedValue;
                     try
                     {
-                        typedValue = Convert.ChangeType(filter.Value, propertyInfo.PropertyType);
+                        typedValue = Convert.ChangeType(filterValue, propertyInfo.PropertyType);
                     }
                     catch (Exception)
                     {
-                        return BadRequest(ResponseApi<RoleDTO>.Error($"El valor '{filter.Value}' no se puede convertir al tipo {propertyInfo.PropertyType.Name}."));
+                        return BadRequest(ResponseApi<IEnumerable<RoleDTO>>.Error($"El valor '{filterValue}' no puede convertirse a tipo {propertyInfo.PropertyType.Name}."));
                     }
-                    MemberExpression property = Expression.Property(param, propertyInfo);
+
+                    // Crear expresión de filtro
+                    ParameterExpression param = Expression.Parameter(typeof(RoleDTO), "dto");
+                    MemberExpression property = Expression.Property(param, filterField);
                     ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                     BinaryExpression comparison = Expression.Equal(property, constant);
-                    finalExpression = finalExpression == null ? comparison : Expression.AndAlso(finalExpression, comparison);
+                    Expression<Func<RoleDTO, bool>> filterExpression = Expression.Lambda<Func<RoleDTO, bool>>(comparison, param);
+
+                    filterExpressions.Add(filterExpression);
                 }
-                var filterExpression = Expression.Lambda<Func<RoleDTO, bool>>(finalExpression, param);
-                var result = await _service.GetAllAsync(new List<Expression<Func<RoleDTO, bool>>> { filterExpression });
+
+                // Llamar al servicio con múltiples filtros
+                var result = await _service.GetAllAsync(filterExpressions);
+
                 return Ok(ResponseApi<IEnumerable<RoleDTO>>.Success(result));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener roles con múltiples filtros.");
+                _logger.LogError(ex, "Error al recuperar roles con múltiples filtros.");
                 return StatusCode(500, ResponseApi<IEnumerable<RoleDTO>>.Error("Error interno del servidor."));
             }
         }
