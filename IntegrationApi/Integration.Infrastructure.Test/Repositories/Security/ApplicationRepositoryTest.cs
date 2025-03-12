@@ -1,18 +1,29 @@
 ﻿using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
+
 using Moq;
+
+using NUnit.Framework;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+
 namespace Integration.Infrastructure.Test.Repositories.Security
 {
     [TestFixture]
     public class ApplicationRepositoryTest
     {
         private Mock<IApplicationRepository> _mock;
+
         [SetUp]
         public void Setup()
         {
             _mock = new Mock<IApplicationRepository>();
         }
+
         [Test]
         public async Task GetByCodeAsync_ShouldReturnCorrectApplication()
         {
@@ -27,6 +38,7 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual("APP0000001", result.Code);
+            Assert.AreEqual("Saga 2.0", result.Name);
         }
 
         [Test]
@@ -44,23 +56,60 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         }
 
         [Test]
-        public async Task GetAllAsync_ShouldReturnAllApplications()
+        public async Task GetAllAsync_WithPredicate_ShouldReturnFilteredApplications()
         {
             // Arrange
             var applications = new List<Application>
             {
-                new Application { Id = 1, Code = "APP0000001", Name = "Saga 2.0", IsActive = true },
-                new Application { Id = 2, Code = "APP0000002", Name = "Sicof Lite", IsActive = false }
+                new Application { Id = 1, Code = "APP0000001", Name = "Integration", IsActive = true },
+                new Application { Id = 2, Code = "APP0000002", Name = "Saga 2.0", IsActive = false },
+                new Application { Id = 3, Code = "APP0000003", Name = "Sicof Lite", IsActive = false }
             };
-            _mock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Application, bool>>>()))
-                .ReturnsAsync(applications);
+
+            Expression<Func<Application, bool>> predicate = app => app.IsActive;
+            var expectedResults = applications.Where(predicate.Compile()).ToList();
+
+            _mock.Setup(repo => repo.GetAllAsync(predicate))
+                .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _mock.Object.GetAllAsync(app => true);
+            var result = await _mock.Object.GetAllAsync(predicate);
 
             // Assert
             Assert.NotNull(result);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(expectedResults.Count, result.Count);
+            Assert.IsTrue(result.All(app => app.IsActive));
+        }
+
+        [Test]
+        public async Task GetAllAsync_WithPredicates_ShouldReturnFilteredApplications()
+        {
+            // Arrange
+            var applications = new List<Application>
+            {
+                new Application { Id = 1, Code = "APP0000001", Name = "Integration", IsActive = true },
+                new Application { Id = 2, Code = "APP0000002", Name = "Saga 2.0", IsActive = false },
+                new Application { Id = 3, Code = "APP0000003", Name = "Sicof Lite", IsActive = true }
+            };
+
+            var predicates = new List<Expression<Func<Application, bool>>>
+            {
+                app => app.IsActive,
+                app => app.Code.Contains("APP")
+            };
+
+            var expectedResults = applications.Where(app => predicates.All(p => p.Compile()(app))).ToList();
+
+            _mock.Setup(repo => repo.GetAllAsync(predicates))
+                .ReturnsAsync(expectedResults);
+
+            // Act
+            var result = await _mock.Object.GetAllAsync(predicates);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(expectedResults.Count, result.Count);
+            Assert.IsTrue(result.All(app => app.IsActive));
         }
 
         [Test]
@@ -68,8 +117,9 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         {
             // Arrange
             var application = new Application { Id = 1, Code = "APP0000001", Name = "Updated Name", IsActive = true };
-            _mock.Setup(repo => repo.UpdateAsync(application))
-                .ReturnsAsync(application);
+
+            _mock.Setup(repo => repo.UpdateAsync(It.IsAny<Application>()))
+                .ReturnsAsync((Application app) => app);
 
             // Act
             var result = await _mock.Object.UpdateAsync(application);
@@ -102,6 +152,7 @@ namespace Integration.Infrastructure.Test.Repositories.Security
                 new Application { Id = 1, Code = "APP0000001", Name = "Saga 2.0", IsActive = true },
                 new Application { Id = 2, Code = "APP0000002", Name = "Sicof Lite", IsActive = true }
             };
+
             _mock.Setup(repo => repo.GetAllActiveAsync())
                 .ReturnsAsync(activeApplications);
 
@@ -112,18 +163,23 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             Assert.NotNull(result);
             Assert.IsTrue(result.All(app => app.IsActive));
         }
+
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedApplication()
         {
             // Arrange
             var application = new Application { Id = 1, Code = "APP0000001", Name = "Integration", IsActive = true };
-            _mock.Setup(repo => repo.CreateAsync(application))
-                .ReturnsAsync(application);
+
+            _mock.Setup(repo => repo.CreateAsync(It.IsAny<Application>()))
+                .ReturnsAsync((Application app) => app);
+
             // Act
             var result = await _mock.Object.CreateAsync(application);
+
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Id);
+            Assert.AreEqual("APP0000001", result.Code);
         }
     }
 }

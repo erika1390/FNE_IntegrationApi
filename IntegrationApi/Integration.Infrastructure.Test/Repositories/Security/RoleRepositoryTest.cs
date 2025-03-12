@@ -12,27 +12,7 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         {
             _mock = new Mock<IRoleRepository>();
         }
-        [Test]
-        public async Task GetByIdAsync_ShouldReturnRole()
-        {
-            // Arrange
-            var Role = new Role
-            {
-                Id = 1,
-                Code = "ROL0000001",
-                Name = "Administrador",
-                ApplicationId = 1,
-                CreatedBy = "System",
-                CreatedAt = DateTime.Now,
-                IsActive = true
-            };
-            _mock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(Role);
-            // Act
-            var result = await _mock.Object.GetByIdAsync(1);
-            // Assert
-            Assert.NotNull(result);
-            Assert.AreEqual(1, result.Id);
-        }
+        
         [Test]
         public async Task GetAllAsync_WithPredicate_ShouldReturnFilteredRoles()
         {
@@ -99,16 +79,6 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Id);
-        }
-        [Test]
-        public async Task DeleteAsync_ShouldReturnTrue()
-        {
-            // Arrange
-            _mock.Setup(repo => repo.DeleteAsync(1)).ReturnsAsync(true);
-            // Act
-            var result = await _mock.Object.DeleteAsync(1);
-            // Assert
-            Assert.IsTrue(result);
         }
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnActiveRoles()

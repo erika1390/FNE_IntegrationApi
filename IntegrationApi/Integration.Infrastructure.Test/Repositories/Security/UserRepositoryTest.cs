@@ -13,44 +13,7 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         {
             _mock = new Mock<IUserRepository>();
         }
-        [Test]
-        public async Task GetByIdAsync_ShouldReturnUser()
-        {
-            // Arrange
-            var user = new User
-            {
-                Id = 1,
-                Code = "USR0000001",
-                FirstName = "Erika",
-                LastName = "Pulido Moreno",
-                DateOfBirth = DateTime.Now.AddYears(-34),                
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                CreatedBy = "System",
-                UpdatedBy = "System",
-                IsActive = true,
-                UserName = "epulido",
-                NormalizedUserName = "EPULIDO",
-                Email = "epulido@minsalud.gov.co",
-                NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
-                EmailConfirmed = true,
-                PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                SecurityStamp = "QJZQ4Q",
-                ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                PhoneNumber = "3001234567",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = true,
-                AccessFailedCount = 0
-            };
-            _mock.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(user);
-            // Act
-            var result = await _mock.Object.GetByIdAsync(1);
-            // Assert
-            Assert.NotNull(result);
-            Assert.AreEqual(1, result.Id);
-        }
+        
         [Test]
         public async Task GetAllAsync_WithPredicate_ShouldReturnFilteredUsers()
         {
@@ -272,9 +235,9 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task DeleteAsync_ShouldReturnTrue()
         {
             // Arrange
-            _mock.Setup(repo => repo.DeleteAsync(1)).ReturnsAsync(true);
+            _mock.Setup(repo => repo.DeactivateAsync(1)).ReturnsAsync(true);
             // Act
-            var result = await _mock.Object.DeleteAsync(1);
+            var result = await _mock.Object.DeactivateAsync(1);
             // Assert
             Assert.IsTrue(result);
         }
