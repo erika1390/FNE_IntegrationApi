@@ -42,31 +42,34 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeactivateAsync(string code)
         {
             try
             {
-                var user = await _context.Users.FindAsync(id);
+                var user = await _context.Users
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (user == null)
                 {
-                    _logger.LogWarning("No se encontró el usuario con ID {UserId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el usuario con ID {UserId} para eliminar.", code);
                     return false;
                 }
                 user.IsActive = false;
                 user.UpdatedAt = DateTime.UtcNow;
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Usuario desactivado: {UserId}", id);
+                _logger.LogInformation("Usuario desactivado: {UserId}", code);
                 return true;
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error de base de datos al eliminar el usuario con ID {UserId}.", id);
+                _logger.LogError(ex, "Error de base de datos al eliminar el usuario con ID {UserId}.", code);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al eliminar el usuario con ID {UserId}.", id);
+                _logger.LogError(ex, "Error inesperado al eliminar el usuario con ID {UserId}.", code);
                 return false;
             }
         }
@@ -147,28 +150,6 @@ namespace Integration.Infrastructure.Repositories.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener el usuario con UserCode {UserCode}.", code);
-                return null;
-            }
-        }
-
-        public async Task<User> GetByIdAsync(int id)
-        {
-            try
-            {
-                var user = await _context.Users.FirstOrDefaultAsync(r => r.Id == id);
-                if (user == null)
-                {
-                    _logger.LogWarning("No se encontró el usuario con ID {UserId}.", id);
-                    return null;
-                }
-
-                _logger.LogInformation("Rol encontrado: UserId: {UserId}, Nombre: {Name}", user.Id, user.UserName);
-
-                return user;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el usuario con ID {UserId}.", id);
                 return null;
             }
         }

@@ -43,31 +43,34 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeactivateAsync(string code)
         {
             try
             {
-                var role = await _context.Roles.FindAsync(id);
+                var role = await _context.Roles
+                    .Where(a => a.Code == code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (role == null)
                 {
-                    _logger.LogWarning("No se encontró el rol con ID {RolId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el rol con RolCode {RolCode} para eliminar.", code);
                     return false;
                 }
                 role.IsActive = false;
                 role.UpdatedAt = DateTime.UtcNow;
                 _context.Roles.Update(role);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Rol desactivado: {RolId}", id);
+                _logger.LogInformation("Rol desactivado: {RolCode}", code);
                 return true;
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error de base de datos al eliminar el rol con ID {RolId}.", id);
+                _logger.LogError(ex, "Error de base de datos al eliminar el rol con RolCode {RolCode}.", code);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al eliminar el rol con ID {RolId}.", id);
+                _logger.LogError(ex, "Error inesperado al eliminar el rol con RolCode {RolCode}.", code);
                 return false;
             }
         }
@@ -146,28 +149,6 @@ namespace Integration.Infrastructure.Repositories.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener el rol con RolCode {RolCode}.", code);
-                return null;
-            }
-        }
-
-        public async Task<Role> GetByIdAsync(int id)
-        {
-            try
-            {
-                var role = await _context.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
-                if (role == null)
-                {
-                    _logger.LogWarning("No se encontró el rol con ID {RolId}.", id);
-                    return null;
-                }
-
-                _logger.LogInformation("Rol encontrado: RolId: {RolId}, Nombre: {Name}", role.Id, role.Name);
-
-                return role;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el rol con ID {RolId}.", id);
                 return null;
             }
         }

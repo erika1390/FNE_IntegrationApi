@@ -35,25 +35,25 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(int id)
+        public async Task<bool> DeactivateAsync(string code)
         {
-            _logger.LogInformation("Eliminando rol con ID: {RoleId}", id);
+            _logger.LogInformation("Eliminando rol con RoleCode: {RoleCode}", code);
             try
             {
-                bool success = await _repository.DeleteAsync(id);
+                bool success = await _repository.DeactivateAsync(code);
                 if (success)
                 {
-                    _logger.LogInformation("Rol con ID {RoleId} eliminada correctamente.", id);
+                    _logger.LogInformation("Rol con RoleCode {RoleCode} eliminada correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el rol con ID {RoleId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode} para eliminar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el rol con ID {RoleId}.", id);
+                _logger.LogError(ex, "Error al eliminar el rol con RoleCode {RoleCode}.", code);
                 throw;
             }
         }
@@ -113,23 +113,23 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<RoleDTO> GetByIdAsync(int id)
+        public async Task<RoleDTO> GetByCodeAsync(string code)
         {
-            _logger.LogInformation("Buscando rol con ID: {RoleId}", id);
+            _logger.LogInformation("Buscando rol con RoleCode: {RoleCode}", code);
             try
             {
-                var permission = await _repository.GetByIdAsync(id);
+                var permission = await _repository.GetByCodeAsync(code);
                 if (permission == null)
                 {
-                    _logger.LogWarning("No se encontró el rol con ID {RoleId}.", id);
+                    _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode}.", code);
                     return null;
                 }
-                _logger.LogInformation("Rol encontrada: {RoleId}, Nombre: {Name}", permission.Id, permission.Name);
+                _logger.LogInformation("Rol encontrada: RoleCode: {RoleCode}, Nombre: {Name}", permission.Code, permission.Name);
                 return _mapper.Map<RoleDTO>(permission);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el rol con ID {RoleId}.", id);
+                _logger.LogError(ex, "Error al obtener el rol con RoleCode {RoleCode}.", code);
                 throw;
             }
         }

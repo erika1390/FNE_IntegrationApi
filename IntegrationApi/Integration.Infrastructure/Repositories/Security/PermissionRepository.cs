@@ -152,28 +152,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<Permission> GetByIdAsync(int id)
-        {
-            try
-            {
-                var permission = await _context.Permissions.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-                if (permission == null)
-                {
-                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId}.", id);
-                    return null;
-                }
-
-                _logger.LogInformation("Permiso encontrado: Permiso: {PermissionId}, Nombre: {Name}", permission.Id, permission.Name);
-
-                return permission;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el permiso con ID {PermissionId}.", id);
-                return null;
-            }
-        }
-
+        
         public async Task<Permission> UpdateAsync(Permission permission)
         {
             if (permission == null)

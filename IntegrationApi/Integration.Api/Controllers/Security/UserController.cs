@@ -3,6 +3,8 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -33,16 +35,16 @@ namespace Integration.Api.Controllers.Security
             });
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode(string code)
         {
             return await HandleRequest(async () =>
             {
-                if (id <= 0)
+                if (code.IsNullOrEmpty())
                 {
-                    return BadRequest(ResponseApi<UserDTO>.Error("El ID debe ser mayor a 0."));
+                    return BadRequest(ResponseApi<UserDTO>.Error("El code debe ser nulo o vacio."));
                 }
-                var result = await _service.GetByIdAsync(id);
+                var result = await _service.GetByCodeAsync(code);
                 if (result == null)
                 {
                     return NotFound(ResponseApi<UserDTO>.Error("Usuario no encontrado."));
@@ -137,7 +139,7 @@ namespace Integration.Api.Controllers.Security
                 {
                     return BadRequest(ResponseApi<UserDTO>.Error("No se pudo crear el usuario."));
                 }
-                return CreatedAtAction(nameof(GetById), new { id = result.UserId },
+                return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
                     ResponseApi<UserDTO>.Success(result, "Usuario creado con éxito."));
             });
         }
@@ -161,17 +163,17 @@ namespace Integration.Api.Controllers.Security
             });
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{code}")]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string code)
         {
             return await HandleRequest(async () =>
             {
-                if (id <= 0)
+                if (code.IsNullOrEmpty())
                 {
-                    return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor a 0."));
+                    return BadRequest(ResponseApi<bool>.Error("El code debe ser nulo o vacio."));
                 }
-                var result = await _service.DeactivateAsync(id);
+                var result = await _service.DeactivateAsync(code);
                 if (!result)
                 {
                     return NotFound(ResponseApi<bool>.Error("Usuario no encontrado."));

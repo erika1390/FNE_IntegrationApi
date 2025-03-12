@@ -28,7 +28,7 @@ namespace Integration.Application.Services.Security
                 user.SecurityStamp = Guid.NewGuid().ToString();
                 user.ConcurrencyStamp = Guid.NewGuid().ToString();
                 var result = await _repository.CreateAsync(user);
-                _logger.LogInformation("Usuario creado con éxito: {UserId}, Nombre: {Name}", result.Id, result.UserName);
+                _logger.LogInformation("Usuario creado con éxito: UserCode: {UserCode}, Nombre: {Name}", result.Code, result.UserName);
                 return _mapper.Map<UserDTO>(result);
             }
             catch (Exception ex)
@@ -38,25 +38,25 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(int id)
+        public async Task<bool> DeactivateAsync(string code)
         {
-            _logger.LogInformation("Eliminando usuario con ID: {UserId}", id);
+            _logger.LogInformation("Eliminando usuario con UserCode: {UserCode}", code);
             try
             {
-                bool success = await _repository.DeleteAsync(id);
+                bool success = await _repository.DeactivateAsync(code);
                 if (success)
                 {
-                    _logger.LogInformation("Usuario con ID {UserId} eliminada correctamente.", id);
+                    _logger.LogInformation("Usuario con UserCode {UserCode} eliminada correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el usuario con ID {UserId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el usuario con UserCode {UserCode} para eliminar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el usuario con ID {UserId}.", id);
+                _logger.LogError(ex, "Error al eliminar el usuario con UserCode {UserCode}.", code);
                 throw;
             }
         }
@@ -116,23 +116,23 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<UserDTO> GetByIdAsync(int id)
+        public async Task<UserDTO> GetByCodeAsync(string code)
         {
-            _logger.LogInformation("Buscando usuario con ID: {UserId}", id);
+            _logger.LogInformation("Buscando usuario con UserCode: {UserCode}", code);
             try
             {
-                var permission = await _repository.GetByIdAsync(id);
+                var permission = await _repository.GetByCodeAsync(code);
                 if (permission == null)
                 {
-                    _logger.LogWarning("No se encontró el usuario con ID {UserId}.", id);
+                    _logger.LogWarning("No se encontró el usuario con UserCode {UserCode}.", code);
                     return null;
                 }
-                _logger.LogInformation("Usuario encontrada: {UserId}, Nombre: {Name}", permission.Id, permission.UserName);
+                _logger.LogInformation("Usuario encontrada: UserCode:{UserCode}, Nombre: {Name}", permission.Code, permission.UserName);
                 return _mapper.Map<UserDTO>(permission);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el usuarios con ID {UserId}.", id);
+                _logger.LogError(ex, "Error al obtener el usuarios con UserCode {UserCode}.", code);
                 throw;
             }
         }

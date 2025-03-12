@@ -3,6 +3,8 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -42,29 +44,29 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode(string code)
         {
-            if (id <= 0)
+            if (code.IsNullOrEmpty())
             {
-                _logger.LogWarning("Se recibió un ID no válido ({RoleId}) en la solicitud de búsqueda.", id);
-                return BadRequest(ResponseApi<RoleDTO>.Error("El ID debe ser mayor a 0."));
+                _logger.LogWarning("Se recibió un RoleCode no válido ({RoleCode}) en la solicitud de búsqueda.", code);
+                return BadRequest(ResponseApi<RoleDTO>.Error("El code node debe ser nulo o vacio."));
             }
-            _logger.LogInformation("Buscando rol con ID: {RoleId}", id);
+            _logger.LogInformation("Buscando rol con RoleCode: {RoleCode}", code);
             try
             {
-                var result = await _service.GetByIdAsync(id);
+                var result = await _service.GetByCodeAsync(code);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se encontró el rol con ID {RoleId}.", id);
+                    _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode}.", code);
                     return NotFound(ResponseApi<RoleDTO>.Error("Rol no encontrada."));
                 }
-                _logger.LogInformation("Rol encontrada: ID={RoleId}, Nombre={Name}", result.RoleId, result.Name);
+                _logger.LogInformation("Rol encontrada: RoleCode={RoleCode}, Nombre={Name}", result.RoleId, result.Name);
                 return Ok(ResponseApi<RoleDTO>.Success(result));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el rol con ID {RoleId}.", id);
+                _logger.LogError(ex, "Error al obtener el rol con RoleCode {RoleCode}.", code);
                 return StatusCode(500, ResponseApi<RoleDTO>.Error("Error interno del servidor."));
             }
         }
@@ -168,8 +170,8 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se pudo crear el rol.");
                     return BadRequest(ResponseApi<RoleDTO>.Error("No se pudo crear el rol."));
                 }
-                _logger.LogInformation("Rol creado con éxito: ID={RoleId}, Nombre={Name}", result.RoleId, result.Name);
-                return CreatedAtAction(nameof(GetById), new { id = result.RoleId },
+                _logger.LogInformation("Rol creado con éxito: RoleCode={RoleCode}, Nombre={Name}", result.Code, result.Name);
+                return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
                     ResponseApi<RoleDTO>.Success(result, "Rol creada con éxito."));
             }
             catch (Exception ex)
@@ -207,32 +209,32 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{code}")]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string code)
         {
-            if (id <= 0)
+            if (code.IsNullOrEmpty())
             {
-                _logger.LogWarning("Se recibió un ID no válido ({RoleId}) en la solicitud de eliminación.", id);
-                return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor a 0."));
+                _logger.LogWarning("Se recibió un RoleCode no válido ({RoleCode}) en la solicitud de eliminación.", code);
+                return BadRequest(ResponseApi<bool>.Error("El RoleCode debe ser nulo o vacio."));
             }
-            _logger.LogInformation("Eliminando rol con ID: {RoleId}", id);
+            _logger.LogInformation("Eliminando rol con RoleCode: {RoleCode}", code);
             try
             {
-                var result = await _service.DeactivateAsync(id);
+                var result = await _service.DeactivateAsync(code);
                 if (!result)
                 {
-                    _logger.LogWarning("No se encontró el rol con ID {RoleId} para eliminar.", id);
+                    _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode} para eliminar.", code);
                     return NotFound(ResponseApi<bool>.Error("Rol no encontrada."));
                 }
-                _logger.LogInformation("Rol eliminada con éxito: ID={RoleId}", id);
+                _logger.LogInformation("Rol eliminada con éxito: RoleCode={RoleCode}", code);
                 return Ok(ResponseApi<bool>.Success(result, "Rol eliminada correctamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el rol con ID {RoleId}.", id);
+                _logger.LogError(ex, "Error al eliminar el rol con RoleCode {RoleCode}.", code);
                 return StatusCode(500, ResponseApi<bool>.Error("Error interno del servidor."));
             }
         }
-    }
+    }   
 }

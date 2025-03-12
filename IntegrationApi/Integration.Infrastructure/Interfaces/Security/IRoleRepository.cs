@@ -5,11 +5,10 @@ namespace Integration.Infrastructure.Interfaces.Security
     public interface IRoleRepository
     {
         Task<Role> CreateAsync(Role role);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeactivateAsync(string code);
         Task<IEnumerable<Role>> GetAllActiveAsync();
         Task<List<Role>> GetAllAsync(Expression<Func<Role, bool>> predicado);
         Task<List<Role>> GetAllAsync(List<Expression<Func<Role, bool>>> predicados);
-        Task<Role> GetByIdAsync(int id);
         Task<Role> GetByCodeAsync(string code);
         Task<Role> UpdateAsync(Role role);
     }
