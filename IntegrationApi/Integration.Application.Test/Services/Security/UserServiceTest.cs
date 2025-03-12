@@ -90,23 +90,23 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task DeleteAsync_ShouldReturnTrue_WhenUserIsDeleted()
+        public async Task DeactivateAsync_ShouldReturnTrue_WhenUserIsDeactivate()
         {
-            int userId = 1;
-            _repositoryMock.Setup(r => r.DeleteAsync(userId)).ReturnsAsync(true);
+            string userCode = "USR0000001";
+            _repositoryMock.Setup(r => r.DeactivateAsync(userCode)).ReturnsAsync(true);
 
-            var result = await _userService.DeactivateAsync(userId);
+            var result = await _userService.DeactivateAsync(userCode);
 
             Assert.IsTrue(result);
         }
 
         [Test]
-        public async Task DeleteAsync_ShouldReturnFalse_WhenUserIsNotFound()
+        public async Task DeactivateAsync_ShouldReturnFalse_WhenUserIsNotFound()
         {
-            int userId = 1;
-            _repositoryMock.Setup(r => r.DeleteAsync(userId)).ReturnsAsync(false);
+            string userCode = "USR0000001";
+            _repositoryMock.Setup(r => r.DeactivateAsync(userCode)).ReturnsAsync(false);
 
-            var result = await _userService.DeactivateAsync(userId);
+            var result = await _userService.DeactivateAsync(userCode);
 
             Assert.IsFalse(result);
         }
@@ -179,9 +179,9 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task GetByIdAsync_ShouldReturnUserDTO_WhenUserExists()
+        public async Task GetByCodeAsync_ShouldReturnUserDTO_WhenUserExists()
         {
-            int userId = 1;
+            string userCode = "USR0000001";
             var user = new Integration.Core.Entities.Security.User {
                 Id = 1,
                 Code = "USR0000001",
@@ -233,18 +233,18 @@ namespace Integration.Application.Test.Services.Security
                 LockoutEnabled = true,
                 AccessFailedCount = 0
             };
-            _repositoryMock.Setup(r => r.GetByIdAsync(userId)).ReturnsAsync(user);
+            _repositoryMock.Setup(r => r.GetByCodeAsync(userCode)).ReturnsAsync(user);
             _mapperMock.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
-            var result = await _userService.GetByIdAsync(userId);
+            var result = await _userService.GetByCodeAsync(userCode);
             Assert.AreEqual(userDTO, result);
         }
 
         [Test]
-        public async Task GetByIdAsync_ShouldReturnNull_WhenUserDoesNotExist()
+        public async Task GetByCodeAsync_ShouldReturnNull_WhenUserDoesNotExist()
         {
-            int userId = 1;
-            _repositoryMock.Setup(r => r.GetByIdAsync(userId)).ReturnsAsync((Integration.Core.Entities.Security.User)null);
-            var result = await _userService.GetByIdAsync(userId);
+            string userCode = "USR0000001";
+            _repositoryMock.Setup(r => r.GetByCodeAsync(userCode)).ReturnsAsync((Integration.Core.Entities.Security.User)null);
+            var result = await _userService.GetByCodeAsync(userCode);
             Assert.IsNull(result);
         }
 

@@ -8,304 +8,167 @@ namespace Integration.Infrastructure.Test.Repositories.Security
     public class UserRepositoryTest
     {
         private Mock<IUserRepository> _mock;
+
         [SetUp]
         public void Setup()
         {
             _mock = new Mock<IUserRepository>();
         }
-        
+
+        [Test]
+        public async Task GetByCodeAsync_ShouldReturnCorrectUser()
+        {
+            // Arrange
+            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="System", FirstName="Erika", LastName="Pulido"};
+            _mock.Setup(repo => repo.GetByCodeAsync("USR0000001"))
+                .ReturnsAsync(user);
+
+            // Act
+            var result = await _mock.Object.GetByCodeAsync("USR0000001");
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual("USR0000001", result.Code);
+            Assert.AreEqual("epulido", result.UserName);
+        }
+
+        [Test]
+        public async Task GetByCodeAsync_ShouldReturnNullForNonExistentCode()
+        {
+            // Arrange
+            _mock.Setup(repo => repo.GetByCodeAsync("INVALID_CODE"))
+                .ReturnsAsync((User)null);
+
+            // Act
+            var result = await _mock.Object.GetByCodeAsync("INVALID_CODE");
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
         [Test]
         public async Task GetAllAsync_WithPredicate_ShouldReturnFilteredUsers()
         {
             // Arrange
-            var Users = new List<User>
+            var users = new List<User>
             {
-                new User { 
-                    Id = 1,
-                    Code = "USR0000001",
-                    FirstName = "Erika",
-                    LastName = "Pulido Moreno",
-                    DateOfBirth = DateTime.Now.AddYears(-34),
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    CreatedBy = "System",
-                    UpdatedBy = "System",
-                    IsActive = true,
-                    UserName = "epulido",
-                    NormalizedUserName = "EPULIDO",
-                    Email = "epulido@minsalud.gov.co",
-                    NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
-                    EmailConfirmed = true,
-                    PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "QJZQ4Q",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                    PhoneNumber = "3001234567",
-                    PhoneNumberConfirmed = true,
-                    TwoFactorEnabled = false,
-                    LockoutEnd = null,
-                    LockoutEnabled = true,
-                    AccessFailedCount = 0
-                },
-                new User {
-                    Id = 2,
-                    Code = "USR0000002",
-                    FirstName = "Julian",
-                    LastName = "Cuervo Bustamante",
-                    DateOfBirth = DateTime.Now.AddYears(-45),
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    CreatedBy = "System",
-                    UpdatedBy = "System",
-                    IsActive = true,
-                    UserName = "jcuervo",
-                    NormalizedUserName = "JCUERVO",
-                    Email = "jcuervo@minsalud.gov.co",
-                    NormalizedEmail = "JCUERVO@MINSALUD.GOV.CO",
-                    EmailConfirmed = true,
-                    PasswordHash = "AQBBBBEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "TJZM4H",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                    PhoneNumber = "3001234567",
-                    PhoneNumberConfirmed = true,
-                    TwoFactorEnabled = false,
-                    LockoutEnd = null,
-                    LockoutEnabled = true,
-                    AccessFailedCount = 0
-                }
+                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="System", FirstName="Erika", LastName="Pulido" },
+                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="System", FirstName="system1", LastName="system2" }
             };
-            Expression<Func<User, bool>> predicate = app => app.IsActive;
+
+            Expression<Func<User, bool>> predicate = user => user.IsActive;
+            var expectedResults = users.Where(predicate.Compile()).ToList();
+
             _mock.Setup(repo => repo.GetAllAsync(predicate))
-                .ReturnsAsync(Users.Where(predicate.Compile()).ToList());
+                .ReturnsAsync(expectedResults);
+
             // Act
             var result = await _mock.Object.GetAllAsync(predicate);
+
             // Assert
             Assert.NotNull(result);
-            Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.First().IsActive);
+            Assert.AreEqual(expectedResults.Count, result.Count);
+            Assert.IsTrue(result.All(user => user.IsActive));
         }
+
         [Test]
         public async Task GetAllAsync_WithPredicates_ShouldReturnFilteredUsers()
         {
             // Arrange
-            var Users = new List<User>
+            var users = new List<User>
             {
-                 new User {
-                    Id = 1,
-                    Code = "USR0000001",
-                    FirstName = "Erika",
-                    LastName = "Pulido Moreno",
-                    DateOfBirth = DateTime.Now.AddYears(-34),
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    CreatedBy = "System",
-                    UpdatedBy = "System",
-                    IsActive = true,
-                    UserName = "epulido",
-                    NormalizedUserName = "EPULIDO",
-                    Email = "epulido@minsalud.gov.co",
-                    NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
-                    EmailConfirmed = true,
-                    PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "QJZQ4Q",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                    PhoneNumber = "3001234567",
-                    PhoneNumberConfirmed = true,
-                    TwoFactorEnabled = false,
-                    LockoutEnd = null,
-                    LockoutEnabled = true,
-                    AccessFailedCount = 0
-                },
-                new User {
-                    Id = 2,
-                    Code = "USR0000002",
-                    FirstName = "Julian",
-                    LastName = "Cuervo Bustamante",
-                    DateOfBirth = DateTime.Now.AddYears(-45),
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    CreatedBy = "System",
-                    UpdatedBy = "System",
-                    IsActive = true,
-                    UserName = "jcuervo",
-                    NormalizedUserName = "JCUERVO",
-                    Email = "jcuervo@minsalud.gov.co",
-                    NormalizedEmail = "JCUERVO@MINSALUD.GOV.CO",
-                    EmailConfirmed = true,
-                    PasswordHash = "AQBBBBEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "TJZM4H",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                    PhoneNumber = "3001234567",
-                    PhoneNumberConfirmed = true,
-                    TwoFactorEnabled = false,
-                    LockoutEnd = null,
-                    LockoutEnabled = true,
-                    AccessFailedCount = 0
-                }
+                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="System", FirstName="Erika", LastName="Pulido" },
+                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="System", FirstName="system1", LastName="system2" }
             };
+
             var predicates = new List<Expression<Func<User, bool>>>
             {
-                app => app.IsActive,
-                app => app.Code.Contains("USR")
+                user => user.IsActive,
+                user => user.Code.Contains("USR")
             };
+
+            var expectedResults = users.Where(user => predicates.All(p => p.Compile()(user))).ToList();
+
             _mock.Setup(repo => repo.GetAllAsync(predicates))
-                .ReturnsAsync(Users.Where(app => predicates.All(p => p.Compile()(app))).ToList());
+                .ReturnsAsync(expectedResults);
+
             // Act
             var result = await _mock.Object.GetAllAsync(predicates);
+
             // Assert
             Assert.NotNull(result);
-            Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.First().IsActive);
+            Assert.AreEqual(expectedResults.Count, result.Count);
+            Assert.IsTrue(result.All(user => user.IsActive));
         }
-        [Test]
-        public async Task CreateAsync_ShouldReturnCreatedUser()
-        {
-            // Arrange
-            var User = new User {
-                Id = 1,
-                Code = "USR0000001",
-                FirstName = "Erika",
-                LastName = "Pulido Moreno",
-                DateOfBirth = DateTime.Now.AddYears(-34),
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                CreatedBy = "System",
-                UpdatedBy = "System",
-                IsActive = true,
-                UserName = "epulido",
-                NormalizedUserName = "EPULIDO",
-                Email = "epulido@minsalud.gov.co",
-                NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
-                EmailConfirmed = true,
-                PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                SecurityStamp = "QJZQ4Q",
-                ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                PhoneNumber = "3001234567",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = true,
-                AccessFailedCount = 0
-            };
-            _mock.Setup(repo => repo.CreateAsync(User))
-                .ReturnsAsync(User);
-            // Act
-            var result = await _mock.Object.CreateAsync(User);
-            // Assert
-            Assert.NotNull(result);
-            Assert.AreEqual(1, result.Id);
-        }
+
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedUser()
         {
             // Arrange
-            var User = new User {
-                Id = 1,
-                Code = "USR0000001",
-                FirstName = "Erika",
-                LastName = "Pulido Moreno",
-                DateOfBirth = DateTime.Now.AddYears(-34),
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                CreatedBy = "System",
-                UpdatedBy = "System",
-                IsActive = true,
-                UserName = "epulido",
-                NormalizedUserName = "EPULIDO",
-                Email = "epulido@minsalud.gov.co",
-                NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
-                EmailConfirmed = true,
-                PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                SecurityStamp = "QJZQ4Q",
-                ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                PhoneNumber = "3001234567",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnd = null,
-                LockoutEnabled = true,
-                AccessFailedCount = 0
-            };
-            _mock.Setup(repo => repo.UpdateAsync(User)).ReturnsAsync(User);
+            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy = "System", FirstName = "Erika", LastName = "Pulido" };
+
+            _mock.Setup(repo => repo.UpdateAsync(It.IsAny<User>()))
+                .ReturnsAsync((User u) => u);
+
             // Act
-            var result = await _mock.Object.UpdateAsync(User);
+            var result = await _mock.Object.UpdateAsync(user);
+
             // Assert
             Assert.NotNull(result);
-            Assert.AreEqual(1, result.Id);
+            Assert.AreEqual("epulido", result.UserName);
         }
+
         [Test]
-        public async Task DeleteAsync_ShouldReturnTrue()
+        public async Task DeactivateAsync_ShouldReturnTrue()
         {
             // Arrange
-            _mock.Setup(repo => repo.DeactivateAsync(1)).ReturnsAsync(true);
+            _mock.Setup(repo => repo.DeactivateAsync("USR0000001"))
+                .ReturnsAsync(true);
+
             // Act
-            var result = await _mock.Object.DeactivateAsync(1);
+            var result = await _mock.Object.DeactivateAsync("USR0000001");
+
             // Assert
             Assert.IsTrue(result);
         }
+
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnActiveUsers()
         {
             // Arrange
             var activeUsers = new List<User>
             {
-                new User {
-                    Id = 1,
-                    Code = "USR0000001",
-                    FirstName = "Erika",
-                    LastName = "Pulido Moreno",
-                    DateOfBirth = DateTime.Now.AddYears(-34),
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    CreatedBy = "System",
-                    UpdatedBy = "System",
-                    IsActive = true,
-                    UserName = "epulido",
-                    NormalizedUserName = "EPULIDO",
-                    Email = "epulido@minsalud.gov.co",
-                    NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
-                    EmailConfirmed = true,
-                    PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "QJZQ4Q",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                    PhoneNumber = "3001234567",
-                    PhoneNumberConfirmed = true,
-                    TwoFactorEnabled = false,
-                    LockoutEnd = null,
-                    LockoutEnabled = true,
-                    AccessFailedCount = 0
-                },
-                new User {
-                    Id = 2,
-                    Code = "USR0000002",
-                    FirstName = "Julian",
-                    LastName = "Cuervo Bustamante",
-                    DateOfBirth = DateTime.Now.AddYears(-45),
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    CreatedBy = "System",
-                    UpdatedBy = "System",
-                    IsActive = true,
-                    UserName = "jcuervo",
-                    NormalizedUserName = "JCUERVO",
-                    Email = "jcuervo@minsalud.gov.co",
-                    NormalizedEmail = "JCUERVO@MINSALUD.GOV.CO",
-                    EmailConfirmed = true,
-                    PasswordHash = "AQBBBBEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "TJZM4H",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
-                    PhoneNumber = "3001234567",
-                    PhoneNumberConfirmed = true,
-                    TwoFactorEnabled = false,
-                    LockoutEnd = null,
-                    LockoutEnabled = true,
-                    AccessFailedCount = 0
-                }
+                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="System", FirstName="Erika", LastName="Pulido" },
+                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="System", FirstName="system1", LastName="system2" }
             };
-            _mock.Setup(repo => repo.GetAllActiveAsync()).ReturnsAsync(activeUsers);
+
+            _mock.Setup(repo => repo.GetAllActiveAsync())
+                .ReturnsAsync(activeUsers);
+
             // Act
             var result = await _mock.Object.GetAllActiveAsync();
+
             // Assert
             Assert.NotNull(result);
-            Assert.IsTrue(result.All(app => app.IsActive));
+            Assert.IsTrue(result.All(user => user.IsActive));
+        }
+
+        [Test]
+        public async Task CreateAsync_ShouldReturnCreatedUser()
+        {
+            // Arrange
+            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy = "System", FirstName = "Erika", LastName = "Pulido" };
+
+            _mock.Setup(repo => repo.CreateAsync(It.IsAny<User>()))
+                .ReturnsAsync((User u) => u);
+
+            // Act
+            var result = await _mock.Object.CreateAsync(user);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Id);
+            Assert.AreEqual("USR0000001", result.Code);
         }
     }
 }

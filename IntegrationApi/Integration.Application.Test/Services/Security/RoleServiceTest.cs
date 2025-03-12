@@ -43,10 +43,10 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeleteAsync_ShouldReturnTrue_WhenRoleIsDeleted()
         {
-            int RoleId = 1;
-            _repositoryMock.Setup(r => r.DeleteAsync(RoleId)).ReturnsAsync(true);
+            string roleCode = "ROL0000001";
+            _repositoryMock.Setup(r => r.DeactivateAsync(roleCode)).ReturnsAsync(true);
 
-            var result = await _RoleService.DeactivateAsync(RoleId);
+            var result = await _RoleService.DeactivateAsync(roleCode);
 
             Assert.IsTrue(result);
         }
@@ -54,10 +54,10 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeleteAsync_ShouldReturnFalse_WhenRoleIsNotFound()
         {
-            int RoleId = 1;
-            _repositoryMock.Setup(r => r.DeleteAsync(RoleId)).ReturnsAsync(false);
+            string roleCode = "ROL0000001";
+            _repositoryMock.Setup(r => r.DeactivateAsync(roleCode)).ReturnsAsync(false);
 
-            var result = await _RoleService.DeactivateAsync(RoleId);
+            var result = await _RoleService.DeactivateAsync(roleCode);
 
             Assert.IsFalse(result);
         }
@@ -77,27 +77,27 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task GetByIdAsync_ShouldReturnRoleDTO_WhenRoleExists()
+        public async Task GetByCodeAsync_ShouldReturnRoleDTO_WhenRoleExists()
         {
-            int RoleId = 1;
-            var Role = new Integration.Core.Entities.Security.Role { Id = RoleId, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" };
-            var RoleDTO = new RoleDTO { RoleId = RoleId, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
+            string roleCode = "ROL0000001";
+            var Role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" };
+            var RoleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
 
-            _repositoryMock.Setup(r => r.GetByIdAsync(RoleId)).ReturnsAsync(Role);
+            _repositoryMock.Setup(r => r.GetByCodeAsync(roleCode)).ReturnsAsync(Role);
             _mapperMock.Setup(m => m.Map<RoleDTO>(Role)).Returns(RoleDTO);
 
-            var result = await _RoleService.GetByIdAsync(RoleId);
+            var result = await _RoleService.GetByCodeAsync(roleCode);
 
             Assert.AreEqual(RoleDTO, result);
         }
 
         [Test]
-        public async Task GetByIdAsync_ShouldReturnNull_WhenRoleDoesNotExist()
+        public async Task GetByCodeAsync_ShouldReturnNull_WhenRoleDoesNotExist()
         {
-            int RoleId = 1;
-            _repositoryMock.Setup(r => r.GetByIdAsync(RoleId)).ReturnsAsync((Integration.Core.Entities.Security.Role)null);
+            string roleCode = "ROL0000001";
+            _repositoryMock.Setup(r => r.GetByCodeAsync(roleCode)).ReturnsAsync((Integration.Core.Entities.Security.Role)null);
 
-            var result = await _RoleService.GetByIdAsync(RoleId);
+            var result = await _RoleService.GetByCodeAsync(roleCode);
 
             Assert.IsNull(result);
         }
