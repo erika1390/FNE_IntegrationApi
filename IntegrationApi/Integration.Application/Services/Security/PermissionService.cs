@@ -35,7 +35,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(string code)
+        public async Task<bool> DeactivateAsync(string code)
         {
             _logger.LogInformation("Eliminando permiso con PermissionId: {PermissionId}", code);
             try

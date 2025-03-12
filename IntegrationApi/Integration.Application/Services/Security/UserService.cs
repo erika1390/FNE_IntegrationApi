@@ -38,7 +38,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeactivateAsync(int id)
         {
             _logger.LogInformation("Eliminando usuario con ID: {UserId}", id);
             try

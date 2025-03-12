@@ -5,7 +5,7 @@ namespace Integration.Application.Interfaces.Security
     public interface IUserService
     {
         Task<UserDTO> CreateAsync(UserDTO userDTO);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeactivateAsync(int id);
         Task<IEnumerable<UserDTO>> GetAllActiveAsync();
         Task<List<UserDTO>> GetAllAsync(Expression<Func<UserDTO, bool>> predicado);
         Task<List<UserDTO>> GetAllAsync(List<Expression<Func<UserDTO, bool>>> predicados);

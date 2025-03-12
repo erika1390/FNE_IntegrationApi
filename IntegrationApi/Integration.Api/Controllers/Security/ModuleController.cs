@@ -251,7 +251,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Eliminando módulo con ModuleCode: {ModuleCode}", code);
             try
             {
-                var result = await _service.DeleteAsync(code);
+                var result = await _service.DeactivateAsync(code);
                 if (!result)
                 {
                     _logger.LogWarning("Módulo con ModuleCode {ModuleCode} no encontrado.", code);

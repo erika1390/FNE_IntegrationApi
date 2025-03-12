@@ -219,7 +219,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Eliminando rol con ID: {RoleId}", id);
             try
             {
-                var result = await _service.DeleteAsync(id);
+                var result = await _service.DeactivateAsync(id);
                 if (!result)
                 {
                     _logger.LogWarning("No se encontró el rol con ID {RoleId} para eliminar.", id);

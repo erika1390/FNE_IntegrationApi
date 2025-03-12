@@ -167,7 +167,6 @@ namespace Integration.Api.Controllers.Security
         /// Crea un nuevo permiso.
         /// </summary>
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([FromBody] PermissionDTO permissionDTO)
         {
             if (!ModelState.IsValid)
@@ -199,7 +198,6 @@ namespace Integration.Api.Controllers.Security
         /// Actualiza un permiso existente.
         /// </summary>
         [HttpPut]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update([FromBody] PermissionDTO permissionDTO)
         {
             if (!ModelState.IsValid)
@@ -230,7 +228,6 @@ namespace Integration.Api.Controllers.Security
         /// Elimina un permiso por su ID.
         /// </summary>
         [HttpDelete("{code}")]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(string code)
         {
             if (code.IsNullOrEmpty())
@@ -241,7 +238,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Eliminando permiso con PermissionCode: {PermissionCode}", code);
             try
             {
-                var result = await _service.DeleteAsync(code);
+                var result = await _service.DeactivateAsync(code);
                 if (!result)
                 {
                     _logger.LogWarning("Permiso con PermissionCode {PermissionCode} no encontrado.", code);

@@ -5,7 +5,7 @@ namespace Integration.Application.Interfaces.Security
     public interface IRoleService
     {
         Task<RoleDTO> CreateAsync(RoleDTO roleDTO);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeactivateAsync(int id);
         Task<IEnumerable<RoleDTO>> GetAllActiveAsync();
         Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> predicado);
         Task<List<RoleDTO>> GetAllAsync(List<Expression<Func<RoleDTO, bool>>> predicados);

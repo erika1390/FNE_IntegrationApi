@@ -171,7 +171,7 @@ namespace Integration.Api.Controllers.Security
                 {
                     return BadRequest(ResponseApi<bool>.Error("El ID debe ser mayor a 0."));
                 }
-                var result = await _service.DeleteAsync(id);
+                var result = await _service.DeactivateAsync(id);
                 if (!result)
                 {
                     return NotFound(ResponseApi<bool>.Error("Usuario no encontrado."));
