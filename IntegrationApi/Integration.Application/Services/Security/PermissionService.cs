@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -139,7 +140,9 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Permiso creado exitosamente: PermissionCode={PermissionCode}, Name={Name}", permissionDTO.Code, permissionDTO.Name);
             try
             {
+                var permissionExist = await _repository.GetByCodeAsync(permissionDTO.Code);
                 var permission = _mapper.Map<Integration.Core.Entities.Security.Permission>(permissionDTO);
+                permission.Id = permissionExist.Id;
                 var updatedPermission = await _repository.UpdateAsync(permission);
                 if (updatedPermission == null)
                 {

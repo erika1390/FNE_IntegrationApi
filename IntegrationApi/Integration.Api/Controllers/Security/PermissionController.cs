@@ -1,11 +1,9 @@
 ﻿using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -170,10 +168,15 @@ namespace Integration.Api.Controllers.Security
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PermissionDTO permissionDTO)
         {
+            if (permissionDTO == null)
+            {
+                _logger.LogWarning("Se recibió una solicitud con datos nulos para crear un permiso.");
+                return BadRequest(ResponseApi<PermissionDTO>.Error("Los datos del permiso no pueden ser nulos."));
+            }
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Datos de entrada no válidos recibidos para crear un permiso.");
-                return BadRequest(ResponseApi<PermissionDTO>.Error("Datos de entrada no válidos."));
+                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un permiso.");
+                return BadRequest(ResponseApi<PermissionDTO>.Error("Datos de entrada inválidos."));
             }
             _logger.LogInformation("Creando nuevo permiso: {Name}", permissionDTO.Name);
             try
@@ -181,12 +184,12 @@ namespace Integration.Api.Controllers.Security
                 var result = await _service.CreateAsync(permissionDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("Fallo al crear el permiso.");
-                    return BadRequest(ResponseApi<PermissionDTO>.Error("Fallo al crear el permiso."));
+                    _logger.LogWarning("No se pudo crear el permiso.");
+                    return BadRequest(ResponseApi<PermissionDTO>.Error("No se pudo crear el permiso."));
                 }
-                _logger.LogInformation("Permiso creado exitosamente: PermissionCode={PermissionCode}, Name={Name}", result.Code, result.Name);
+                _logger.LogInformation("Permiso creado con éxito: Código={Code}, Nombre={Name}", result.Code, result.Name);
                 return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
-                    ResponseApi<PermissionDTO>.Success(result, "Permiso creado exitosamente."));
+                    ResponseApi<PermissionDTO>.Success(result, "Permiso creado con éxito."));
             }
             catch (Exception ex)
             {

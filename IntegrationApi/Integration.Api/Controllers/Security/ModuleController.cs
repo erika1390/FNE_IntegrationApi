@@ -181,23 +181,31 @@ namespace Integration.Api.Controllers.Security
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ModuleDTO moduleDTO)
         {
+            if (moduleDTO == null)
+            {
+                _logger.LogWarning("Se recibió una solicitud con datos nulos para crear un módulo.");
+                return BadRequest(ResponseApi<ModuleDTO>.Error("Los datos del módulo no pueden ser nulos."));
+            }
+
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Datos de entrada no válidos recibidos para crear un módulo.");
-                return BadRequest(ResponseApi<ModuleDTO>.Error("Datos de entrada no válidos."));
+                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un módulo.");
+                return BadRequest(ResponseApi<ModuleDTO>.Error("Datos de entrada inválidos."));
             }
+
             _logger.LogInformation("Creando nuevo módulo: {Name}", moduleDTO.Name);
             try
             {
                 var result = await _service.CreateAsync(moduleDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("Fallo al crear el módulo.");
-                    return BadRequest(ResponseApi<ModuleDTO>.Error("Fallo al crear el módulo."));
+                    _logger.LogWarning("No se pudo crear el módulo.");
+                    return BadRequest(ResponseApi<ModuleDTO>.Error("No se pudo crear el módulo."));
                 }
-                _logger.LogInformation("Módulo creado exitosamente: ModuleCode={ModuleCode}, Name={Name}", result.Code, result.Name);
+
+                _logger.LogInformation("Módulo creado con éxito: Código={Code}, Nombre={Name}", result.Code, result.Name);
                 return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
-                    ResponseApi<ModuleDTO>.Success(result, "Módulo creado exitosamente."));
+                    ResponseApi<ModuleDTO>.Success(result, "Módulo creado con éxito."));
             }
             catch (Exception ex)
             {
@@ -205,6 +213,7 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<ModuleDTO>.Error("Error interno del servidor."));
             }
         }
+
 
         /// <summary>
         /// Actualiza un módulo existente.
