@@ -27,6 +27,13 @@ namespace Integration.Api.Controllers.Security
         {
             try
             {
+                // Verificar si el request es nulo
+                if (request == null)
+                {
+                    _logger.LogWarning("Se recibió una solicitud de login con datos nulos.");
+                    return BadRequest(ResponseApi<string>.Error("Los datos de login no pueden ser nulos."));
+                }
+
                 // Validación del modelo de entrada
                 if (!ModelState.IsValid)
                 {
