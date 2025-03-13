@@ -41,7 +41,7 @@ namespace Integration.Api.Controllers.Security
         {
             return await HandleRequest(async () =>
             {
-                if (code.IsNullOrEmpty())
+                if (code == null)
                 {
                     return BadRequest(ResponseApi<UserDTO>.Error("El code debe ser nulo o vacio."));
                 }
@@ -167,7 +167,7 @@ namespace Integration.Api.Controllers.Security
         {
             return await HandleRequest(async () =>
             {
-                if (code.IsNullOrEmpty())
+                if (code == null)
                 {
                     return BadRequest(ResponseApi<bool>.Error("El code debe ser nulo o vacio."));
                 }

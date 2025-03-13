@@ -138,7 +138,7 @@ namespace Integration.Api.Controllers.Security
         [HttpGet("{code}")]
         public async Task<IActionResult> GetByCode(string code)
         {
-            if (code.IsNullOrEmpty())
+            if (code == null)
             {
                 _logger.LogWarning("Se recibió un PermissionCode no válido ({PermissionCode}) en la solicitud de búsqueda.", code);
                 return BadRequest(ResponseApi<PermissionDTO>.Error("El PermissionCode no debe ser nulo o vacio"));
@@ -234,11 +234,12 @@ namespace Integration.Api.Controllers.Security
         [HttpDelete("{code}")]
         public async Task<IActionResult> Delete(string code)
         {
-            if (code.IsNullOrEmpty())
+            if (code == null)
             {
                 _logger.LogWarning("ID no válido recibido ({PermissionCode}) en la solicitud de eliminación.", code);
-                return BadRequest(ResponseApi<bool>.Error("El PermissionCode debe ser nulo o vacio."));
+                return BadRequest(ResponseApi<bool>.Error("El PermissionCode no debe ser nulo o vacío."));
             }
+
             _logger.LogInformation("Eliminando permiso con PermissionCode: {PermissionCode}", code);
             try
             {

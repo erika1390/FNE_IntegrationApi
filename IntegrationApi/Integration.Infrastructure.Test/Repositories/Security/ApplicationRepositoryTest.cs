@@ -1,16 +1,7 @@
 ﻿using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
-
 using Moq;
-
-using NUnit.Framework;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-
 namespace Integration.Infrastructure.Test.Repositories.Security
 {
     [TestFixture]

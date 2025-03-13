@@ -150,7 +150,7 @@ namespace Integration.Api.Controllers.Security
         [HttpGet("{code}")]
         public async Task<IActionResult> GetByCode(string code)
         {
-            if (code.IsNullOrEmpty())
+            if (code==null)
             {
                 _logger.LogWarning("Se recibió un ModuleCode no válido ({ModuleCode}) en la solicitud de búsqueda.", code);
                 return BadRequest(ResponseApi<ModuleDTO>.Error("El ModuleCode no debe ser nulo o vacio"));
@@ -251,7 +251,7 @@ namespace Integration.Api.Controllers.Security
         [HttpDelete("{code}")]
         public async Task<IActionResult> Delete(string code)
         {
-            if (code.IsNullOrEmpty())
+            if (code == null)
             {
                 _logger.LogWarning("Code no válido recibido ({ModuleCode}) en la solicitud de eliminación.", code);
                 return BadRequest(ResponseApi<bool>.Error("El ModuleCode debe ser nulo o vacio."));

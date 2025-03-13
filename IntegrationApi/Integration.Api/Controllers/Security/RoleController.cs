@@ -48,7 +48,7 @@ namespace Integration.Api.Controllers.Security
         [HttpGet("{code}")]
         public async Task<IActionResult> GetByCode(string code)
         {
-            if (code.IsNullOrEmpty())
+            if (code == null)
             {
                 _logger.LogWarning("Se recibió un RoleCode no válido ({RoleCode}) en la solicitud de búsqueda.", code);
                 return BadRequest(ResponseApi<RoleDTO>.Error("El code node debe ser nulo o vacio."));
@@ -238,7 +238,7 @@ namespace Integration.Api.Controllers.Security
         [HttpDelete("{code}")]
         public async Task<IActionResult> Delete(string code)
         {
-            if (code.IsNullOrEmpty())
+            if (code == null)
             {
                 _logger.LogWarning("Se recibió un RoleCode no válido ({RoleCode}) en la solicitud de eliminación.", code);
                 return BadRequest(ResponseApi<bool>.Error("El RoleCode debe ser nulo o vacio."));
