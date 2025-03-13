@@ -1,12 +1,4 @@
-﻿using Integration.Api.Controllers.Security;
-using Integration.Application.Interfaces.Security;
-using Integration.Shared.DTO.Security;
-using Integration.Shared.Response;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-namespace Integration.Api.Tests.Controllers.Security
+﻿namespace Integration.Api.Tests.Controllers.Security
 {
     [TestFixture]
     public class ApplicationControllerTest
