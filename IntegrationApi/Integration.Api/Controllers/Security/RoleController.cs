@@ -174,11 +174,18 @@ namespace Integration.Api.Controllers.Security
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] RoleDTO roleDTO)
         {
+            if (roleDTO == null)
+            {
+                _logger.LogWarning("Se recibió una solicitud con datos nulos para crear un rol.");
+                return BadRequest(ResponseApi<RoleDTO>.Error("Los datos del rol no pueden ser nulos."));
+            }
+
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un rol.");
                 return BadRequest(ResponseApi<RoleDTO>.Error("Datos de entrada inválidos."));
             }
+
             _logger.LogInformation("Creando nuevo rol: {Name}", roleDTO.Name);
             try
             {
@@ -188,16 +195,18 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se pudo crear el rol.");
                     return BadRequest(ResponseApi<RoleDTO>.Error("No se pudo crear el rol."));
                 }
-                _logger.LogInformation("Rol creado con éxito: RoleCode={RoleCode}, Nombre={Name}", result.Code, result.Name);
+
+                _logger.LogInformation("Rol creado con éxito: Código={Code}, Nombre={Name}", result.Code, result.Name);
                 return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
-                    ResponseApi<RoleDTO>.Success(result, "Rol creada con éxito."));
+                    ResponseApi<RoleDTO>.Success(result, "Rol creado con éxito."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear la rol.");
+                _logger.LogError(ex, "Error al crear el rol.");
                 return StatusCode(500, ResponseApi<RoleDTO>.Error("Error interno del servidor."));
             }
         }
+
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] RoleDTO roleDTO)

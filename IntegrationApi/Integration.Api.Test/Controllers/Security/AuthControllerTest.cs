@@ -1,4 +1,5 @@
-﻿using Integration.Application.Exceptions;
+﻿using Integration.Api.Controllers.Security;
+using Integration.Application.Exceptions;
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
@@ -6,11 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
-using Integration.Api.Controllers.Security;
-
 namespace Integration.Api.Tests.Controllers.Security
 {
     [TestFixture]
