@@ -8,7 +8,6 @@ namespace Integration.Core.MappingProfiles
         public UserProfile()
         {
             CreateMap<User, UserDTO>()
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.NormalizedUserName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
@@ -24,7 +23,6 @@ namespace Integration.Core.MappingProfiles
                 .ForMember(dest => dest.LockoutEnabled, opt => opt.MapFrom(src => src.LockoutEnabled))
                 .ForMember(dest => dest.AccessFailedCount, opt => opt.MapFrom(src => src.AccessFailedCount))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
-                .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src => src.UserRoles))
                 .ReverseMap();
         }
     }
