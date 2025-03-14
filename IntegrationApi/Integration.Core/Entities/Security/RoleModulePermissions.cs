@@ -6,7 +6,7 @@ namespace Integration.Core.Entities.Security
     public class RoleModulePermissions : BaseEntity
     {
         [ForeignKey("Role")]
-        public int RoleId { get; set; } 
+        public int RoleId { get; set; }
         [ForeignKey("Module")]
         public int ModuleId { get; set; }
         [ForeignKey("Permission")]

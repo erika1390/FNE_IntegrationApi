@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Integration.Infrastructure.Data.Configurations.Security
 {
-    public class RoleModuleConfiguration : IEntityTypeConfiguration<RoleModulePermissions>
+    public class RoleModulePermissionConfiguration : IEntityTypeConfiguration<RoleModulePermissions>
     {
         public void Configure(EntityTypeBuilder<RoleModulePermissions> builder)
         {
-            builder.ToTable("RoleModules", "Security");
+            builder.ToTable("RoleModulePermissions", "Security");
 
             // Clave primaria compuesta en lugar de Id
             builder.HasKey(e => new { e.RoleId, e.ModuleId, e.PermissionId });
