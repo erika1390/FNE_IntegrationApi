@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
+using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
@@ -102,17 +103,23 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedPermissionDTO()
         {
-            var permissionDTO = new PermissionDTO { Name = "UpdatedPermission", Code = "UPD", CreatedBy = "User", IsActive = true };
-            var permission = new Integration.Core.Entities.Security.Permission { Id = 1, Name = "UpdatedPermission", Code = "UPD" };
-
-            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Permission>(permissionDTO)).Returns(permission);
-            _repositoryMock.Setup(r => r.UpdateAsync(permission)).ReturnsAsync(permission);
-            _mapperMock.Setup(m => m.Map<PermissionDTO>(permission)).Returns(permissionDTO);
-
+            // Arrange
+            var permissionDTO = new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy= "System"};
+            var permissionEntity = new Permission { Id = 1, Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "System"};
+            // Configuración del Mock del repositorio para devolver un permiso válido
+            _repositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Permission>()))
+                           .ReturnsAsync(permissionEntity);
+            // Configuración del Mock del Mapper para convertir entre DTO y entidad
+            _mapperMock.Setup(m => m.Map<Permission>(It.IsAny<PermissionDTO>())).Returns(permissionEntity);
+            _mapperMock.Setup(m => m.Map<PermissionDTO>(It.IsAny<Permission>())).Returns(permissionDTO);
+            // Act
             var result = await _permissionService.UpdateAsync(permissionDTO);
-
-            Assert.AreEqual(permissionDTO, result);
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(permissionDTO.Code, result.Code);
+            Assert.AreEqual(permissionDTO.Name, result.Name);
         }
+
 
         [Test]
         public async Task GetAllAsync_WithSinglePredicate_ShouldReturnFilteredPermissionDTOs()

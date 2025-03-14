@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
+using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Security;
@@ -137,26 +138,21 @@ namespace Integration.Application.Services.Security
 
         public async Task<PermissionDTO> UpdateAsync(PermissionDTO permissionDTO)
         {
-            _logger.LogInformation("Permiso creado exitosamente: PermissionCode={PermissionCode}, Name={Name}", permissionDTO.Code, permissionDTO.Name);
-            try
+            if (permissionDTO == null)
+                throw new ArgumentNullException(nameof(permissionDTO), "El permiso no puede ser nulo.");
+            var permissionEntity = _mapper.Map<Permission>(permissionDTO);
+            if (permissionEntity == null)
             {
-                var permissionExist = await _repository.GetByCodeAsync(permissionDTO.Code);
-                var permission = _mapper.Map<Integration.Core.Entities.Security.Permission>(permissionDTO);
-                permission.Id = permissionExist.Id;
-                var updatedPermission = await _repository.UpdateAsync(permission);
-                if (updatedPermission == null)
-                {
-                    _logger.LogWarning("No se pudo actualizar el permiso con PermissionCode {PermissionCode}.", permissionDTO.Code);
-                    return null;
-                }
-                _logger.LogInformation("Permiso actualizado con éxito: PermissionCode: {PermissionCode}, Nombre: {Name}", updatedPermission.Code, updatedPermission.Name);
-                return _mapper.Map<PermissionDTO>(updatedPermission);
+                _logger.LogWarning("No se pudo mapear el permiso.");
+                return null;
             }
-            catch (Exception ex)
+            var updatedEntity = await _repository.UpdateAsync(permissionEntity);
+            if (updatedEntity == null)
             {
-                _logger.LogError(ex, "Error al actualizar el permiso con PermissionCode {PermissionCode}.", permissionDTO.Code);
-                throw;
+                _logger.LogWarning("No se encontró el permiso con Code {PermissionCode} para actualizar.", permissionDTO.Code);
+                return null;
             }
+            return _mapper.Map<PermissionDTO>(updatedEntity);
         }
     }
 }
