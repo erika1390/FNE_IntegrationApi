@@ -13,6 +13,6 @@ namespace Integration.Core.Entities.Security
         [ForeignKey("Application")]
         public int ApplicationId { get; set; }
         public virtual Application? Application { get; set; }
-        public virtual ICollection<RoleModule>? RoleModules { get; set; }
+        public virtual ICollection<RoleModulePermissions>? RoleModulePermissions { get; set; }
     }
 }

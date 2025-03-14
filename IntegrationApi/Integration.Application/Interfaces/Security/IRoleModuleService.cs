@@ -5,11 +5,11 @@ namespace Integration.Application.Interfaces.Security
 {
     public interface IRoleModuleService
     {
-        Task<RoleModuleDTO> CreateAsync(RoleModuleDTO roleModuleDTO);
+        Task<RoleModulePermissionsDTO> CreateAsync(RoleModulePermissionsDTO roleModuleDTO);
         //Task<bool> DeactivateAsync(int id);
-        Task<IEnumerable<RoleModuleDTO>> GetAllActiveAsync();
-        Task<List<RoleModuleDTO>> GetAllAsync(Expression<Func<RoleModuleDTO, bool>> predicado);
-        Task<List<RoleModuleDTO>> GetAllAsync(List<Expression<Func<RoleModuleDTO, bool>>> predicados);
-        Task<RoleModuleDTO> UpdateAsync(RoleModuleDTO roleModuleDTO);
+        Task<IEnumerable<RoleModulePermissionsDTO>> GetAllActiveAsync();
+        Task<List<RoleModulePermissionsDTO>> GetAllAsync(Expression<Func<RoleModulePermissionsDTO, bool>> predicado);
+        Task<List<RoleModulePermissionsDTO>> GetAllAsync(List<Expression<Func<RoleModulePermissionsDTO, bool>>> predicados);
+        Task<RoleModulePermissionsDTO> UpdateAsync(RoleModulePermissionsDTO roleModuleDTO);
     }
 }

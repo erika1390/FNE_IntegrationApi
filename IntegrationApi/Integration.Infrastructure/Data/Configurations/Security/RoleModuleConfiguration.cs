@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Integration.Infrastructure.Data.Configurations.Security
 {
-    public class RoleModuleConfiguration : IEntityTypeConfiguration<RoleModule>
+    public class RoleModuleConfiguration : IEntityTypeConfiguration<RoleModulePermissions>
     {
-        public void Configure(EntityTypeBuilder<RoleModule> builder)
+        public void Configure(EntityTypeBuilder<RoleModulePermissions> builder)
         {
             builder.ToTable("RoleModules", "Security");
 
@@ -19,17 +19,17 @@ namespace Integration.Infrastructure.Data.Configurations.Security
 
             // Relaciones y restricciones de eliminación
             builder.HasOne(e => e.Role)
-                .WithMany(r => r.RoleModules)
+                .WithMany(r => r.RoleModulePermissions)
                 .HasForeignKey(e => e.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Module)
-                .WithMany(m => m.RoleModules)
+                .WithMany(m => m.RoleModulePermissions)
                 .HasForeignKey(e => e.ModuleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.Permission)
-                .WithMany(p => p.RoleModules)
+                .WithMany(p => p.RoleModulePermissions)
                 .HasForeignKey(e => e.PermissionId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
