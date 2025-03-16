@@ -1,17 +1,18 @@
 ﻿using FluentValidation;
+
 using Integration.Shared.DTO.Security;
 namespace Integration.Application.Validations.Security
 {
-    public class ApplicationDTOValidator : AbstractValidator<ApplicationDTO>
+    public class ModuleDTOValidator : AbstractValidator<ModuleDTO>
     {
-        public ApplicationDTOValidator()
+        public ModuleDTOValidator()
         {
             RuleFor(x => x.Code)
-                .NotEmpty().WithMessage("El código de la aplicación es obligatorio.")
+                .NotEmpty().WithMessage("El código del módulo es obligatorio.")
                 .MaximumLength(10).WithMessage("El código no puede exceder los 10 caracteres.");
 
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("El nombre de la aplicación es obligatorio.")
+                .NotEmpty().WithMessage("El nombre del módulo es obligatorio.")
                 .MaximumLength(255).WithMessage("El nombre no puede exceder los 255 caracteres.");
 
             RuleFor(x => x.CreatedAt)
@@ -24,15 +25,14 @@ namespace Integration.Application.Validations.Security
                 .WithMessage("La fecha de actualización no puede ser menor a la fecha de creación.");
 
             RuleFor(x => x.CreatedBy)
-                .NotEmpty().WithMessage("El usuario que creó la aplicación es obligatorio.")
+                .NotEmpty().WithMessage("El usuario que creó el módulo es obligatorio.")
                 .MaximumLength(50).WithMessage("El nombre del usuario no puede exceder los 50 caracteres.");
 
             RuleFor(x => x.UpdatedBy)
-                .NotEmpty().WithMessage("El usuario que actualizó la aplicación es obligatorio.")
                 .MaximumLength(50).WithMessage("El nombre del usuario no puede exceder los 50 caracteres.");
 
             RuleFor(x => x.IsActive)
-                .NotNull().WithMessage("El estado de la aplicación es obligatorio.");
+                .NotNull().WithMessage("El estado del módulo es obligatorio.");
         }
     }
 }
