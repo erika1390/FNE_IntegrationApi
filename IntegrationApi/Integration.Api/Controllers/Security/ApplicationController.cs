@@ -1,10 +1,10 @@
-﻿using Integration.Application.Interfaces.Security;
+﻿using FluentValidation;
+
+using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -15,11 +15,13 @@ namespace Integration.Api.Controllers.Security
     {
         private readonly IApplicationService _service;
         private readonly ILogger<ApplicationController> _logger;
+        private readonly IValidator<ApplicationDTO> _validator;
 
-        public ApplicationController(IApplicationService service, ILogger<ApplicationController> logger)
+        public ApplicationController(IApplicationService service, ILogger<ApplicationController> logger, IValidator<ApplicationDTO> validator)
         {
             _service = service;
             _logger = logger;
+            _validator = validator;
         }
 
         [HttpGet("active")]
@@ -161,10 +163,12 @@ namespace Integration.Api.Controllers.Security
                 return BadRequest(ResponseApi<ApplicationDTO>.Error("Los datos de la aplicación no pueden ser nulos."));
             }
 
-            if (!ModelState.IsValid)
+            var validationResult = await _validator.ValidateAsync(applicationDTO);
+
+            if (!validationResult.IsValid)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear una aplicación.");
-                return BadRequest(ResponseApi<ApplicationDTO>.Error("Datos de entrada inválidos."));
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ResponseApi<ApplicationDTO>.Error(errors));
             }
 
             _logger.LogInformation("Creando nueva aplicación: {Name}", applicationDTO.Name);
@@ -176,7 +180,6 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se pudo crear la aplicación.");
                     return BadRequest(ResponseApi<ApplicationDTO>.Error("No se pudo crear la aplicación."));
                 }
-
                 _logger.LogInformation("Aplicación creada con éxito: Código={Code}, Nombre={Name}", result.Code, result.Name);
                 return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
                     ResponseApi<ApplicationDTO>.Success(result, "Aplicación creada con éxito."));
@@ -192,11 +195,20 @@ namespace Integration.Api.Controllers.Security
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ApplicationDTO applicationDTO)
         {
-            if (!ModelState.IsValid)
+            if (applicationDTO == null)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para actualizar una aplicación.");
-                return BadRequest(ResponseApi<ApplicationDTO>.Error("Datos de entrada inválidos."));
+                _logger.LogWarning("Se recibió una solicitud con datos nulos para modificar una aplicación.");
+                return BadRequest(ResponseApi<ApplicationDTO>.Error("Los datos de la aplicación no pueden ser nulos."));
             }
+
+            var validationResult = await _validator.ValidateAsync(applicationDTO);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ResponseApi<ApplicationDTO>.Error(errors));
+            }
+
             _logger.LogInformation("Actualizando aplicación con ApplicatioCode: {ApplicatioCode}, Nombre: {Name}", applicationDTO.Code, applicationDTO.Name);
             try
             {

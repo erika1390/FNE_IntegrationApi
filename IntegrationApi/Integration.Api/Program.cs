@@ -1,10 +1,13 @@
-﻿using Integration.Api.Middlewares;
+﻿using FluentValidation;
+
+using Integration.Api.Middlewares;
 using Integration.Application.Interfaces.Audit;
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Mappings.Audit;
 using Integration.Application.Mappings.Security;
 using Integration.Application.Services.Audit;
 using Integration.Application.Services.Security;
+using Integration.Application.Validations.Security;
 using Integration.Core.Entities.Security;
 using Integration.Core.MappingProfiles;
 using Integration.Infrastructure.Data.Contexts;
@@ -14,11 +17,14 @@ using Integration.Infrastructure.Interfaces.UnitOfWork;
 using Integration.Infrastructure.Repositories.Audit;
 using Integration.Infrastructure.Repositories.Security;
 using Integration.Infrastructure.Repositories.UnitOfWork;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 using Serilog;
+
 using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -41,6 +47,8 @@ builder.Services.AddAutoMapper(typeof(RoleModuleProfile));
 builder.Services.AddAutoMapper(typeof(UserRoleProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<ApplicationDTOValidator>();
 
 // Si el servicio no es genérico, registra la implementación específica
 builder.Services.AddScoped<IJwtService, JwtService>();
