@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +26,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("active")]
-        public async Task<IActionResult> GetAllActive()
+        public async Task<IActionResult> GetAllActive([FromHeader] HeaderDTO header)
         {
             _logger.LogInformation("Iniciando solicitud para obtener todas las aplicaciones activas.");
             try
@@ -47,7 +48,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode(string code)
+        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
         {
             if (string.IsNullOrEmpty(code))
             {
@@ -74,7 +75,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("filter")]
-        public async Task<IActionResult> GetApplications([FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetApplications([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)
         {
             try
             {
@@ -112,7 +113,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("filters")]
-        public async Task<IActionResult> GetApplications([FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetApplications([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
         {
             try
             {
@@ -155,7 +156,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ApplicationDTO applicationDTO)
+        public async Task<IActionResult> Create([FromHeader] HeaderDTO header, [FromBody] ApplicationDTO applicationDTO)
         {
             if (applicationDTO == null)
             {
@@ -174,7 +175,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Creando nueva aplicación: {Name}", applicationDTO.Name);
             try
             {
-                var result = await _service.CreateAsync(applicationDTO);
+                var result = await _service.CreateAsync(header, applicationDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("No se pudo crear la aplicación.");
@@ -193,7 +194,7 @@ namespace Integration.Api.Controllers.Security
 
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] ApplicationDTO applicationDTO)
+        public async Task<IActionResult> Update([FromHeader] HeaderDTO header, [FromBody] ApplicationDTO applicationDTO)
         {
             if (applicationDTO == null)
             {
@@ -212,7 +213,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Actualizando aplicación con ApplicatioCode: {ApplicatioCode}, Nombre: {Name}", applicationDTO.Code, applicationDTO.Name);
             try
             {
-                var result = await _service.UpdateAsync(applicationDTO);
+                var result = await _service.UpdateAsync(header, applicationDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("No se pudo actualizar la aplicación con ApplicatioCode {ApplicatioCode}.", applicationDTO.Code);
@@ -229,7 +230,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpDelete("{code}")]
-        public async Task<IActionResult> Deactivate(string code)
+        public async Task<IActionResult> Deactivate([FromHeader] HeaderDTO header, string code)
         {
             if (string.IsNullOrEmpty(code))
             {
@@ -239,7 +240,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Eliminando aplicación con Code: {ApplicationCode}", code);
             try
             {
-                var result = await _service.DeactivateAsync(code);
+                var result = await _service.DeactivateAsync(header, code);
                 if (!result)
                 {
                     _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para eliminar.", code);

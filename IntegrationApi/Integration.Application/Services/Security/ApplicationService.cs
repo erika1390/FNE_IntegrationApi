@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
-
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
@@ -12,20 +14,41 @@ namespace Integration.Application.Services.Security
         private readonly IApplicationRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<ApplicationService> _logger;
-
-        public ApplicationService(IApplicationRepository repository, IMapper mapper, ILogger<ApplicationService> logger)
+        private readonly IUserRepository _userRepository;
+        public ApplicationService(IApplicationRepository repository, IMapper mapper, ILogger<ApplicationService> logger, IUserRepository userRepository)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            _userRepository = userRepository;
         }
 
-        public async Task<ApplicationDTO> CreateAsync(ApplicationDTO applicationDTO)
+        public async Task<ApplicationDTO> CreateAsync(HeaderDTO header, ApplicationDTO applicationDTO)
         {
+            if (header == null || string.IsNullOrEmpty(header.UserCode))
+            {
+                throw new ArgumentNullException(nameof(header), "El encabezado o UserCode no pueden ser nulos.");
+            }
+
+            if (applicationDTO == null)
+            {
+                throw new ArgumentNullException(nameof(applicationDTO), "La aplicación no puede ser nula.");
+            }
             _logger.LogInformation("Creando aplicación: {Name}", applicationDTO.Name);
             try
             {
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 var application = _mapper.Map<Integration.Core.Entities.Security.Application>(applicationDTO);
+                if (application == null)
+                {
+                    throw new Exception("Error al mapear ApplicationDTO a Application.");
+                }
+                application.CreatedBy = user.UserName;
+                application.UpdatedBy = user.UserName;
                 var result = await _repository.CreateAsync(application);
                 _logger.LogInformation("Aplicación creada con éxito: {ApplicationId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<ApplicationDTO>(result);
@@ -37,7 +60,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
             _logger.LogInformation("Desactivando aplicación con ApplicationCode: {ApplicationCode}", code);
             try
@@ -136,7 +159,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<ApplicationDTO> UpdateAsync(ApplicationDTO applicationDTO)
+        public async Task<ApplicationDTO> UpdateAsync(HeaderDTO header, ApplicationDTO applicationDTO)
         {
             _logger.LogInformation("Actualizando aplicación con ApplicatioCode: {ApplicatioCode}, Nombre: {Name}", applicationDTO.Code, applicationDTO.Name);
             try
