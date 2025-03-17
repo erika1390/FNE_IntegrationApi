@@ -1,9 +1,9 @@
-﻿using Integration.Application.Interfaces.Security;
+﻿using FluentValidation;
+using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -14,11 +14,13 @@ namespace Integration.Api.Controllers.Security
     {
         private readonly IPermissionService _service;
         private readonly ILogger<PermissionController> _logger;
+        private readonly IValidator<PermissionDTO> _validator;
 
-        public PermissionController(IPermissionService service, ILogger<PermissionController> logger)
+        public PermissionController(IPermissionService service, ILogger<PermissionController> logger, IValidator<PermissionDTO> validator)
         {
             _service = service;
             _logger = logger;
+            _validator = validator;
         }
 
         /// <summary>
@@ -173,10 +175,12 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió una solicitud con datos nulos para crear un permiso.");
                 return BadRequest(ResponseApi<PermissionDTO>.Error("Los datos del permiso no pueden ser nulos."));
             }
-            if (!ModelState.IsValid)
+            var validationResult = await _validator.ValidateAsync(permissionDTO);
+
+            if (!validationResult.IsValid)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un permiso.");
-                return BadRequest(ResponseApi<PermissionDTO>.Error("Datos de entrada inválidos."));
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ResponseApi<PermissionDTO>.Error(errors));
             }
             _logger.LogInformation("Creando nuevo permiso: {Name}", permissionDTO.Name);
             try
@@ -204,10 +208,16 @@ namespace Integration.Api.Controllers.Security
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] PermissionDTO permissionDTO)
         {
-            if (!ModelState.IsValid)
+            if (permissionDTO == null)
             {
-                _logger.LogWarning("Datos de entrada no válidos recibidos para actualizar un permiso.");
-                return BadRequest(ResponseApi<PermissionDTO>.Error("Datos de entrada no válidos."));
+                _logger.LogWarning("Se recibió una solicitud con datos nulos para modificar un permiso.");
+                return BadRequest(ResponseApi<PermissionDTO>.Error("Los datos de un permiso no pueden ser nulos."));
+            }
+            var validationResult = await _validator.ValidateAsync(permissionDTO);
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ResponseApi<PermissionDTO>.Error(errors));
             }
             _logger.LogInformation("Permiso creado exitosamente: PermissionCode={PermissionCode}, Name={Name}", permissionDTO.Code, permissionDTO.Name);
             try

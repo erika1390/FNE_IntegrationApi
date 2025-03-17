@@ -1,11 +1,10 @@
-﻿using Integration.Application.Interfaces.Security;
+﻿using FluentValidation;
+
+using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -16,11 +15,12 @@ namespace Integration.Api.Controllers.Security
     {
         private readonly IRoleService _service;
         private readonly ILogger<RoleController> _logger;
-
-        public RoleController(IRoleService service, ILogger<RoleController> logger)
+        private readonly IValidator<RoleDTO> _validator;
+        public RoleController(IRoleService service, ILogger<RoleController> logger, IValidator<RoleDTO> validator)
         {
             _service = service;
             _logger = logger;
+            _validator = validator;
         }
 
         [HttpGet("active")]
@@ -179,13 +179,12 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió una solicitud con datos nulos para crear un rol.");
                 return BadRequest(ResponseApi<RoleDTO>.Error("Los datos del rol no pueden ser nulos."));
             }
-
-            if (!ModelState.IsValid)
+            var validationResult = await _validator.ValidateAsync(roleDTO);
+            if (!validationResult.IsValid)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un rol.");
-                return BadRequest(ResponseApi<RoleDTO>.Error("Datos de entrada inválidos."));
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ResponseApi<RoleDTO>.Error(errors));
             }
-
             _logger.LogInformation("Creando nuevo rol: {Name}", roleDTO.Name);
             try
             {
@@ -211,10 +210,16 @@ namespace Integration.Api.Controllers.Security
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] RoleDTO roleDTO)
         {
-            if (!ModelState.IsValid)
+            if (roleDTO == null)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para actualizar un rol.");
-                return BadRequest(ResponseApi<RoleDTO>.Error("Datos de entrada inválidos."));
+                _logger.LogWarning("Se recibió una solicitud con datos nulos para modificar un rol.");
+                return BadRequest(ResponseApi<RoleDTO>.Error("Los datos del rol no pueden ser nulos."));
+            }
+            var validationResult = await _validator.ValidateAsync(roleDTO);
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ResponseApi<RoleDTO>.Error(errors));
             }
             _logger.LogInformation("Actualizando rol con RoleCode: {RoleCode}, Nombre: {Name}", roleDTO.Code, roleDTO.Name);
             try

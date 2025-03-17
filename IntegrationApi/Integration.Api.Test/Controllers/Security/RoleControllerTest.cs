@@ -1,4 +1,7 @@
-﻿using Integration.Api.Controllers.Security;
+﻿using FluentValidation;
+using FluentValidation.Results;
+
+using Integration.Api.Controllers.Security;
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
@@ -14,13 +17,14 @@ namespace Integration.Api.Tests.Controllers.Security
         private Mock<IRoleService> _serviceMock;
         private Mock<ILogger<RoleController>> _loggerMock;
         private RoleController _controller;
-
+        private Mock<IValidator<RoleDTO>> _validatorMock;
         [SetUp]
         public void SetUp()
         {
             _serviceMock = new Mock<IRoleService>();
             _loggerMock = new Mock<ILogger<RoleController>>();
-            _controller = new RoleController(_serviceMock.Object, _loggerMock.Object);
+            _validatorMock = new Mock<IValidator<RoleDTO>>();
+            _controller = new RoleController(_serviceMock.Object, _loggerMock.Object,_validatorMock.Object);
         }
 
         [Test]
@@ -92,11 +96,33 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Create_ShouldReturnCreatedAtAction_WhenRoleIsCreated()
         {
             // Arrange
-            var role = new RoleDTO {Code = "ROL0000001", Name = "System", IsActive = true, CreatedBy = "System" };
-            _serviceMock.Setup(s => s.CreateAsync(role)).ReturnsAsync(role);
+            var role = new RoleDTO
+            {
+                Code = "ROL0000001",
+                Name = "System",
+                IsActive = true,
+                CreatedBy = "System"
+            };
+
+            var serviceMock = new Mock<IRoleService>();
+            var validatorMock = new Mock<IValidator<RoleDTO>>();
+            var loggerMock = new Mock<ILogger<RoleController>>();
+
+            // Configurar validación exitosa
+            validatorMock
+                .Setup(v => v.ValidateAsync(It.IsAny<RoleDTO>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
+
+            // Configurar el servicio para devolver el rol creado
+            serviceMock
+                .Setup(s => s.CreateAsync(It.IsAny<RoleDTO>()))
+                .ReturnsAsync(role);
+
+            // Instanciar el controlador correctamente
+            var controller = new RoleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await _controller.Create(role);
+            var result = await controller.Create(role);
 
             // Assert
             var createdAtActionResult = result as CreatedAtActionResult;
@@ -125,11 +151,33 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnOk_WhenRoleIsUpdated()
         {
             // Arrange
-            var role = new RoleDTO { Code = "ROL0000001", Name = "System", IsActive = true, CreatedBy = "System" };
-            _serviceMock.Setup(s => s.UpdateAsync(role)).ReturnsAsync(role);
+            var role = new RoleDTO
+            {
+                Code = "ROL0000001",
+                Name = "System",
+                IsActive = true,
+                CreatedBy = "System"
+            };
+
+            var serviceMock = new Mock<IRoleService>();
+            var validatorMock = new Mock<IValidator<RoleDTO>>();
+            var loggerMock = new Mock<ILogger<RoleController>>();
+
+            // Configurar validación exitosa
+            validatorMock
+                .Setup(v => v.ValidateAsync(It.IsAny<RoleDTO>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
+
+            // Configurar el servicio para devolver el rol actualizado
+            serviceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<RoleDTO>()))
+                .ReturnsAsync(role);
+
+            // Instanciar el controlador correctamente
+            var controller = new RoleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await _controller.Update(role);
+            var result = await controller.Update(role);
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -137,15 +185,38 @@ namespace Integration.Api.Tests.Controllers.Security
             Assert.AreEqual(200, okResult.StatusCode);
         }
 
+
         [Test]
         public async Task Update_ShouldReturnNotFound_WhenRoleDoesNotExist()
         {
             // Arrange
-            var role = new RoleDTO { Code = "ROL0000001", Name = "System", IsActive = true, CreatedBy = "System" };
-            _serviceMock.Setup(s => s.UpdateAsync(role)).ReturnsAsync((RoleDTO)null);
+            var role = new RoleDTO
+            {
+                Code = "ROL0000001",
+                Name = "System",
+                IsActive = true,
+                CreatedBy = "System"
+            };
+
+            var serviceMock = new Mock<IRoleService>();
+            var validatorMock = new Mock<IValidator<RoleDTO>>();
+            var loggerMock = new Mock<ILogger<RoleController>>();
+
+            // Configurar validación exitosa
+            validatorMock
+                .Setup(v => v.ValidateAsync(It.IsAny<RoleDTO>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
+
+            // Configurar el servicio para devolver `null` (simulando que el rol no existe)
+            serviceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<RoleDTO>()))
+                .ReturnsAsync((RoleDTO)null);
+
+            // Instanciar el controlador correctamente
+            var controller = new RoleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await _controller.Update(role);
+            var result = await controller.Update(role);
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;

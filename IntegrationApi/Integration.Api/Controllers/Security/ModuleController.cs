@@ -230,7 +230,7 @@ namespace Integration.Api.Controllers.Security
             if (moduleDTO == null)
             {
                 _logger.LogWarning("Se recibió una solicitud con datos nulos para modificar un modulo.");
-                return BadRequest(ResponseApi<ModuleDTO>.Error("Los datos de la aplicación no pueden ser nulos."));
+                return BadRequest(ResponseApi<ModuleDTO>.Error("Los datos del modulo no pueden ser nulos."));
             }
 
             var validationResult = await _validator.ValidateAsync(moduleDTO);
