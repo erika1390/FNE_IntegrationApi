@@ -13,7 +13,7 @@ namespace Integration.Application.Validations.Security
 
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("El nombre del módulo es obligatorio.")
-                .MaximumLength(255).WithMessage("El nombre no puede exceder los 255 caracteres.");
+                .MaximumLength(50).WithMessage("El nombre no puede exceder los 50 caracteres.");
 
             RuleFor(x => x.CreatedAt)
                 .NotEmpty().WithMessage("La fecha de creación es obligatoria.")

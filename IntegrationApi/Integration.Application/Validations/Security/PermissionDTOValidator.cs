@@ -11,7 +11,7 @@ namespace Integration.Application.Validations.Security
                 .MaximumLength(10).WithMessage("El código no puede exceder los 10 caracteres.");
 
             RuleFor(x => x.Name)
-                .MaximumLength(255).WithMessage("El nombre del permiso no puede exceder los 255 caracteres.");
+                .MaximumLength(50).WithMessage("El nombre del permiso no puede exceder los 50 caracteres.");
 
             RuleFor(x => x.CreatedAt)
                 .NotEmpty().WithMessage("La fecha de creación es obligatoria.")
