@@ -3,6 +3,7 @@ namespace Integration.Application.Interfaces.Security
 {
     public interface IJwtService
     {
-        Task<string> GenerateTokenAsync(LoginRequestDTO request);        
+        Task<string> GenerateTokenAsync(LoginRequestDTO request);
+        Task<bool> ValidateTokenAsync(string token);
     }
 }

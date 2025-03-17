@@ -1,4 +1,5 @@
-﻿using Integration.Shared.DTO.Header;
+﻿using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -6,11 +7,16 @@ namespace Integration.Api.Filters
 {
     public class ValidateHeadersFilter : ActionFilterAttribute
     {
+        private readonly IConfiguration _config;
         private readonly ILogger<ValidateHeadersFilter> _logger;
+        private readonly string _secretKey = string.Empty;
+        private readonly IJwtService _jwtService;
 
-        public ValidateHeadersFilter(ILogger<ValidateHeadersFilter> logger)
+        public ValidateHeadersFilter(IConfiguration config, ILogger<ValidateHeadersFilter> logger, IJwtService jwtService)
         {
+            _config = config;
             _logger = logger;
+            _jwtService = jwtService;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -32,7 +38,20 @@ namespace Integration.Api.Filters
 
             if (string.IsNullOrWhiteSpace(header.Authorization))
                 errors.Add("El campo Authorization es obligatorio.");
+            else
+            {
+                // Validar el token JWT
+                var token = header.Authorization.StartsWith("Bearer ") ? header.Authorization.Substring(7) : null;
 
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    errors.Add("El token JWT es inválido o está mal formado.");
+                }
+                else if (!_jwtService.ValidateTokenAsync(token).Result)
+                {
+                    errors.Add("El token JWT no es válido o ha expirado.");
+                }
+            }
             if (errors.Any())
             {
                 _logger.LogWarning("Errores en los headers: {Errors}", string.Join(", ", errors));
