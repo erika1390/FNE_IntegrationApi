@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Integration.Application\Integration.Application.csproj" />
     <ProjectReference Include="..\Integration.Core\Integration.Core.csproj" />
+    <ProjectReference Include="..\Integration.Shared\Integration.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="NUnit.Framework" />

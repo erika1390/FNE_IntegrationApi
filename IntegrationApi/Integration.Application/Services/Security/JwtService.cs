@@ -48,11 +48,13 @@ namespace Integration.Application.Services.Security
             }
 
             var key = Encoding.UTF8.GetBytes(_secretKey);
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, request.UserName),
                 new Claim(ClaimTypes.Role, "User") // Ajusta esto según tus necesidades
             };
+
+            Console.WriteLine($"Claims generados: {string.Join(", ", claims.Select(c => $"{c.Type}: {c.Value}"))}");
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

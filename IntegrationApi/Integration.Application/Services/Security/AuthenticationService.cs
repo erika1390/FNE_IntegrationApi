@@ -36,22 +36,29 @@ namespace Integration.Application.Services.Security
         public async Task<bool> ValidateCredentialsAsync(string userName, string password)
         {
             _logger.LogInformation("Validando credenciales para usuario: {UserName}", userName);
-            
+
             var users = await _userRepository.GetAllAsync(u => u.UserName == userName && u.IsActive == true);
-            var passwordHash = await VerifyPassword(users.FirstOrDefault().PasswordHash, password); 
 
-            bool isValid = passwordHash;
+            // ✅ Verificar si la lista de usuarios está vacía
+            var user = users.FirstOrDefault();
+            if (user == null)
+            {
+                _logger.LogWarning("Usuario no encontrado: {UserName}", userName);
+                return false;
+            }
 
-            if (isValid)
+            var passwordHash = await VerifyPassword(user.PasswordHash, password);
+
+            if (passwordHash)
             {
                 _logger.LogInformation("Credenciales válidas para usuario: {UserName}", userName);
+                return true;
             }
             else
             {
                 _logger.LogWarning("Credenciales inválidas para usuario: {UserName}", userName);
+                return false;
             }
-
-            return isValid;
         }
     }
 }
