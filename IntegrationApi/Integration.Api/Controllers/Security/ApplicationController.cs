@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-
 using Integration.Api.Filters;
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Header;

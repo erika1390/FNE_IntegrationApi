@@ -38,7 +38,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(string code, string userName)
         {
             try
             {
@@ -50,11 +50,9 @@ namespace Integration.Infrastructure.Repositories.Security
                     _logger.LogWarning("No se encontró la aplicación con ApplicationCode {ApplicationCode} para desactivar.", code);
                     return false;
                 }
-
                 application.IsActive = false;
-                application.UpdatedBy = "System";
                 application.UpdatedAt = DateTime.UtcNow;
-
+                application.UpdatedBy = userName;
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Aplicación desactivada: {ApplicationCode}", code);
                 return true;

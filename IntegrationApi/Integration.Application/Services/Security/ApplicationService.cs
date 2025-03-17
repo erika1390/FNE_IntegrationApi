@@ -70,7 +70,7 @@ namespace Integration.Application.Services.Security
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                bool success = await _repository.DeactivateAsync(code);
+                bool success = await _repository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
                     _logger.LogInformation("Aplicación con ApplicationCode {ApplicationCode} desactivada correctamente.", code);
@@ -175,6 +175,7 @@ namespace Integration.Application.Services.Security
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
                 var application = _mapper.Map<Integration.Core.Entities.Security.Application>(applicationDTO);
+                application.UpdatedBy = user.UserName;
                 var updatedApplication = await _repository.UpdateAsync(application);
                 if (updatedApplication == null)
                 {
