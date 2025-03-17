@@ -44,10 +44,10 @@ namespace Integration.Infrastructure.Data.Configurations.Security
 
             builder.Property(e => e.CreatedBy)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(50);
 
             builder.Property(e => e.UpdatedBy)
-                .HasMaxLength(100);
+                .HasMaxLength(50);
 
             builder.Property(e => e.IsActive)
                 .IsRequired();

@@ -8,7 +8,7 @@ namespace Integration.Core.Entities.Security
     {
         [Required, MaxLength(10)]
         public required string Code { get; set; }
-        [Required, MaxLength(255)]
+        [Required, MaxLength(50)]
         public string? Name { get; set; }
         public virtual ICollection<RoleModulePermissions> RoleModulePermissions { get; set; } = new HashSet<RoleModulePermissions>();
     }

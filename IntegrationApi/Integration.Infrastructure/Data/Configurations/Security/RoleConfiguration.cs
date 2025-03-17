@@ -20,7 +20,7 @@ namespace Integration.Infrastructure.Data.Configurations.Security
 
             builder.Property(e => e.Name)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(50);
 
             builder.HasIndex(e => e.Code)
                 .IsUnique();
@@ -32,10 +32,10 @@ namespace Integration.Infrastructure.Data.Configurations.Security
 
             builder.Property(e => e.CreatedBy)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(50);
 
             builder.Property(e => e.UpdatedBy)
-                .HasMaxLength(100);
+                .HasMaxLength(50);
 
             builder.Property(e => e.IsActive)
                 .IsRequired();

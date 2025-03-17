@@ -19,7 +19,7 @@ namespace Integration.Infrastructure.Data.Configurations.Security
                 .HasMaxLength(10);
 
             builder.Property(e => e.Name)
-                .HasMaxLength(255);
+                .HasMaxLength(50);
 
             builder.HasIndex(e => e.Code)
                 .IsUnique();

@@ -25,7 +25,7 @@ namespace Integration.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -69,7 +69,7 @@ namespace Integration.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -94,8 +94,8 @@ namespace Integration.Infrastructure.Migrations
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -125,7 +125,7 @@ namespace Integration.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ApplicationId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -153,12 +153,12 @@ namespace Integration.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ApplicationId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
@@ -266,7 +266,7 @@ namespace Integration.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleModules",
+                name: "RoleModulePermissions",
                 schema: "Security",
                 columns: table => new
                 {
@@ -282,23 +282,23 @@ namespace Integration.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleModules", x => new { x.RoleId, x.ModuleId, x.PermissionId });
+                    table.PrimaryKey("PK_RoleModulePermissions", x => new { x.RoleId, x.ModuleId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_RoleModules_Modules_ModuleId",
+                        name: "FK_RoleModulePermissions_Modules_ModuleId",
                         column: x => x.ModuleId,
                         principalSchema: "Security",
                         principalTable: "Modules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_RoleModules_Permissions_PermissionId",
+                        name: "FK_RoleModulePermissions_Permissions_PermissionId",
                         column: x => x.PermissionId,
                         principalSchema: "Security",
                         principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_RoleModules_Roles_RoleId",
+                        name: "FK_RoleModulePermissions_Roles_RoleId",
                         column: x => x.RoleId,
                         principalSchema: "Security",
                         principalTable: "Roles",
@@ -311,17 +311,19 @@ namespace Integration.Infrastructure.Migrations
                 schema: "Security",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UpdatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_UserRoles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserRoles_Roles_RoleId",
                         column: x => x.RoleId,
@@ -381,20 +383,20 @@ namespace Integration.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IDX_RoleModules_RoleId_ModuleId_PermissionId",
                 schema: "Security",
-                table: "RoleModules",
+                table: "RoleModulePermissions",
                 columns: new[] { "RoleId", "ModuleId", "PermissionId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleModules_ModuleId",
+                name: "IX_RoleModulePermissions_ModuleId",
                 schema: "Security",
-                table: "RoleModules",
+                table: "RoleModulePermissions",
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleModules_PermissionId",
+                name: "IX_RoleModulePermissions_PermissionId",
                 schema: "Security",
-                table: "RoleModules",
+                table: "RoleModulePermissions",
                 column: "PermissionId");
 
             migrationBuilder.CreateIndex(
@@ -492,7 +494,7 @@ namespace Integration.Infrastructure.Migrations
                 schema: "Security");
 
             migrationBuilder.DropTable(
-                name: "RoleModules",
+                name: "RoleModulePermissions",
                 schema: "Security");
 
             migrationBuilder.DropTable(
