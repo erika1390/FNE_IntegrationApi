@@ -40,7 +40,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(string code, string userName)
         {
             try
             {
@@ -53,10 +53,9 @@ namespace Integration.Infrastructure.Repositories.Security
                     _logger.LogWarning("No se encontró el módulo con ModuleCode {ModuleCode} para eliminar.", code);
                     return false;
                 }
-
                 module.IsActive = false;
                 module.UpdatedAt = DateTime.UtcNow;
-
+                module.UpdatedBy = userName;
                 _context.Modules.Update(module);
                 await _context.SaveChangesAsync();
 

@@ -24,7 +24,7 @@ namespace Integration.Infrastructure.Repositories.Base
             return entidad;
         }
 
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(string code, string userName)
         {
             var entity = await _dbSet.FindAsync(code);
             if (entity == null)

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+
 using Integration.Application.Interfaces.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
+
 using Microsoft.Extensions.Logging;
 
 using System.Linq.Expressions;
@@ -14,11 +16,13 @@ namespace Integration.Application.Services.Security
         private readonly IPermissionRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<PermissionService> _logger;
-        public PermissionService(IPermissionRepository repository, IMapper mapper, ILogger<PermissionService> logger)
+        private readonly IUserRepository _userRepository;
+        public PermissionService(IPermissionRepository repository, IMapper mapper, ILogger<PermissionService> logger, IUserRepository userRepository)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            _userRepository = userRepository;
         }
 
         public async Task<PermissionDTO> CreateAsync(HeaderDTO header, PermissionDTO permissionDTO)
@@ -43,7 +47,12 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Eliminando permiso con PermissionId: {PermissionId}", code);
             try
             {
-                bool success = await _repository.DeactivateAsync(code);
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
+                bool success = await _repository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
                     _logger.LogInformation("Permiso con ID {PermissionId} eliminada correctamente.", code);

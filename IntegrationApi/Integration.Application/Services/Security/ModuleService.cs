@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
+using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
@@ -58,7 +59,12 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Eliminando modulo con ModuleCode: {ModuleCode}", code);
             try
             {
-                bool success = await _moduleRepository.DeactivateAsync(code);
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
+                bool success = await _moduleRepository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
                     _logger.LogInformation("Modulo con ModuleCode {ModuleCode} eliminada correctamente.", code);
@@ -222,11 +228,17 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Módulo creado exitosamente: ModuleCode={ModuleCode}, Name={Name}", moduleDTO.Code, moduleDTO.Name);
             try
             {
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 var application = await _applicationRepository.GetByCodeAsync(moduleDTO.ApplicationCode);
                 var moduleExist = await _moduleRepository.GetByCodeAsync(moduleDTO.Code); 
                 var module = _mapper.Map<Integration.Core.Entities.Security.Module>(moduleDTO);
                 module.ApplicationId = application.Id;
                 module.Id = moduleExist.Id;
+                module.UpdatedBy = user.UserName;
                 var updatedModule = await _moduleRepository.UpdateAsync(module);
                 if (updatedModule == null)
                 {

@@ -42,7 +42,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(string code, string userName)
         {
             try
             {
@@ -57,6 +57,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 }
                 permission.IsActive = false;
                 permission.UpdatedAt = DateTime.UtcNow;
+                permission.UpdatedBy = userName;
                 _context.Permissions.Update(permission);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Permiso desactivado: {PermissionCode}", code);

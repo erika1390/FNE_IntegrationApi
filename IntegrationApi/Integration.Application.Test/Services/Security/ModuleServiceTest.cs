@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
+using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
@@ -57,6 +58,22 @@ namespace Integration.Application.Test.Services.Security
                 ApplicationId = 1
             };
 
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+
+            // ✅ Mockear la consulta del usuario para que devuelva un usuario válido
+            _userRepositoryMock.Setup(u => u.GetByCodeAsync(header.UserCode))
+                               .ReturnsAsync(user);
+
             _applicationRepositoryMock.Setup(a => a.GetByCodeAsync(moduleDTO.ApplicationCode))
                                       .ReturnsAsync(application);
 
@@ -77,26 +94,65 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeactivateAsync_ShouldReturnTrue_WhenModuleIsDeleted()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string moduleCode = "MOD0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(moduleCode)).ReturnsAsync(true);
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            // ✅ Simular que el módulo fue desactivado con éxito
+            _repositoryMock.Setup(r => r.DeactivateAsync(moduleCode, user.UserName)).ReturnsAsync(true);
+
+            // Act
             var result = await _moduleService.DeactivateAsync(header, moduleCode);
 
+            // Assert
             Assert.IsTrue(result);
         }
 
         [Test]
         public async Task DeactivateAsync_ShouldReturnFalse_WhenModuleIsNotFound()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string moduleCode = "MOD0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(moduleCode)).ReturnsAsync(false);
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            // ✅ Simular que el módulo no fue encontrado
+            _repositoryMock.Setup(r => r.DeactivateAsync(moduleCode, user.UserName)).ReturnsAsync(false);
+
+            // Act
             var result = await _moduleService.DeactivateAsync(header, moduleCode);
 
+            // Assert
             Assert.IsFalse(result);
         }
+
 
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnListOfModuleDTOs()
@@ -144,6 +200,7 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedModuleDTO()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var moduleDTO = new ModuleDTO
             {
@@ -157,6 +214,20 @@ namespace Integration.Application.Test.Services.Security
             var application = new Integration.Core.Entities.Security.Application { Id = 1, Code = "APP0000001", Name = "Integration" };
             var moduleExist = new Integration.Core.Entities.Security.Module { Id = 1, Code = "UPD", ApplicationId = 1, Name = "Aplicaciones" };
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
             _applicationRepositoryMock.Setup(a => a.GetByCodeAsync(moduleDTO.ApplicationCode))
                                       .ReturnsAsync(application);
 
@@ -167,7 +238,7 @@ namespace Integration.Application.Test.Services.Security
             {
                 Id = 1,
                 Code = "UPD",
-                Name = "Aplicaciones", // Agregar el miembro requerido 'Name'
+                Name = "Aplicaciones",
                 ApplicationId = application.Id
             };
 
@@ -180,8 +251,10 @@ namespace Integration.Application.Test.Services.Security
             _mapperMock.Setup(m => m.Map<ModuleDTO>(module))
                        .Returns(moduleDTO);
 
+            // Act
             var result = await _moduleService.UpdateAsync(header, moduleDTO);
 
+            // Assert
             Assert.AreEqual(moduleDTO, result);
         }
 

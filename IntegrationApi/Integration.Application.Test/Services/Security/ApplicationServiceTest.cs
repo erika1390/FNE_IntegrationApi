@@ -81,7 +81,7 @@ namespace Integration.Application.Test.Services.Security
             _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
 
             // ✅ Simular que la aplicación fue desactivada con éxito
-            _repositoryMock.Setup(r => r.DeactivateAsync(applicationCode)).ReturnsAsync(true);
+            _repositoryMock.Setup(r => r.DeactivateAsync(applicationCode, "epulido")).ReturnsAsync(true);
 
             // Act
             var result = await _applicationService.DeactivateAsync(header, applicationCode);
@@ -111,7 +111,7 @@ namespace Integration.Application.Test.Services.Security
             _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
 
             // ✅ Simular que la aplicación no fue encontrada
-            _repositoryMock.Setup(r => r.DeactivateAsync(applicationCode)).ReturnsAsync(false);
+            _repositoryMock.Setup(r => r.DeactivateAsync(applicationCode, "epulido")).ReturnsAsync(false);
 
             // Act
             var result = await _applicationService.DeactivateAsync(header, applicationCode);

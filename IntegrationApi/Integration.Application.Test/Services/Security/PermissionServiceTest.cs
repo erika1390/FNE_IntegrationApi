@@ -17,14 +17,15 @@ namespace Integration.Application.Test.Services.Security
         private Mock<IMapper> _mapperMock;
         private Mock<ILogger<PermissionService>> _loggerMock;
         private IPermissionService _permissionService;
-
+        private Mock<IUserRepository> _userRepositoryMock;
         [SetUp]
         public void SetUp()
         {
             _repositoryMock = new Mock<IPermissionRepository>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<PermissionService>>();
-            _permissionService = new PermissionService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object);
+            _userRepositoryMock = new Mock<IUserRepository>();
+            _permissionService = new PermissionService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object, _userRepositoryMock.Object);
         }
 
         [Test]
@@ -46,26 +47,66 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeleteAsync_ShouldReturnTrue_WhenPermissionIsDeleted()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string permissionCode = "PER0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode)).ReturnsAsync(true);
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            // ✅ Simular que el permiso fue eliminado con éxito
+            _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode, user.UserName)).ReturnsAsync(true);
+
+            // Act
             var result = await _permissionService.DeactivateAsync(header, permissionCode);
 
+            // Assert
             Assert.IsTrue(result);
         }
+
 
         [Test]
         public async Task DeleteAsync_ShouldReturnFalse_WhenPermissionIsNotFound()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string permissionCode = "";
-            _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode)).ReturnsAsync(false);
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            // ✅ Simular que el permiso no fue encontrado
+            _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode, user.UserName)).ReturnsAsync(false);
+
+            // Act
             var result = await _permissionService.DeactivateAsync(header, permissionCode);
 
+            // Assert
             Assert.IsFalse(result);
         }
+
 
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnListOfPermissionDTOs()

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Integration.Api.Filters;
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
@@ -11,6 +12,7 @@ namespace Integration.Api.Controllers.Security
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [ServiceFilter(typeof(ValidateHeadersFilter))]
     public class ModuleController : ControllerBase
     {
         private readonly IModuleService _service;
