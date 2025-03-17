@@ -3,6 +3,7 @@ using FluentValidation.Results;
 
 using Integration.Api.Controllers.Security;
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetAllActive_ShouldReturnOk_WhenModulesExist()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var modules = new List<ModuleDTO>
             {
                 new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, ApplicationCode="APP0000001", CreatedBy="System" }
@@ -37,7 +39,7 @@ namespace Integration.Api.Tests.Controllers.Security
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(modules);
 
             // Act
-            var result = await _controller.GetAllActive();
+            var result = await _controller.GetAllActive(header);
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -49,10 +51,11 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetAllActive_ShouldReturnNotFound_WhenNoModulesExist()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(new List<ModuleDTO>());
 
             // Act
-            var result = await _controller.GetAllActive();
+            var result = await _controller.GetAllActive(header);
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;
@@ -64,11 +67,12 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetByCode_ShouldReturnOk_WhenModuleExists()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var module = new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, ApplicationCode = "APP0000001", CreatedBy = "System" };
             _serviceMock.Setup(s => s.GetByCodeAsync("MOD0000001")).ReturnsAsync(module);
 
             // Act
-            var result = await _controller.GetByCode("MOD0000001");
+            var result = await _controller.GetByCode(header, "MOD0000001");
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -80,10 +84,11 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetByCode_ShouldReturnNotFound_WhenModuleDoesNotExist()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.GetByCodeAsync("MOD0000001")).ReturnsAsync((ModuleDTO)null);
 
             // Act
-            var result = await _controller.GetByCode("MOD0000001");
+            var result = await _controller.GetByCode(header, "MOD0000001");
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;
@@ -94,6 +99,7 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task Create_ShouldReturnCreatedAtAction_WhenModuleIsCreated()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             // Arrange
             var module = new ModuleDTO
             {
@@ -115,13 +121,13 @@ namespace Integration.Api.Tests.Controllers.Security
 
             // Configurar el servicio mock para devolver el módulo esperado
             serviceMock
-                .Setup(s => s.CreateAsync(It.IsAny<ModuleDTO>()))
+                .Setup(s => s.CreateAsync(header, It.IsAny<ModuleDTO>()))
                 .ReturnsAsync(module);
 
             var controller = new ModuleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await controller.Create(module);
+            var result = await controller.Create(header, module);
 
             // Assert
             var createdAtActionResult = result as CreatedAtActionResult;
@@ -133,7 +139,8 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Create_ShouldReturnBadRequest_WhenModuleIsNull()
         {
             // Act
-            var result = await _controller.Create(null);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var result = await _controller.Create(header, null);
 
             // Assert
             var badRequestResult = result as BadRequestObjectResult;
@@ -149,6 +156,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnOk_WhenModuleIsUpdated()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var module = new ModuleDTO
             {
                 Code = "MOD0000001",
@@ -169,14 +177,14 @@ namespace Integration.Api.Tests.Controllers.Security
 
             // Configurar el servicio para devolver el módulo actualizado
             serviceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<ModuleDTO>()))
+                .Setup(s => s.UpdateAsync(header, It.IsAny<ModuleDTO>()))
                 .ReturnsAsync(module);
 
             // Instanciar el controlador con los mocks
             var controller = new ModuleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await controller.Update(module);
+            var result = await controller.Update(header, module);
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -188,6 +196,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnNotFound_WhenModuleDoesNotExist()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var module = new ModuleDTO
             {
                 Code = "MOD0000001",
@@ -208,14 +217,14 @@ namespace Integration.Api.Tests.Controllers.Security
 
             // Configurar el servicio para devolver `null` (simulando que el módulo no existe)
             serviceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<ModuleDTO>()))
+                .Setup(s => s.UpdateAsync(header, It.IsAny<ModuleDTO>()))
                 .ReturnsAsync((ModuleDTO)null);
 
             // Instanciar el controlador con los mocks
             var controller = new ModuleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await controller.Update(module);
+            var result = await controller.Update(header, module);
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;
@@ -227,10 +236,11 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Delete_ShouldReturnOk_WhenModuleIsDeleted()
         {
             // Arrange
-            _serviceMock.Setup(s => s.DeactivateAsync("MOD0000001")).ReturnsAsync(true);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.DeactivateAsync(header, "MOD0000001")).ReturnsAsync(true);
 
             // Act
-            var result = await _controller.Delete("MOD0000001");
+            var result = await _controller.Delete(header, "MOD0000001");
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -242,10 +252,11 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Delete_ShouldReturnNotFound_WhenModuleDoesNotExist()
         {
             // Arrange
-            _serviceMock.Setup(s => s.DeactivateAsync("MOD0000001")).ReturnsAsync(false);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.DeactivateAsync(header,"MOD0000001")).ReturnsAsync(false);
 
             // Act
-            var result = await _controller.Delete("MOD00000010000");
+            var result = await _controller.Delete(header, "MOD00000010000");
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;

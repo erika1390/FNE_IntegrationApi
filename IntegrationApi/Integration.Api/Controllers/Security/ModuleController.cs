@@ -1,13 +1,10 @@
 ﻿using FluentValidation;
-
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -31,7 +28,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene todos los módulos activos.
         /// </summary>
         [HttpGet("active")]
-        public async Task<IActionResult> GetAllActive()
+        public async Task<IActionResult> GetAllActive([FromHeader] HeaderDTO header)
         {
             _logger.LogInformation("Iniciando solicitud para obtener todos los módulos activos.");
             try
@@ -56,7 +53,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene módulos basados en un solo filtro.
         /// </summary>
         [HttpGet("filter")]
-        public async Task<IActionResult> GetModules([FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetModules([FromHeader] HeaderDTO header,  [FromQuery] string filterField, [FromQuery] string filterValue)
         {
             try
             {
@@ -97,7 +94,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene módulos basados en múltiples filtros.
         /// </summary>
         [HttpGet("filters")]
-        public async Task<IActionResult> GetModules([FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetModules([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
         {
             try
             {
@@ -152,7 +149,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode(string code)
+        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
         {
             if (code==null)
             {
@@ -183,7 +180,7 @@ namespace Integration.Api.Controllers.Security
         /// Crea un nuevo módulo.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ModuleDTO moduleDTO)
+        public async Task<IActionResult> Create([FromHeader] HeaderDTO header, [FromBody] ModuleDTO moduleDTO)
         {
             if (moduleDTO == null)
             {
@@ -202,7 +199,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Creando nuevo módulo: {Name}", moduleDTO.Name);
             try
             {
-                var result = await _service.CreateAsync(moduleDTO);
+                var result = await _service.CreateAsync(header, moduleDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("No se pudo crear el módulo.");
@@ -225,16 +222,14 @@ namespace Integration.Api.Controllers.Security
         /// Actualiza un módulo existente.
         /// </summary>
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] ModuleDTO moduleDTO)
+        public async Task<IActionResult> Update([FromHeader] HeaderDTO header, [FromBody] ModuleDTO moduleDTO)
         {
             if (moduleDTO == null)
             {
                 _logger.LogWarning("Se recibió una solicitud con datos nulos para modificar un modulo.");
                 return BadRequest(ResponseApi<ModuleDTO>.Error("Los datos del modulo no pueden ser nulos."));
             }
-
             var validationResult = await _validator.ValidateAsync(moduleDTO);
-
             if (!validationResult.IsValid)
             {
                 var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
@@ -243,7 +238,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Actualizando módulo con ModuleCode: {ModuleCode}, Name: {Name}", moduleDTO.Code, moduleDTO.Name);
             try
             {
-                var result = await _service.UpdateAsync(moduleDTO);
+                var result = await _service.UpdateAsync(header, moduleDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("Módulo con ModuleCode {ModuleCode} no encontrado.", moduleDTO.Code);
@@ -263,7 +258,7 @@ namespace Integration.Api.Controllers.Security
         /// Elimina un módulo por su ID.
         /// </summary>
         [HttpDelete("{code}")]
-        public async Task<IActionResult> Delete(string code)
+        public async Task<IActionResult> Delete([FromHeader] HeaderDTO header, string code)
         {
             if (code == null)
             {
@@ -273,7 +268,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Eliminando módulo con ModuleCode: {ModuleCode}", code);
             try
             {
-                var result = await _service.DeactivateAsync(code);
+                var result = await _service.DeactivateAsync(header, code);
                 if (!result)
                 {
                     _logger.LogWarning("Módulo con ModuleCode {ModuleCode} no encontrado.", code);

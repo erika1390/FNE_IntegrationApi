@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("active")]
-        public async Task<IActionResult> GetAllActive()
+        public async Task<IActionResult> GetAllActive([FromHeader] HeaderDTO header)
         {
             var result = await _service.GetAllActiveAsync();
             if (!result.Any())
@@ -34,7 +35,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode(string code)
+        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
         {
             if (code == null)
             {
@@ -49,7 +50,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("filter")]
-        public async Task<IActionResult> GetByFilter([FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetByFilter([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)
         {
             if (string.IsNullOrEmpty(filterField) || string.IsNullOrEmpty(filterValue))
             {
@@ -79,7 +80,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("filters")]
-        public async Task<IActionResult> GetByFilters([FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetByFilters([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
         {
             if (filters == null || filters.Count == 0)
             {
@@ -114,7 +115,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Create([FromHeader] HeaderDTO header, [FromBody] UserDTO userDTO)
         {
             if (userDTO == null)
             {
@@ -127,7 +128,7 @@ namespace Integration.Api.Controllers.Security
                 var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ResponseApi<UserDTO>.Error(errors));
             }
-            var result = await _service.CreateAsync(userDTO);
+            var result = await _service.CreateAsync(header, userDTO);
             if (result == null)
             {
                 return BadRequest(ResponseApi<UserDTO>.Error("No se pudo crear el usuario."));
@@ -137,7 +138,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Update([FromHeader] HeaderDTO header, [FromBody] UserDTO userDTO)
         {
             if (userDTO == null)
             {
@@ -150,7 +151,7 @@ namespace Integration.Api.Controllers.Security
                 var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ResponseApi<UserDTO>.Error(errors));
             }
-            var result = await _service.UpdateAsync(userDTO);
+            var result = await _service.UpdateAsync(header, userDTO);
             if (result == null)
             {
                 return NotFound(ResponseApi<UserDTO>.Error("Usuario no encontrado."));
@@ -159,13 +160,13 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpDelete("{code}")]
-        public async Task<IActionResult> Delete(string code)
+        public async Task<IActionResult> Delete([FromHeader] HeaderDTO header, string code)
         {
             if (code == null)
             {
                 return BadRequest(ResponseApi<bool>.Error("El code debe ser nulo o vacio."));
             }
-            var result = await _service.DeactivateAsync(code);
+            var result = await _service.DeactivateAsync(header, code);
             if (!result)
             {
                 return NotFound(ResponseApi<bool>.Error("Usuario no encontrado."));

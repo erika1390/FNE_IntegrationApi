@@ -2,6 +2,7 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -16,7 +17,7 @@ namespace Integration.Application.Test.Services.Security
         private Mock<IMapper> _mapperMock;
         private Mock<ILogger<ModuleService>> _loggerMock;
         private IModuleService _moduleService;
-
+        private Mock<IUserRepository> _userRepositoryMock;
         [SetUp]
         public void SetUp()
         {
@@ -24,18 +25,20 @@ namespace Integration.Application.Test.Services.Security
             _applicationRepositoryMock = new Mock<IApplicationRepository>(); // Nueva dependencia
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<ModuleService>>();
-
+            _userRepositoryMock = new Mock<IUserRepository>();
             _moduleService = new ModuleService(
                 _repositoryMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object,
-                _applicationRepositoryMock.Object
+                _applicationRepositoryMock.Object, 
+                _userRepositoryMock.Object
             );
         }
 
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedModuleDTO()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var moduleDTO = new ModuleDTO
             {
                 Name = "Aplicaciones",
@@ -66,7 +69,7 @@ namespace Integration.Application.Test.Services.Security
             _mapperMock.Setup(m => m.Map<ModuleDTO>(module))
                        .Returns(moduleDTO);
 
-            var result = await _moduleService.CreateAsync(moduleDTO);
+            var result = await _moduleService.CreateAsync(header, moduleDTO);
 
             Assert.AreEqual(moduleDTO, result);
         }
@@ -74,10 +77,11 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeactivateAsync_ShouldReturnTrue_WhenModuleIsDeleted()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string moduleCode = "MOD0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(moduleCode)).ReturnsAsync(true);
 
-            var result = await _moduleService.DeactivateAsync(moduleCode);
+            var result = await _moduleService.DeactivateAsync(header, moduleCode);
 
             Assert.IsTrue(result);
         }
@@ -85,10 +89,11 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeactivateAsync_ShouldReturnFalse_WhenModuleIsNotFound()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string moduleCode = "MOD0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(moduleCode)).ReturnsAsync(false);
 
-            var result = await _moduleService.DeactivateAsync(moduleCode);
+            var result = await _moduleService.DeactivateAsync(header, moduleCode);
 
             Assert.IsFalse(result);
         }
@@ -139,6 +144,7 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedModuleDTO()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var moduleDTO = new ModuleDTO
             {
                 Name = "Aplicaciones",
@@ -174,7 +180,7 @@ namespace Integration.Application.Test.Services.Security
             _mapperMock.Setup(m => m.Map<ModuleDTO>(module))
                        .Returns(moduleDTO);
 
-            var result = await _moduleService.UpdateAsync(moduleDTO);
+            var result = await _moduleService.UpdateAsync(header, moduleDTO);
 
             Assert.AreEqual(moduleDTO, result);
         }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -19,7 +20,7 @@ namespace Integration.Application.Services.Security
             _logger = logger;
             _applicationRepository = applicationRepository;
         }
-        public async Task<RoleDTO> CreateAsync(RoleDTO roleDTO)
+        public async Task<RoleDTO> CreateAsync(HeaderDTO header, RoleDTO roleDTO)
         {
             _logger.LogInformation("Creando rol: {Name}", roleDTO.Name);
             try
@@ -37,7 +38,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
             _logger.LogInformation("Eliminando rol con RoleCode: {RoleCode}", code);
             try
@@ -202,7 +203,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<RoleDTO> UpdateAsync(RoleDTO roleDTO)
+        public async Task<RoleDTO> UpdateAsync(HeaderDTO header, RoleDTO roleDTO)
         {
             _logger.LogInformation("Actualizando rol con RoleCode: {RoleCode}, Nombre: {Name}", roleDTO.Code, roleDTO.Name);
             try

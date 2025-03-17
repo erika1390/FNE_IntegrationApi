@@ -2,7 +2,6 @@
 {
     public class RoleModulePermissionsDTO
     {
-        public int RoleModuleId { get; set; }
         public int RoleId { get; set; }
         public int ModuleId { get; set; }
         public int PermissionId { get; set; }

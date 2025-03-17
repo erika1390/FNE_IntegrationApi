@@ -65,6 +65,11 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Desactivando aplicación con ApplicationCode: {ApplicationCode}", code);
             try
             {
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 bool success = await _repository.DeactivateAsync(code);
                 if (success)
                 {
@@ -164,6 +169,11 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Actualizando aplicación con ApplicatioCode: {ApplicatioCode}, Nombre: {Name}", applicationDTO.Code, applicationDTO.Name);
             try
             {
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 var application = _mapper.Map<Integration.Core.Entities.Security.Application>(applicationDTO);
                 var updatedApplication = await _repository.UpdateAsync(application);
                 if (updatedApplication == null)

@@ -3,6 +3,7 @@ using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -29,6 +30,7 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedPermissionDTO()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var permissionDTO = new PermissionDTO { Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true };
             var permission = new Integration.Core.Entities.Security.Permission { Id = 1, Name = "Consultar Aplicacion", Code = "PER0000001" };
 
@@ -36,7 +38,7 @@ namespace Integration.Application.Test.Services.Security
             _repositoryMock.Setup(r => r.CreateAsync(permission)).ReturnsAsync(permission);
             _mapperMock.Setup(m => m.Map<PermissionDTO>(permission)).Returns(permissionDTO);
 
-            var result = await _permissionService.CreateAsync(permissionDTO);
+            var result = await _permissionService.CreateAsync(header, permissionDTO);
 
             Assert.AreEqual(permissionDTO, result);
         }
@@ -44,10 +46,11 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeleteAsync_ShouldReturnTrue_WhenPermissionIsDeleted()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string permissionCode = "PER0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode)).ReturnsAsync(true);
 
-            var result = await _permissionService.DeactivateAsync(permissionCode);
+            var result = await _permissionService.DeactivateAsync(header, permissionCode);
 
             Assert.IsTrue(result);
         }
@@ -55,10 +58,11 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeleteAsync_ShouldReturnFalse_WhenPermissionIsNotFound()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string permissionCode = "";
             _repositoryMock.Setup(r => r.DeactivateAsync(permissionCode)).ReturnsAsync(false);
 
-            var result = await _permissionService.DeactivateAsync(permissionCode);
+            var result = await _permissionService.DeactivateAsync(header, permissionCode);
 
             Assert.IsFalse(result);
         }
@@ -104,6 +108,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task UpdateAsync_ShouldReturnUpdatedPermissionDTO()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var permissionDTO = new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy= "System"};
             var permissionEntity = new Permission { Id = 1, Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "System"};
             // Configuración del Mock del repositorio para devolver un permiso válido
@@ -113,7 +118,7 @@ namespace Integration.Application.Test.Services.Security
             _mapperMock.Setup(m => m.Map<Permission>(It.IsAny<PermissionDTO>())).Returns(permissionEntity);
             _mapperMock.Setup(m => m.Map<PermissionDTO>(It.IsAny<Permission>())).Returns(permissionDTO);
             // Act
-            var result = await _permissionService.UpdateAsync(permissionDTO);
+            var result = await _permissionService.UpdateAsync(header, permissionDTO);
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(permissionDTO.Code, result.Code);

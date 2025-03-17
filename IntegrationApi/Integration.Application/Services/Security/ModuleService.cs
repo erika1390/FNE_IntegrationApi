@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -12,23 +13,35 @@ namespace Integration.Application.Services.Security
         private readonly IMapper _mapper;
         private readonly ILogger<ModuleService> _logger;
         private readonly IApplicationRepository _applicationRepository;
+        private readonly IUserRepository _userRepository;
 
-        public ModuleService(IModuleRepository moduleRepository, IMapper mapper, ILogger<ModuleService> logger, IApplicationRepository applicationRepository)
+        public ModuleService(IModuleRepository moduleRepository, IMapper mapper, ILogger<ModuleService> logger, IApplicationRepository applicationRepository, IUserRepository userRepository)
         {
             _moduleRepository = moduleRepository;
             _mapper = mapper;
             _logger = logger;
             _applicationRepository = applicationRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<ModuleDTO> CreateAsync(ModuleDTO moduleDTO)
+        public async Task<ModuleDTO> CreateAsync(HeaderDTO header, ModuleDTO moduleDTO)
         {
+            if (header == null || string.IsNullOrEmpty(header.UserCode))
+            {
+                throw new ArgumentNullException(nameof(header), "El encabezado o UserCode no pueden ser nulos.");
+            }
             _logger.LogInformation("Creando modulo: {Name}", moduleDTO.Name);
             try
             {
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 var application = await _applicationRepository.GetByCodeAsync(moduleDTO.ApplicationCode);
                 var module = _mapper.Map<Integration.Core.Entities.Security.Module>(moduleDTO);
                 module.ApplicationId = application.Id;
+                module.CreatedBy = user.UserName;
                 var result = await _moduleRepository.CreateAsync(module);
                 _logger.LogInformation("Modulo creado con éxito: {ModuleId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<ModuleDTO>(result);
@@ -40,7 +53,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
             _logger.LogInformation("Eliminando modulo con ModuleCode: {ModuleCode}", code);
             try
@@ -204,7 +217,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<ModuleDTO> UpdateAsync(ModuleDTO moduleDTO)
+        public async Task<ModuleDTO> UpdateAsync(HeaderDTO header, ModuleDTO moduleDTO)
         {
             _logger.LogInformation("Módulo creado exitosamente: ModuleCode={ModuleCode}, Name={Name}", moduleDTO.Code, moduleDTO.Name);
             try

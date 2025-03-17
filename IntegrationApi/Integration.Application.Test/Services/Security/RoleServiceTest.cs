@@ -2,6 +2,7 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -30,25 +31,27 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedRoleDTO()
         {
-            var RoleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
-            var Role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System"};
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
+            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System"};
 
-            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(RoleDTO)).Returns(Role);
-            _repositoryMock.Setup(r => r.CreateAsync(Role)).ReturnsAsync(Role);
-            _mapperMock.Setup(m => m.Map<RoleDTO>(Role)).Returns(RoleDTO);
+            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(roleDTO)).Returns(role);
+            _repositoryMock.Setup(r => r.CreateAsync(role)).ReturnsAsync(role);
+            _mapperMock.Setup(m => m.Map<RoleDTO>(role)).Returns(roleDTO);
 
-            var result = await _roleService.CreateAsync(RoleDTO);
+            var result = await _roleService.CreateAsync(header, roleDTO);
 
-            Assert.AreEqual(RoleDTO, result);
+            Assert.AreEqual(roleDTO, result);
         }
 
         [Test]
         public async Task DeleteAsync_ShouldReturnTrue_WhenRoleIsDeleted()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string roleCode = "ROL0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(roleCode)).ReturnsAsync(true);
 
-            var result = await _roleService.DeactivateAsync(roleCode);
+            var result = await _roleService.DeactivateAsync(header, roleCode);
 
             Assert.IsTrue(result);
         }
@@ -56,10 +59,11 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeleteAsync_ShouldReturnFalse_WhenRoleIsNotFound()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string roleCode = "ROL0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(roleCode)).ReturnsAsync(false);
 
-            var result = await _roleService.DeactivateAsync(roleCode);
+            var result = await _roleService.DeactivateAsync(header, roleCode);
 
             Assert.IsFalse(result);
         }
@@ -107,16 +111,17 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedRoleDTO()
         {
-            var RoleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
-            var Role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001" , CreatedBy = "System" };
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
+            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001" , CreatedBy = "System" };
 
-            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(RoleDTO)).Returns(Role);
-            _repositoryMock.Setup(r => r.UpdateAsync(Role)).ReturnsAsync(Role);
-            _mapperMock.Setup(m => m.Map<RoleDTO>(Role)).Returns(RoleDTO);
+            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(roleDTO)).Returns(role);
+            _repositoryMock.Setup(r => r.UpdateAsync(role)).ReturnsAsync(role);
+            _mapperMock.Setup(m => m.Map<RoleDTO>(role)).Returns(roleDTO);
 
-            var result = await _roleService.UpdateAsync(RoleDTO);
+            var result = await _roleService.UpdateAsync(header, roleDTO);
 
-            Assert.AreEqual(RoleDTO, result);
+            Assert.AreEqual(roleDTO, result);
         }
 
         [Test]

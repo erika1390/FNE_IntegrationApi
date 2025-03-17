@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +24,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("active")]
-        public async Task<IActionResult> GetAllActive()
+        public async Task<IActionResult> GetAllActive([FromHeader] HeaderDTO header)
         {
             _logger.LogInformation("Iniciando solicitud para obtener todos los roles activos.");
             try
@@ -46,7 +46,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode(string code)
+        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
         {
             if (code == null)
             {
@@ -76,7 +76,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene roles basados en un solo filtro.
         /// </summary>
         [HttpGet("filter")]
-        public async Task<IActionResult> GetRoles([FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetRoles([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene roles basados en múltiples filtros.
         /// </summary>
         [HttpGet("filters")]
-        public async Task<IActionResult> GetRoles([FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetRoles([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
         {
             try
             {
@@ -172,7 +172,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] RoleDTO roleDTO)
+        public async Task<IActionResult> Create([FromHeader] HeaderDTO header, [FromBody] RoleDTO roleDTO)
         {
             if (roleDTO == null)
             {
@@ -188,7 +188,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Creando nuevo rol: {Name}", roleDTO.Name);
             try
             {
-                var result = await _service.CreateAsync(roleDTO);
+                var result = await _service.CreateAsync(header, roleDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("No se pudo crear el rol.");
@@ -208,7 +208,7 @@ namespace Integration.Api.Controllers.Security
 
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] RoleDTO roleDTO)
+        public async Task<IActionResult> Update([FromHeader] HeaderDTO header, [FromBody] RoleDTO roleDTO)
         {
             if (roleDTO == null)
             {
@@ -224,7 +224,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Actualizando rol con RoleCode: {RoleCode}, Nombre: {Name}", roleDTO.Code, roleDTO.Name);
             try
             {
-                var result = await _service.UpdateAsync(roleDTO);
+                var result = await _service.UpdateAsync(header, roleDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("No se pudo actualizar el rol con RoleCode {RoleCode}.", roleDTO.Code);
@@ -241,7 +241,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpDelete("{code}")]
-        public async Task<IActionResult> Delete(string code)
+        public async Task<IActionResult> Delete([FromHeader] HeaderDTO header, string code)
         {
             if (code == null)
             {
@@ -251,7 +251,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Eliminando rol con RoleCode: {RoleCode}", code);
             try
             {
-                var result = await _service.DeactivateAsync(code);
+                var result = await _service.DeactivateAsync(header, code);
                 if (!result)
                 {
                     _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode} para eliminar.", code);

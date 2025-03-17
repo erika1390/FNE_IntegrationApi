@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene todas las permisos activos.
         /// </summary>
         [HttpGet("active")]
-        public async Task<IActionResult> GetAllActive()
+        public async Task<IActionResult> GetAllActive([FromHeader] HeaderDTO header)
         {
             _logger.LogInformation("Iniciando solicitud para obtener todas las permisos activos.");
             try
@@ -54,7 +55,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene permisos basados en un solo filtro.
         /// </summary>
         [HttpGet("filter")]
-        public async Task<IActionResult> GetPermissions([FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetPermissions([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)
         {
             try
             {
@@ -95,7 +96,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene permisos basados en múltiples filtros.
         /// </summary>
         [HttpGet("filters")]
-        public async Task<IActionResult> GetPermissions([FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetPermissions([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
         {
             try
             {
@@ -138,7 +139,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode(string code)
+        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
         {
             if (code == null)
             {
@@ -168,7 +169,7 @@ namespace Integration.Api.Controllers.Security
         /// Crea un nuevo permiso.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] PermissionDTO permissionDTO)
+        public async Task<IActionResult> Create([FromHeader] HeaderDTO header, [FromBody] PermissionDTO permissionDTO)
         {
             if (permissionDTO == null)
             {
@@ -185,7 +186,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Creando nuevo permiso: {Name}", permissionDTO.Name);
             try
             {
-                var result = await _service.CreateAsync(permissionDTO);
+                var result = await _service.CreateAsync(header, permissionDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("No se pudo crear el permiso.");
@@ -206,7 +207,7 @@ namespace Integration.Api.Controllers.Security
         /// Actualiza un permiso existente.
         /// </summary>
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] PermissionDTO permissionDTO)
+        public async Task<IActionResult> Update([FromHeader] HeaderDTO header, [FromBody] PermissionDTO permissionDTO)
         {
             if (permissionDTO == null)
             {
@@ -222,7 +223,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Permiso creado exitosamente: PermissionCode={PermissionCode}, Name={Name}", permissionDTO.Code, permissionDTO.Name);
             try
             {
-                var result = await _service.UpdateAsync(permissionDTO);
+                var result = await _service.UpdateAsync(header, permissionDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("Permiso con PermissionCode {PermissionCode} no encontrado.", permissionDTO.Code);
@@ -242,7 +243,7 @@ namespace Integration.Api.Controllers.Security
         /// Elimina un permiso por su ID.
         /// </summary>
         [HttpDelete("{code}")]
-        public async Task<IActionResult> Delete(string code)
+        public async Task<IActionResult> Delete([FromHeader] HeaderDTO header, string code)
         {
             if (code == null)
             {
@@ -253,7 +254,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Eliminando permiso con PermissionCode: {PermissionCode}", code);
             try
             {
-                var result = await _service.DeactivateAsync(code);
+                var result = await _service.DeactivateAsync(header, code);
                 if (!result)
                 {
                     _logger.LogWarning("Permiso con PermissionCode {PermissionCode} no encontrado.", code);

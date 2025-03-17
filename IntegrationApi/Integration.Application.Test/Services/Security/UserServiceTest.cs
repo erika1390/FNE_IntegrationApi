@@ -2,6 +2,7 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -28,6 +29,7 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedUserDTO()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var userDTO = new UserDTO {
                 Code = "USR0000001",
                 FirstName = "Erika",
@@ -84,7 +86,7 @@ namespace Integration.Application.Test.Services.Security
             _repositoryMock.Setup(r => r.CreateAsync(user)).ReturnsAsync(user);
             _mapperMock.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
 
-            var result = await _userService.CreateAsync(userDTO);
+            var result = await _userService.CreateAsync(header, userDTO);
 
             Assert.AreEqual(userDTO, result);
         }
@@ -92,10 +94,11 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeactivateAsync_ShouldReturnTrue_WhenUserIsDeactivate()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string userCode = "USR0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(userCode)).ReturnsAsync(true);
 
-            var result = await _userService.DeactivateAsync(userCode);
+            var result = await _userService.DeactivateAsync(header, userCode);
 
             Assert.IsTrue(result);
         }
@@ -103,10 +106,11 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task DeactivateAsync_ShouldReturnFalse_WhenUserIsNotFound()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string userCode = "USR0000001";
             _repositoryMock.Setup(r => r.DeactivateAsync(userCode)).ReturnsAsync(false);
 
-            var result = await _userService.DeactivateAsync(userCode);
+            var result = await _userService.DeactivateAsync(header, userCode);
 
             Assert.IsFalse(result);
         }
@@ -251,6 +255,7 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedUserDTO()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var userDTO = new UserDTO {
                 Code = "USR0000001",
                 FirstName = "Erika",
@@ -305,7 +310,7 @@ namespace Integration.Application.Test.Services.Security
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.User>(userDTO)).Returns(user);
             _repositoryMock.Setup(r => r.UpdateAsync(user)).ReturnsAsync(user);
             _mapperMock.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
-            var result = await _userService.UpdateAsync(userDTO);
+            var result = await _userService.UpdateAsync(header, userDTO);
             Assert.AreEqual(userDTO, result);
         }
 

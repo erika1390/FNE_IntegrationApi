@@ -2,9 +2,10 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
-using Integration.Infrastructure.Repositories.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
+
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
@@ -20,7 +21,7 @@ namespace Integration.Application.Services.Security
             _logger = logger;
         }
 
-        public async Task<PermissionDTO> CreateAsync(PermissionDTO permissionDTO)
+        public async Task<PermissionDTO> CreateAsync(HeaderDTO header, PermissionDTO permissionDTO)
         {
             _logger.LogInformation("Creando permiso: {Name}", permissionDTO.Name);
             try
@@ -37,7 +38,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
             _logger.LogInformation("Eliminando permiso con PermissionId: {PermissionId}", code);
             try
@@ -136,7 +137,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<PermissionDTO> UpdateAsync(PermissionDTO permissionDTO)
+        public async Task<PermissionDTO> UpdateAsync(HeaderDTO header, PermissionDTO permissionDTO)
         {
             if (permissionDTO == null)
                 throw new ArgumentNullException(nameof(permissionDTO), "El permiso no puede ser nulo.");

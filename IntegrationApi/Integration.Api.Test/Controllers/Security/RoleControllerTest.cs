@@ -3,6 +3,7 @@ using FluentValidation.Results;
 
 using Integration.Api.Controllers.Security;
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 
@@ -31,6 +32,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetAllActive_ShouldReturnOk_WhenRolesExist()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var roles = new List<RoleDTO>
             {
                 new RoleDTO { Code = "ROL0000001", Name = "System", IsActive = true, CreatedBy="System" }
@@ -38,7 +40,7 @@ namespace Integration.Api.Tests.Controllers.Security
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(roles);
 
             // Act
-            var result = await _controller.GetAllActive();
+            var result = await _controller.GetAllActive(header);
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -50,10 +52,11 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetAllActive_ShouldReturnNotFound_WhenNoRolesExist()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(new List<RoleDTO>());
 
             // Act
-            var result = await _controller.GetAllActive();
+            var result = await _controller.GetAllActive(header);
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;
@@ -65,11 +68,12 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetByCode_ShouldReturnOk_WhenRoleExists()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var role = new RoleDTO { Code = "ROL0000001", Name = "System", IsActive = true, CreatedBy = "System" };
             _serviceMock.Setup(s => s.GetByCodeAsync("ROL0000001")).ReturnsAsync(role);
 
             // Act
-            var result = await _controller.GetByCode("ROL0000001");
+            var result = await _controller.GetByCode(header, "ROL0000001");
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -81,10 +85,11 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetByCode_ShouldReturnNotFound_WhenRoleDoesNotExist()
         {
             // Arrange
-            _serviceMock.Setup(s => s.GetByCodeAsync("ROL001")).ReturnsAsync((RoleDTO)null);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.GetByCodeAsync("ROL0000001")).ReturnsAsync((RoleDTO)null);
 
             // Act
-            var result = await _controller.GetByCode("ROL001");
+            var result = await _controller.GetByCode(header, "ROL0000001");
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;
@@ -96,6 +101,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Create_ShouldReturnCreatedAtAction_WhenRoleIsCreated()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var role = new RoleDTO
             {
                 Code = "ROL0000001",
@@ -115,14 +121,14 @@ namespace Integration.Api.Tests.Controllers.Security
 
             // Configurar el servicio para devolver el rol creado
             serviceMock
-                .Setup(s => s.CreateAsync(It.IsAny<RoleDTO>()))
+                .Setup(s => s.CreateAsync(header, It.IsAny<RoleDTO>()))
                 .ReturnsAsync(role);
 
             // Instanciar el controlador correctamente
             var controller = new RoleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await controller.Create(role);
+            var result = await controller.Create(header, role);
 
             // Assert
             var createdAtActionResult = result as CreatedAtActionResult;
@@ -134,7 +140,8 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Create_ShouldReturnBadRequest_WhenRoleIsNull()
         {
             // Act
-            var result = await _controller.Create(null);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var result = await _controller.Create(header, null);
 
             // Assert
             var badRequestResult = result as BadRequestObjectResult;
@@ -151,6 +158,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnOk_WhenRoleIsUpdated()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var role = new RoleDTO
             {
                 Code = "ROL0000001",
@@ -170,14 +178,14 @@ namespace Integration.Api.Tests.Controllers.Security
 
             // Configurar el servicio para devolver el rol actualizado
             serviceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<RoleDTO>()))
+                .Setup(s => s.UpdateAsync(header, It.IsAny<RoleDTO>()))
                 .ReturnsAsync(role);
 
             // Instanciar el controlador correctamente
             var controller = new RoleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await controller.Update(role);
+            var result = await controller.Update(header, role);
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -190,6 +198,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnNotFound_WhenRoleDoesNotExist()
         {
             // Arrange
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var role = new RoleDTO
             {
                 Code = "ROL0000001",
@@ -209,14 +218,14 @@ namespace Integration.Api.Tests.Controllers.Security
 
             // Configurar el servicio para devolver `null` (simulando que el rol no existe)
             serviceMock
-                .Setup(s => s.UpdateAsync(It.IsAny<RoleDTO>()))
+                .Setup(s => s.UpdateAsync(header, It.IsAny<RoleDTO>()))
                 .ReturnsAsync((RoleDTO)null);
 
             // Instanciar el controlador correctamente
             var controller = new RoleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await controller.Update(role);
+            var result = await controller.Update(header, role);
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;
@@ -228,10 +237,11 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Delete_ShouldReturnOk_WhenRoleIsDeleted()
         {
             // Arrange
-            _serviceMock.Setup(s => s.DeactivateAsync("ROL0000001")).ReturnsAsync(true);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.DeactivateAsync(header, "ROL0000001")).ReturnsAsync(true);
 
             // Act
-            var result = await _controller.Delete("ROL0000001");
+            var result = await _controller.Delete(header, "ROL0000001");
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -243,10 +253,11 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Delete_ShouldReturnNotFound_WhenRoleDoesNotExist()
         {
             // Arrange
-            _serviceMock.Setup(s => s.DeactivateAsync("ROL0000001")).ReturnsAsync(false);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.DeactivateAsync(header, "ROL0000001")).ReturnsAsync(false);
 
             // Act
-            var result = await _controller.Delete("ROL0000001");
+            var result = await _controller.Delete(header, "ROL0000001");
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;

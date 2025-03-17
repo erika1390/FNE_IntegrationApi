@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -17,7 +18,7 @@ namespace Integration.Application.Services.Security
             _mapper = mapper;
             _logger = logger;
         }
-        public async Task<UserDTO> CreateAsync(UserDTO userDTO)
+        public async Task<UserDTO> CreateAsync(HeaderDTO header, UserDTO userDTO)
         {
             _logger.LogInformation("Creando usuario: {Name}", userDTO.UserName);
             try
@@ -38,7 +39,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(string code)
+        public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
             _logger.LogInformation("Eliminando usuario con UserCode: {UserCode}", code);
             try
@@ -137,7 +138,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<UserDTO> UpdateAsync(UserDTO userDTO)
+        public async Task<UserDTO> UpdateAsync(HeaderDTO header, UserDTO userDTO)
         {
             _logger.LogInformation("Actualizando usuario con UserName: {UserName}", userDTO.UserName);
             try
