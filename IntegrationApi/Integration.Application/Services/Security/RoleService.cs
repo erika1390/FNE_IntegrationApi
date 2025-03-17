@@ -204,22 +204,22 @@ namespace Integration.Application.Services.Security
 
         public async Task<RoleDTO> UpdateAsync(RoleDTO roleDTO)
         {
-            _logger.LogInformation("Actualizando rol con ID: {RoleId}, Nombre: {Name}", roleDTO.RoleId, roleDTO.Name);
+            _logger.LogInformation("Actualizando rol con RoleCode: {RoleCode}, Nombre: {Name}", roleDTO.Code, roleDTO.Name);
             try
             {
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
                 var updatedRole = await _roleRrepository.UpdateAsync(role);
                 if (updatedRole == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar el rol con ID {RoleId}.", roleDTO.RoleId);
+                    _logger.LogWarning("No se pudo actualizar el rol con RoleCode {RoleCode}.", roleDTO.Code);
                     return null;
                 }
-                _logger.LogInformation("Rol actualizado con éxito: {RoleId}, Nombre: {Name}", updatedRole.Id, updatedRole.Name);
+                _logger.LogInformation("Rol actualizado con éxito: {RoleCode}, Nombre: {Name}", updatedRole.Code, updatedRole.Name);
                 return _mapper.Map<RoleDTO>(updatedRole);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rol con ID {roleDTO}.", roleDTO.RoleId);
+                _logger.LogError(ex, "Error al actualizar el rol con RoleCode {RoleCode}.", roleDTO.Code);
                 throw;
             }
         }

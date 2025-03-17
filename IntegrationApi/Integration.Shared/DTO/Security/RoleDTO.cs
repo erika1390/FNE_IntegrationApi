@@ -2,7 +2,6 @@
 {
     public class RoleDTO
     {
-        public int RoleId { get; set; }
         public required string Code { get; set; }
         public required string Name { get; set; }
         public string ApplicationCode { get; set; }

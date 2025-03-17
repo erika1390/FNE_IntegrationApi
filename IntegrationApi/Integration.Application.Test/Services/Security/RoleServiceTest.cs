@@ -30,7 +30,7 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedRoleDTO()
         {
-            var RoleDTO = new RoleDTO { RoleId = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
+            var RoleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
             var Role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System"};
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(RoleDTO)).Returns(Role);
@@ -68,7 +68,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetAllActiveAsync_ShouldReturnListOfRoleDTOs()
         {
             var Roles = new List<Integration.Core.Entities.Security.Role> { new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" } };
-            var RoleDTOs = new List<RoleDTO> { new RoleDTO { RoleId = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true } };
+            var RoleDTOs = new List<RoleDTO> { new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true } };
 
             _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(Roles);
             _mapperMock.Setup(m => m.Map<IEnumerable<RoleDTO>>(Roles)).Returns(RoleDTOs);
@@ -107,7 +107,7 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedRoleDTO()
         {
-            var RoleDTO = new RoleDTO { RoleId = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
+            var RoleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
             var Role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001" , CreatedBy = "System" };
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(RoleDTO)).Returns(Role);
