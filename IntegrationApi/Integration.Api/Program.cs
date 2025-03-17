@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 
+using Integration.Api.Filters;
 using Integration.Api.Middlewares;
 using Integration.Application.Interfaces.Audit;
 using Integration.Application.Interfaces.Security;
@@ -49,6 +50,8 @@ builder.Services.AddAutoMapper(typeof(UserRoleProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
 
+builder.Services.AddScoped<ValidateHeadersFilter>();
+
 builder.Services.AddValidatorsFromAssemblyContaining<ApplicationDTOValidator>();
 
 // Si el servicio no es genérico, registra la implementación específica
@@ -72,7 +75,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.SuppressModelStateInvalidFilter = false;
+    options.SuppressModelStateInvalidFilter = true;
 });
 
 // Configurar Identity
