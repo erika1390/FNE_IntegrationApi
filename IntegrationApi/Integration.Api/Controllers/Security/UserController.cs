@@ -1,11 +1,9 @@
-﻿using Integration.Application.Interfaces.Security;
+﻿using FluentValidation;
+using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
@@ -16,10 +14,12 @@ namespace Integration.Api.Controllers.Security
     {
         private readonly IUserService _service;
         private readonly ILogger<UserController> _logger;
-        public UserController(IUserService service, ILogger<UserController> logger)
+        private readonly IValidator<UserDTO> _validator;
+        public UserController(IUserService service, ILogger<UserController> logger, IValidator<UserDTO> validator)
         {
             _service = service;
             _logger = logger;
+            _validator = validator;
         }
 
         [HttpGet("active")]
@@ -130,10 +130,13 @@ namespace Integration.Api.Controllers.Security
         {
             return await HandleRequest(async () =>
             {
-                if (!ModelState.IsValid)
+                var validationResult = await _validator.ValidateAsync(userDTO);
+                if (!validationResult.IsValid)
                 {
-                    return BadRequest(ResponseApi<UserDTO>.Error("Datos de entrada inválidos."));
+                    var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    return BadRequest(ResponseApi<UserDTO>.Error(errors));
                 }
+
                 var result = await _service.CreateAsync(userDTO);
                 if (result == null)
                 {
@@ -149,9 +152,11 @@ namespace Integration.Api.Controllers.Security
         {
             return await HandleRequest(async () =>
             {
-                if (!ModelState.IsValid)
+                var validationResult = await _validator.ValidateAsync(userDTO);
+                if (!validationResult.IsValid)
                 {
-                    return BadRequest(ResponseApi<UserDTO>.Error("Datos de entrada inválidos."));
+                    var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    return BadRequest(ResponseApi<UserDTO>.Error(errors));
                 }
                 var result = await _service.UpdateAsync(userDTO);
                 if (result == null)

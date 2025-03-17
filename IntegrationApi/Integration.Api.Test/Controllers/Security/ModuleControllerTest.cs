@@ -1,4 +1,7 @@
-﻿using Integration.Api.Controllers.Security;
+﻿using FluentValidation;
+using FluentValidation.Results;
+
+using Integration.Api.Controllers.Security;
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
@@ -13,12 +16,14 @@ namespace Integration.Api.Tests.Controllers.Security
         private Mock<IModuleService> _serviceMock;
         private Mock<ILogger<ModuleController>> _loggerMock;
         private ModuleController _controller;
+        private Mock<IValidator<ModuleDTO>> _validatorMock;
         [SetUp]
         public void SetUp()
         {
             _serviceMock = new Mock<IModuleService>();
             _loggerMock = new Mock<ILogger<ModuleController>>();
-            _controller = new ModuleController(_serviceMock.Object, _loggerMock.Object);
+            _validatorMock = new Mock<IValidator<ModuleDTO>>();
+            _controller = new ModuleController(_serviceMock.Object, _loggerMock.Object, _validatorMock.Object);
         }
 
         [Test]
@@ -90,11 +95,33 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Create_ShouldReturnCreatedAtAction_WhenModuleIsCreated()
         {
             // Arrange
-            var module = new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, ApplicationCode = "APP0000001", CreatedBy = "System" };
-            _serviceMock.Setup(s => s.CreateAsync(module)).ReturnsAsync(module);
+            var module = new ModuleDTO
+            {
+                Code = "MOD0000001",
+                Name = "Aplicaciones",
+                IsActive = true,
+                ApplicationCode = "APP0000001",
+                CreatedBy = "System"
+            };
+
+            var serviceMock = new Mock<IModuleService>();
+            var validatorMock = new Mock<IValidator<ModuleDTO>>();
+            var loggerMock = new Mock<ILogger<ModuleController>>();
+
+            // Configurar validación exitosa
+            validatorMock
+                .Setup(v => v.ValidateAsync(It.IsAny<ModuleDTO>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
+
+            // Configurar el servicio mock para devolver el módulo esperado
+            serviceMock
+                .Setup(s => s.CreateAsync(It.IsAny<ModuleDTO>()))
+                .ReturnsAsync(module);
+
+            var controller = new ModuleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await _controller.Create(module);
+            var result = await controller.Create(module);
 
             // Assert
             var createdAtActionResult = result as CreatedAtActionResult;
@@ -122,11 +149,34 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnOk_WhenModuleIsUpdated()
         {
             // Arrange
-            var module = new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, ApplicationCode = "APP0000001", CreatedBy = "System" };
-            _serviceMock.Setup(s => s.UpdateAsync(module)).ReturnsAsync(module);
+            var module = new ModuleDTO
+            {
+                Code = "MOD0000001",
+                Name = "Aplicaciones",
+                IsActive = true,
+                ApplicationCode = "APP0000001",
+                CreatedBy = "System"
+            };
+
+            var serviceMock = new Mock<IModuleService>();
+            var validatorMock = new Mock<IValidator<ModuleDTO>>();
+            var loggerMock = new Mock<ILogger<ModuleController>>();
+
+            // Configurar validación exitosa
+            validatorMock
+                .Setup(v => v.ValidateAsync(It.IsAny<ModuleDTO>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
+
+            // Configurar el servicio para devolver el módulo actualizado
+            serviceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<ModuleDTO>()))
+                .ReturnsAsync(module);
+
+            // Instanciar el controlador con los mocks
+            var controller = new ModuleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await _controller.Update(module);
+            var result = await controller.Update(module);
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -138,11 +188,34 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnNotFound_WhenModuleDoesNotExist()
         {
             // Arrange
-            var module = new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, ApplicationCode = "APP0000001", CreatedBy = "System" };
-            _serviceMock.Setup(s => s.UpdateAsync(module)).ReturnsAsync((ModuleDTO)null);
+            var module = new ModuleDTO
+            {
+                Code = "MOD0000001",
+                Name = "Aplicaciones",
+                IsActive = true,
+                ApplicationCode = "APP0000001",
+                CreatedBy = "System"
+            };
+
+            var serviceMock = new Mock<IModuleService>();
+            var validatorMock = new Mock<IValidator<ModuleDTO>>();
+            var loggerMock = new Mock<ILogger<ModuleController>>();
+
+            // Configurar el validador para devolver una validación exitosa
+            validatorMock
+                .Setup(v => v.ValidateAsync(It.IsAny<ModuleDTO>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
+
+            // Configurar el servicio para devolver `null` (simulando que el módulo no existe)
+            serviceMock
+                .Setup(s => s.UpdateAsync(It.IsAny<ModuleDTO>()))
+                .ReturnsAsync((ModuleDTO)null);
+
+            // Instanciar el controlador con los mocks
+            var controller = new ModuleController(serviceMock.Object, loggerMock.Object, validatorMock.Object);
 
             // Act
-            var result = await _controller.Update(module);
+            var result = await controller.Update(module);
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;

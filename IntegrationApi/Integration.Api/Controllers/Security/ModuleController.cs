@@ -1,4 +1,6 @@
-﻿using Integration.Application.Interfaces.Security;
+﻿using FluentValidation;
+
+using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 
@@ -16,11 +18,13 @@ namespace Integration.Api.Controllers.Security
     {
         private readonly IModuleService _service;
         private readonly ILogger<ModuleController> _logger;
+        private readonly IValidator<ModuleDTO> _validator;
 
-        public ModuleController(IModuleService service, ILogger<ModuleController> logger)
+        public ModuleController(IModuleService service, ILogger<ModuleController> logger, IValidator<ModuleDTO> validator)
         {
             _service = service;
             _logger = logger;
+            _validator = validator;
         }
 
         /// <summary>
@@ -187,11 +191,13 @@ namespace Integration.Api.Controllers.Security
                 return BadRequest(ResponseApi<ModuleDTO>.Error("Los datos del módulo no pueden ser nulos."));
             }
 
-            if (!ModelState.IsValid)
+            var validationResult = await _validator.ValidateAsync(moduleDTO);
+
+            if (!validationResult.IsValid)
             {
-                _logger.LogWarning("Se recibió una solicitud con datos inválidos para crear un módulo.");
-                return BadRequest(ResponseApi<ModuleDTO>.Error("Datos de entrada inválidos."));
-            }
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ResponseApi<ModuleDTO>.Error(errors));
+            }   
 
             _logger.LogInformation("Creando nuevo módulo: {Name}", moduleDTO.Name);
             try
@@ -221,10 +227,18 @@ namespace Integration.Api.Controllers.Security
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ModuleDTO moduleDTO)
         {
-            if (!ModelState.IsValid)
+            if (moduleDTO == null)
             {
-                _logger.LogWarning("Datos de entrada no válidos recibidos para actualizar un módulo.");
-                return BadRequest(ResponseApi<ModuleDTO>.Error("Datos de entrada no válidos."));
+                _logger.LogWarning("Se recibió una solicitud con datos nulos para modificar un modulo.");
+                return BadRequest(ResponseApi<ModuleDTO>.Error("Los datos de la aplicación no pueden ser nulos."));
+            }
+
+            var validationResult = await _validator.ValidateAsync(moduleDTO);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ResponseApi<ModuleDTO>.Error(errors));
             }
             _logger.LogInformation("Actualizando módulo con ModuleCode: {ModuleCode}, Name: {Name}", moduleDTO.Code, moduleDTO.Name);
             try

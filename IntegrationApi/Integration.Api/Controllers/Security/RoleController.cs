@@ -62,7 +62,7 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode}.", code);
                     return NotFound(ResponseApi<RoleDTO>.Error("Rol no encontrada."));
                 }
-                _logger.LogInformation("Rol encontrada: RoleCode={RoleCode}, Nombre={Name}", result.RoleId, result.Name);
+                _logger.LogInformation("Rol encontrada: RoleCode={RoleCode}, Nombre={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<RoleDTO>.Success(result));
             }
             catch (Exception ex)
@@ -216,21 +216,21 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió una solicitud con datos inválidos para actualizar un rol.");
                 return BadRequest(ResponseApi<RoleDTO>.Error("Datos de entrada inválidos."));
             }
-            _logger.LogInformation("Actualizando rol con ID: {RoleId}, Nombre: {Name}", roleDTO.RoleId, roleDTO.Name);
+            _logger.LogInformation("Actualizando rol con RoleCode: {RoleCode}, Nombre: {Name}", roleDTO.Code, roleDTO.Name);
             try
             {
                 var result = await _service.UpdateAsync(roleDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo actualizar el rol con ID {RoleId}.", roleDTO.RoleId);
+                    _logger.LogWarning("No se pudo actualizar el rol con RoleCode {RoleCode}.", roleDTO.Code);
                     return NotFound(ResponseApi<RoleDTO>.Error("Rol no encontrada."));
                 }
-                _logger.LogInformation("Rol actualizada con éxito: ID={RoleId}, Nombre={Name}", result.RoleId, result.Name);
+                _logger.LogInformation("Rol actualizada con éxito: RoleCode={RoleCode}, Nombre={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<RoleDTO>.Success(result, "Rol actualizada correctamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rol con ID {RoleId}.", roleDTO.RoleId);
+                _logger.LogError(ex, "Error al actualizar el rol con RoleCode {RoleCode}.", roleDTO.Code);
                 return StatusCode(500, ResponseApi<RoleDTO>.Error("Error interno del servidor."));
             }
         }
