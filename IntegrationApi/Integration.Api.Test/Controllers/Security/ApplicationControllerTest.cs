@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using FluentValidation.Results;
+using System.Reflection.PortableExecutable;
+using Integration.Shared.DTO.Header;
 namespace Integration.Api.Tests.Controllers.Security
 {
     [TestFixture]
@@ -29,12 +31,13 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task GetAllActive_ShouldReturnOk_WhenApplicationsExist()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var applications = new List<ApplicationDTO>
             {
                 new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" }
             };
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(applications);
-            var result = await _controller.GetAllActive();
+            var result = await _controller.GetAllActive(header);
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
@@ -47,8 +50,9 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task GetAllActive_ShouldReturnNotFound_WhenNoApplicationsExist()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(new List<ApplicationDTO>());
-            var result = await _controller.GetAllActive();
+            var result = await _controller.GetAllActive(header);
             var notFoundResult = result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
             Assert.AreEqual(404, notFoundResult.StatusCode);
@@ -61,9 +65,10 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task GetByCode_ShouldReturnOk_WhenApplicationExists()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" };
             _serviceMock.Setup(s => s.GetByCodeAsync("APP0000001")).ReturnsAsync(application);
-            var result = await _controller.GetByCode("APP0000001");
+            var result = await _controller.GetByCode(header,"APP0000001");
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
@@ -76,8 +81,9 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task GetByCode_ShouldReturnNotFound_WhenApplicationDoesNotExist()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.GetByCodeAsync("APP0000001")).ReturnsAsync((ApplicationDTO)null);
-            var result = await _controller.GetByCode("APP0000001");
+            var result = await _controller.GetByCode(header, "APP0000001");
             var notFoundResult = result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
             Assert.AreEqual(404, notFoundResult.StatusCode);
@@ -90,7 +96,8 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task GetByCode_ShouldReturnBadRequest_WhenCodeIsEmpty()
         {
-            var result = await _controller.GetByCode("");
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var result = await _controller.GetByCode(header,"");
             var badRequestResult = result as BadRequestObjectResult;
             Assert.NotNull(badRequestResult);
             Assert.AreEqual(400, badRequestResult.StatusCode);
@@ -103,11 +110,12 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task Create_ShouldReturnCreatedAtAction_WhenApplicationIsCreated()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" };
             _validatorMock.Setup(v => v.ValidateAsync(application, It.IsAny<CancellationToken>()))
                           .ReturnsAsync(new ValidationResult());
-            _serviceMock.Setup(s => s.CreateAsync(application)).ReturnsAsync(application);
-            var result = await _controller.Create(application);
+            _serviceMock.Setup(s => s.CreateAsync(header, application)).ReturnsAsync(application);
+            var result = await _controller.Create(header, application);
             var createdAtActionResult = result as CreatedAtActionResult;
             Assert.NotNull(createdAtActionResult);
             Assert.AreEqual(201, createdAtActionResult.StatusCode);
@@ -120,7 +128,8 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task Create_ShouldReturnBadRequest_WhenApplicationIsNull()
         {
-            var result = await _controller.Create(null);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var result = await _controller.Create(header, null);
             var badRequestResult = result as BadRequestObjectResult;
             Assert.NotNull(badRequestResult);
             Assert.AreEqual(400, badRequestResult.StatusCode);
@@ -134,11 +143,12 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task Update_ShouldReturnOk_WhenApplicationIsUpdated()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" };
             _validatorMock.Setup(v => v.ValidateAsync(application, It.IsAny<CancellationToken>()))
                           .ReturnsAsync(new ValidationResult());
-            _serviceMock.Setup(s => s.UpdateAsync(application)).ReturnsAsync(application);
-            var result = await _controller.Update(application);
+            _serviceMock.Setup(s => s.UpdateAsync(header, application)).ReturnsAsync(application);
+            var result = await _controller.Update(header, application);
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
@@ -151,11 +161,12 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task Update_ShouldReturnNotFound_WhenApplicationDoesNotExist()
         {
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" };
             _validatorMock.Setup(v => v.ValidateAsync(application, It.IsAny<CancellationToken>()))
                           .ReturnsAsync(new ValidationResult());
-            _serviceMock.Setup(s => s.UpdateAsync(application)).ReturnsAsync((ApplicationDTO)null);
-            var result = await _controller.Update(application);
+            _serviceMock.Setup(s => s.UpdateAsync(header, application)).ReturnsAsync((ApplicationDTO)null);
+            var result = await _controller.Update(header, application);
             var notFoundResult = result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
             Assert.AreEqual(404, notFoundResult.StatusCode);
@@ -168,8 +179,9 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task Delete_ShouldReturnOk_WhenApplicationIsDeleted()
         {
-            _serviceMock.Setup(s => s.DeactivateAsync("APP0000001")).ReturnsAsync(true);
-            var result = await _controller.Deactivate("APP0000001");
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.DeactivateAsync(header, "APP0000001")).ReturnsAsync(true);
+            var result = await _controller.Deactivate(header, "APP0000001");
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
@@ -182,8 +194,9 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task Delete_ShouldReturnNotFound_WhenApplicationDoesNotExist()
         {
-            _serviceMock.Setup(s => s.DeactivateAsync("APP0000001")).ReturnsAsync(false);
-            var result = await _controller.Deactivate("APP0000001");
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.DeactivateAsync(header, "APP0000001")).ReturnsAsync(false);
+            var result = await _controller.Deactivate(header, "APP0000001");
             var notFoundResult = result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
             Assert.AreEqual(404, notFoundResult.StatusCode);
@@ -196,7 +209,8 @@ namespace Integration.Api.Tests.Controllers.Security
         [Test]
         public async Task Delete_ShouldReturnBadRequest_WhenCodeIsEmpty()
         {
-            var result = await _controller.Deactivate("");
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var result = await _controller.Deactivate(header, "");
             var badRequestResult = result as BadRequestObjectResult;
             Assert.NotNull(badRequestResult);
             Assert.AreEqual(400, badRequestResult.StatusCode);
