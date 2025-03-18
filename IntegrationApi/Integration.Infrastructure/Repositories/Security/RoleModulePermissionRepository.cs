@@ -7,11 +7,11 @@ using System.Data;
 using System.Linq.Expressions;
 namespace Integration.Infrastructure.Repositories.Security
 {
-    public class RoleModulePermissionsRepository : IRoleModulePermissionsRepository
+    public class RoleModulePermissionRepository : IRoleModulePermissionRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<RoleRepository> _logger;
-        public RoleModulePermissionsRepository(ApplicationDbContext context, ILogger<RoleRepository> logger)
+        private readonly ILogger<RoleModulePermissionRepository> _logger;
+        public RoleModulePermissionRepository(ApplicationDbContext context, ILogger<RoleModulePermissionRepository> logger)
         {
             _context = context;
             _logger = logger;
@@ -20,15 +20,32 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             if (roleModulePermissions == null)
             {
-                _logger.LogWarning("Intento de crear un roleModulePermissions con datos nulos.");
-                throw new ArgumentNullException(nameof(roleModulePermissions), "El roleModulePermissions no puede ser nulo.");
+                _logger.LogWarning("Intento de crear un RoleModulePermissions con datos nulos.");
+                throw new ArgumentNullException(nameof(roleModulePermissions), "El RoleModulePermissions no puede ser nulo.");
             }
+
             try
             {
+                // Evitar que Entity Framework intente insertar relaciones
+                roleModulePermissions.Role = null;
+                roleModulePermissions.Module = null;
+                roleModulePermissions.Permission = null;
+
+                // Insertar el nuevo registro
                 await _context.RoleModulePermissions.AddAsync(roleModulePermissions);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("RoleModulePermissions creado exitosamente: RoleId: {RoleId}, ModuleId: {ModuleId}, PermissionId: {PermissionId}", roleModulePermissions.RoleId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
-                return roleModulePermissions;
+
+                // Recargar el objeto desde la base de datos con sus relaciones
+                var createdEntity = await _context.RoleModulePermissions
+                    .Include(rmp => rmp.Role)
+                    .Include(rmp => rmp.Module)
+                    .Include(rmp => rmp.Permission)
+                    .FirstOrDefaultAsync(rmp => rmp.Id == roleModulePermissions.Id);
+
+                _logger.LogInformation("RoleModulePermissions creado exitosamente: RoleId: {RoleId}, ModuleId: {ModuleId}, PermissionId: {PermissionId}, CreatedBy: {CreatedBy}",
+                    createdEntity.RoleId, createdEntity.ModuleId, createdEntity.PermissionId, createdEntity.CreatedBy);
+
+                return createdEntity;
             }
             catch (DbUpdateException ex)
             {
@@ -41,6 +58,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
+
 
         public async Task<bool> DeactivateAsync(RoleModulePermissions roleModulePermissions)
         {
@@ -80,7 +98,13 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var roleModulePermissions = await _context.RoleModulePermissions.Where(r => r.IsActive == true).AsNoTracking().ToListAsync();
+                var roleModulePermissions = await _context.RoleModulePermissions
+                    .Where(r => r.IsActive == true)
+                    .Include(a => a.Role)
+                    .Include(a => a.Module)
+                    .Include(a => a.Permission)
+                    .AsNoTracking()
+                    .ToListAsync();
 
                 _logger.LogInformation("Se obtuvieron {Count} RoleModulePermissions de la base de datos.", roleModulePermissions.Count);
                 return roleModulePermissions;
@@ -97,7 +121,13 @@ namespace Integration.Infrastructure.Repositories.Security
             try
             {
                 _logger.LogInformation("Obteniendo RoleModulePermissions con un predicado específico.");
-                var roleModulePermissions = await _context.RoleModulePermissions.Where(predicate).ToListAsync();
+                var roleModulePermissions = await _context.RoleModulePermissions
+                    .Where(predicate)
+                    .Include(a => a.Role)
+                    .Include(a => a.Module)
+                    .Include(a => a.Permission)
+                    .AsNoTracking()
+                    .ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} RoleModulePermissions.", roleModulePermissions.Count);
                 return roleModulePermissions;
             }
@@ -116,7 +146,11 @@ namespace Integration.Infrastructure.Repositories.Security
                 var query = _context.RoleModulePermissions.AsQueryable();
                 foreach (var predicado in predicates)
                 {
-                    query = query.Where(predicado);
+                    query = query
+                        .Where(predicado)
+                        .Include(a => a.Role)
+                        .Include(a => a.Module)
+                        .Include(a => a.Permission);
                 }
                 var roles = await query.ToListAsync();
                 _logger.LogInformation("Se obtuvieron {Count} RoleModulePermissions tras aplicar múltiples predicados.", roles.Count);
@@ -137,6 +171,9 @@ namespace Integration.Infrastructure.Repositories.Security
                     .Where(a => a.RoleId == roleModulePermissions.RoleId
                     && a.ModuleId == roleModulePermissions.ModuleId
                     && a.PermissionId == roleModulePermissions.PermissionId)
+                    .Include(a => a.Role)
+                    .Include(a => a.Module)
+                    .Include(a => a.Permission)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
                 if (roleModulePermission == null)
@@ -160,37 +197,61 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             if (roleModulePermissions == null)
             {
-                _logger.LogWarning("Intento de actualizar un roleModulePermissions con datos nulos.");
-                throw new ArgumentNullException(nameof(roleModulePermissions), "El roleModulePermissions no puede ser nulo.");
+                _logger.LogWarning("Intento de actualizar un RoleModulePermissions con datos nulos.");
+                throw new ArgumentNullException(nameof(roleModulePermissions), "El RoleModulePermissions no puede ser nulo.");
             }
+
             try
             {
-                var roleModulePermissionEntity = await _context.RoleModulePermissions.FindAsync(roleModulePermissions.PermissionId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
+                // Buscar el objeto existente sin rastreo para evitar conflictos con EF
+                var roleModulePermissionEntity = await _context.RoleModulePermissions
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(a => a.RoleId == roleModulePermissions.RoleId
+                                           && a.ModuleId == roleModulePermissions.ModuleId
+                                           && a.PermissionId == roleModulePermissions.PermissionId);
+
                 if (roleModulePermissionEntity == null)
                 {
-                    _logger.LogWarning("No se encontró el roleModulePermissions con RoleId {RoleId}, ModuleId {ModuleId} y PermissionId {PermissionId} para modificar.", roleModulePermissions.RoleId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
+                    _logger.LogWarning("No se encontró el RoleModulePermissions con RoleId {RoleId}, ModuleId {ModuleId} y PermissionId {PermissionId} para modificar.",
+                        roleModulePermissions.RoleId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
                     return null;
                 }
+
+                // Mapear los valores actualizados
                 roleModulePermissionEntity.RoleId = roleModulePermissions.RoleId;
-                roleModulePermissionEntity.ModuleId = roleModulePermissionEntity.ModuleId;
-                roleModulePermissionEntity.PermissionId = roleModulePermissionEntity.PermissionId;
-                roleModulePermissionEntity.UpdatedBy = roleModulePermissionEntity.UpdatedBy;
+                roleModulePermissionEntity.ModuleId = roleModulePermissions.ModuleId;
+                roleModulePermissionEntity.PermissionId = roleModulePermissions.PermissionId;
+                roleModulePermissionEntity.UpdatedBy = roleModulePermissions.UpdatedBy ?? "System"; // Usar un valor por defecto si es nulo
                 roleModulePermissionEntity.UpdatedAt = DateTime.UtcNow;
-                roleModulePermissionEntity.IsActive = roleModulePermissionEntity.IsActive;
+                roleModulePermissionEntity.IsActive = roleModulePermissions.IsActive;
+
+                // Actualizar la entidad en la base de datos
                 _context.RoleModulePermissions.Update(roleModulePermissionEntity);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("RoleModulePermissions actualizado: RoleId {RoleId}, ModuleId {ModuleId} y PermissionId {PermissionId} para modificar.", roleModulePermissions.RoleId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
-                return roleModulePermissionEntity;
+
+                // Recargar el objeto actualizado con sus relaciones
+                var updatedEntity = await _context.RoleModulePermissions
+                    .Include(rmp => rmp.Role)
+                    .Include(rmp => rmp.Module)
+                    .Include(rmp => rmp.Permission)
+                    .FirstOrDefaultAsync(rmp => rmp.Id == roleModulePermissionEntity.Id);
+
+                _logger.LogInformation("RoleModulePermissions actualizado exitosamente: RoleId: {RoleId}, ModuleId: {ModuleId}, PermissionId: {PermissionId}, UpdatedBy: {UpdatedBy}",
+                    updatedEntity.RoleId, updatedEntity.ModuleId, updatedEntity.PermissionId, updatedEntity.UpdatedBy);
+
+                return updatedEntity;
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error de base de datos al actualizar el RoleModulePermissions con RoleId {RoleId}, ModuleId {ModuleId} y PermissionId {PermissionId} para modificar.", roleModulePermissions.RoleId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
-                return null;
+                _logger.LogError(ex, "Error de base de datos al actualizar el RoleModulePermissions con RoleId {RoleId}, ModuleId {ModuleId} y PermissionId {PermissionId}.",
+                    roleModulePermissions.RoleId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
+                throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al actualizar el RoleModulePermissions con RoleId {RoleId}, ModuleId {ModuleId} y PermissionId {PermissionId} para modificar.", roleModulePermissions.RoleId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
-                return null;
+                _logger.LogError(ex, "Error inesperado al actualizar el RoleModulePermissions con RoleId {RoleId}, ModuleId {ModuleId} y PermissionId {PermissionId}.",
+                    roleModulePermissions.RoleId, roleModulePermissions.ModuleId, roleModulePermissions.PermissionId);
+                throw;
             }
         }
     }

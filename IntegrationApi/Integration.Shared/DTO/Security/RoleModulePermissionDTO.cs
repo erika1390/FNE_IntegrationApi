@@ -1,6 +1,6 @@
 ﻿namespace Integration.Shared.DTO.Security
 {
-    public class RoleModulePermissionsDTO
+    public class RoleModulePermissionDTO
     {
         public required string RoleCode { get; set; }
         public string ModuleCode { get; set; }

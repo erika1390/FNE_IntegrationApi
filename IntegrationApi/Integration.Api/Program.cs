@@ -53,6 +53,10 @@ builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
 builder.Services.AddScoped<ValidateHeadersFilter>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<ApplicationDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ModuleDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<PermissionDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<RoleDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserDTOValidator>();
 
 // Si el servicio no es genérico, registra la implementación específica
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -63,7 +67,7 @@ builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddScoped<IRoleModuleService, RoleModuleService>();
+builder.Services.AddScoped<IRoleModulePermissionService, RoleModulePermissionService>();
 
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
@@ -71,7 +75,7 @@ builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRoleModulePermissionsRepository, RoleModulePermissionsRepository>();
+builder.Services.AddScoped<IRoleModulePermissionRepository, RoleModulePermissionRepository>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

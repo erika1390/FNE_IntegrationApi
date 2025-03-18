@@ -4,6 +4,7 @@ using Integration.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Integration.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318172518_InitialMigrations2")]
+    partial class InitialMigrations2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,10 +341,19 @@ namespace Integration.Infrastructure.Migrations
                     b.Property<int>("ModuleId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ModuleId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PermissionId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoleId1")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -355,7 +367,13 @@ namespace Integration.Infrastructure.Migrations
 
                     b.HasIndex("ModuleId");
 
+                    b.HasIndex("ModuleId1");
+
                     b.HasIndex("PermissionId");
+
+                    b.HasIndex("PermissionId1");
+
+                    b.HasIndex("RoleId1");
 
                     b.HasIndex("RoleId", "ModuleId", "PermissionId")
                         .IsUnique()
@@ -631,22 +649,31 @@ namespace Integration.Infrastructure.Migrations
             modelBuilder.Entity("Integration.Core.Entities.Security.RoleModulePermissions", b =>
                 {
                     b.HasOne("Integration.Core.Entities.Security.Module", "Module")
-                        .WithMany("RoleModulePermissions")
+                        .WithMany()
                         .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Integration.Core.Entities.Security.Module", null)
+                        .WithMany("RoleModulePermissions")
+                        .HasForeignKey("ModuleId1");
 
                     b.HasOne("Integration.Core.Entities.Security.Permission", "Permission")
-                        .WithMany("RoleModulePermissions")
+                        .WithMany()
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Integration.Core.Entities.Security.Permission", null)
+                        .WithMany("RoleModulePermissions")
+                        .HasForeignKey("PermissionId1");
 
                     b.HasOne("Integration.Core.Entities.Security.Role", "Role")
-                        .WithMany("RoleModulePermissions")
+                        .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Integration.Core.Entities.Security.Role", null)
+                        .WithMany("RoleModulePermissions")
+                        .HasForeignKey("RoleId1");
 
                     b.Navigation("Module");
 

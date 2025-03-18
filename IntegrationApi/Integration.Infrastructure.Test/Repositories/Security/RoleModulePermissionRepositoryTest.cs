@@ -8,14 +8,14 @@ using System.Linq.Expressions;
 namespace Integration.Infrastructure.Test.Repositories.Security
 {
     [TestFixture]
-    public class RoleModulePermissionsRepositoryTest
+    public class RoleModulePermissionRepositoryTest
     {
-        private Mock<IRoleModulePermissionsRepository> _mock;
+        private Mock<IRoleModulePermissionRepository> _mock;
 
         [SetUp]
         public void Setup()
         {
-            _mock = new Mock<IRoleModulePermissionsRepository>();
+            _mock = new Mock<IRoleModulePermissionRepository>();
         }
 
         [Test]

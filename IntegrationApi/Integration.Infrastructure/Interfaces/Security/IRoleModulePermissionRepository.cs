@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 namespace Integration.Infrastructure.Interfaces.Security
 {
-    public interface IRoleModulePermissionsRepository
+    public interface IRoleModulePermissionRepository
     {
         Task<RoleModulePermissions> GetByRoleIdModuleIdPermissionsIdAsync(RoleModulePermissions roleModulePermissions);
         Task<List<RoleModulePermissions>> GetAllAsync(Expression<Func<RoleModulePermissions, bool>> predicate);

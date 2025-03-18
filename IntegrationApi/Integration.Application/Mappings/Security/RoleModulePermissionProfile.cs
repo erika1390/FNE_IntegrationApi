@@ -10,7 +10,7 @@ namespace Integration.Application.Mappings.Security
             CreateMap<Role, RoleDTO>();
             CreateMap<Module, ModuleDTO>();
             CreateMap<Permission, PermissionDTO>();
-            CreateMap<RoleModulePermissions, RoleModulePermissionsDTO>()
+            CreateMap<RoleModulePermissions, RoleModulePermissionDTO>()
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
                 .ForMember(dest => dest.Module, opt => opt.MapFrom(src => src.Module))
                 .ForMember(dest => dest.Permission, opt => opt.MapFrom(src => src.Permission))

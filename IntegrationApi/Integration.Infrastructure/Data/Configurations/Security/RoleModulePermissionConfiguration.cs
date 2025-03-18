@@ -10,7 +10,7 @@ namespace Integration.Infrastructure.Data.Configurations.Security
             builder.ToTable("RoleModulePermissions", "Security");
 
             // Clave primaria compuesta en lugar de Id
-            builder.HasKey(e => new { e.RoleId, e.ModuleId, e.PermissionId });
+            builder.HasKey(e => new { e.Id});
 
             // Índice único para optimización
             builder.HasIndex(rm => new { rm.RoleId, rm.ModuleId, rm.PermissionId })
@@ -19,19 +19,19 @@ namespace Integration.Infrastructure.Data.Configurations.Security
 
             // Relaciones y restricciones de eliminación
             builder.HasOne(e => e.Role)
-                .WithMany(r => r.RoleModulePermissions)
-                .HasForeignKey(e => e.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
+                   .WithMany(r => r.RoleModulePermissions)
+                   .HasForeignKey(e => e.RoleId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.Module)
-                .WithMany(m => m.RoleModulePermissions)
-                .HasForeignKey(e => e.ModuleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                   .WithMany(r => r.RoleModulePermissions)
+                   .HasForeignKey(e => e.ModuleId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.Permission)
-                .WithMany(p => p.RoleModulePermissions)
-                .HasForeignKey(e => e.PermissionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                   .WithMany(r => r.RoleModulePermissions)
+                   .HasForeignKey(e => e.PermissionId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

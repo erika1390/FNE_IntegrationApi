@@ -12,18 +12,18 @@ using System.Linq.Expressions;
 
 namespace Integration.Application.Services.Security
 {
-    public class RoleModulePermissionsService : IRoleModulePermissionsService
+    public class RoleModulePermissionService : IRoleModulePermissionService
     {
-        private readonly IRoleModulePermissionsRepository _repository;
+        private readonly IRoleModulePermissionRepository _roleModulePermissionRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger<RoleModulePermissionsService> _logger;
+        private readonly ILogger<RoleModulePermissionService> _logger;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IModuleRepository _moduleRepository;
         private readonly IPermissionRepository _permissionsRepository;
-        public RoleModulePermissionsService(IRoleModulePermissionsRepository repository, IMapper mapper, ILogger<RoleModulePermissionsService> logger, IUserRepository userRepository, IRoleRepository roleRepository, IModuleRepository moduleRepository, IPermissionRepository permissionsRepository)
+        public RoleModulePermissionService(IRoleModulePermissionRepository repository, IMapper mapper, ILogger<RoleModulePermissionService> logger, IUserRepository userRepository, IRoleRepository roleRepository, IModuleRepository moduleRepository, IPermissionRepository permissionsRepository)
         {
-            _repository = repository;
+            _roleModulePermissionRepository = repository;
             _mapper = mapper;
             _logger = logger;
             _userRepository = userRepository;
@@ -31,7 +31,7 @@ namespace Integration.Application.Services.Security
             _moduleRepository = moduleRepository;
             _permissionsRepository = permissionsRepository;
         }
-        public async Task<RoleModulePermissionsDTO> CreateAsync(HeaderDTO header, RoleModulePermissionsDTO roleModulePermissionsDTO)
+        public async Task<RoleModulePermissionDTO> CreateAsync(HeaderDTO header, RoleModulePermissionDTO roleModulePermissionsDTO)
         {
             if (header == null || string.IsNullOrEmpty(header.UserCode))
             {
@@ -54,9 +54,9 @@ namespace Integration.Application.Services.Security
                 roleModulePermission.ModuleId = module.Id;
                 var permission = await _permissionsRepository.GetByCodeAsync(roleModulePermissionsDTO.PermissionCode);
                 roleModulePermission.PermissionId = permission.Id;
-                var result = await _repository.CreateAsync(roleModulePermission);
+                var result = await _roleModulePermissionRepository.CreateAsync(roleModulePermission);
                 _logger.LogInformation("RoleModulePermissions creado con éxito: RoleCode : {RoleCode}, ModuleCode : {ModuleCode}, PermissionCode : {PermissionCode}", roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
-                return _mapper.Map<RoleModulePermissionsDTO>(result);
+                return _mapper.Map<RoleModulePermissionDTO>(result);
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(HeaderDTO header, RoleModulePermissionsDTO roleModulePermissionsDTO)
+        public async Task<bool> DeactivateAsync(HeaderDTO header, RoleModulePermissionDTO roleModulePermissionsDTO)
         {
             _logger.LogInformation("Desactivar RoleModulePermissionsDTO con RoleCode : {RoleCode}, ModuleCode : {ModuleCode}, PermissionCode : {PermissionCode}", roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
             try
@@ -76,8 +76,14 @@ namespace Integration.Application.Services.Security
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
                 var roleModulePermission = _mapper.Map<Integration.Core.Entities.Security.RoleModulePermissions>(roleModulePermissionsDTO);
+                var role = await _roleRepository.GetByCodeAsync(roleModulePermissionsDTO.RoleCode);
+                roleModulePermission.RoleId = role.Id;
+                var module = await _moduleRepository.GetByCodeAsync(roleModulePermissionsDTO.ModuleCode);
+                roleModulePermission.ModuleId = module.Id;
+                var permission = await _permissionsRepository.GetByCodeAsync(roleModulePermissionsDTO.PermissionCode);
+                roleModulePermission.PermissionId = permission.Id;
                 roleModulePermission.UpdatedBy = user.UserName;
-                bool success = await _repository.DeactivateAsync(roleModulePermission);
+                bool success = await _roleModulePermissionRepository.DeactivateAsync(roleModulePermission);
                 if (success)
                 {
                     _logger.LogInformation("RoleModulePermissionsDTO con RoleCode : {RoleCode}, ModuleCode : {ModuleCode}, PermissionCode : {PermissionCode} desactivada correctamente.", roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
@@ -95,13 +101,13 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<IEnumerable<RoleModulePermissionsDTO>> GetAllActiveAsync()
+        public async Task<IEnumerable<RoleModulePermissionDTO>> GetAllActiveAsync()
         {
             _logger.LogInformation("Obteniendo todos los RoleModulePermissions.");
             try
             {
-                var roleModulePermissions = await _repository.GetAllActiveAsync();
-                var roleModulePermissionsDTO = _mapper.Map<IEnumerable<RoleModulePermissionsDTO>>(roleModulePermissions);
+                var roleModulePermissions = await _roleModulePermissionRepository.GetAllActiveAsync();
+                var roleModulePermissionsDTO = _mapper.Map<IEnumerable<RoleModulePermissionDTO>>(roleModulePermissions);
                 _logger.LogInformation("{Count} RoleModulePermissions obtenidas con éxito.", roleModulePermissionsDTO.Count());
                 return roleModulePermissionsDTO;
             }
@@ -112,7 +118,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<RoleModulePermissionsDTO>> GetAllAsync(Expression<Func<RoleModulePermissionsDTO, bool>> predicado)
+        public async Task<List<RoleModulePermissionDTO>> GetAllAsync(Expression<Func<RoleModulePermissionDTO, bool>> predicado)
         {
             try
             {
@@ -135,7 +141,7 @@ namespace Integration.Application.Services.Security
                 if (!string.IsNullOrEmpty(roleCode))
                 {
                     var role = await _roleRepository.GetByCodeAsync(roleCode);
-                    if (role == null) return new List<RoleModulePermissionsDTO>();
+                    if (role == null) return new List<RoleModulePermissionDTO>();
                     roleModuleFilter = a => a.RoleId == role.Id;
                 }
 
@@ -143,7 +149,7 @@ namespace Integration.Application.Services.Security
                 if (!string.IsNullOrEmpty(moduleCode))
                 {
                     var module = await _moduleRepository.GetByCodeAsync(moduleCode);
-                    if (module == null) return new List<RoleModulePermissionsDTO>();
+                    if (module == null) return new List<RoleModulePermissionDTO>();
                     roleModuleFilter = a => a.ModuleId == module.Id;
                 }
 
@@ -151,13 +157,13 @@ namespace Integration.Application.Services.Security
                 if (!string.IsNullOrEmpty(permissionCode))
                 {
                     var permission = await _permissionsRepository.GetByCodeAsync(permissionCode);
-                    if (permission == null) return new List<RoleModulePermissionsDTO>();
+                    if (permission == null) return new List<RoleModulePermissionDTO>();
                     roleModuleFilter = a => a.PermissionId == permission.Id;
                 }
 
                 // Obtener los permisos filtrados desde la base de datos
-                var roleModulePermissions = await _repository.GetAllAsync(roleModuleFilter);
-                var roleModulePermissionsDTOs = _mapper.Map<List<RoleModulePermissionsDTO>>(roleModulePermissions);
+                var roleModulePermissions = await _roleModulePermissionRepository.GetAllAsync(roleModuleFilter);
+                var roleModulePermissionsDTOs = _mapper.Map<List<RoleModulePermissionDTO>>(roleModulePermissions);
 
                 // Aplicar otros filtros en memoria si es necesario
                 if (predicado != null && string.IsNullOrEmpty(roleCode) && string.IsNullOrEmpty(moduleCode) && string.IsNullOrEmpty(permissionCode))
@@ -174,7 +180,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        private string GetFilterValue(Expression<Func<RoleModulePermissionsDTO, bool>> predicado, string propertyName)
+        private string GetFilterValue(Expression<Func<RoleModulePermissionDTO, bool>> predicado, string propertyName)
         {
             if (predicado.Body is BinaryExpression binaryExp &&
                 binaryExp.Left is MemberExpression member &&
@@ -187,7 +193,7 @@ namespace Integration.Application.Services.Security
             return null;
         }
 
-        public async Task<List<RoleModulePermissionsDTO>> GetAllAsync(List<Expression<Func<RoleModulePermissionsDTO, bool>>> predicates)
+        public async Task<List<RoleModulePermissionDTO>> GetAllAsync(List<Expression<Func<RoleModulePermissionDTO, bool>>> predicates)
         {
             try
             {
@@ -197,31 +203,31 @@ namespace Integration.Application.Services.Security
                 Expression<Func<RoleModulePermissions, bool>> roleModuleFilter = a => true;
 
                 // Aplicar filtros en la base de datos si existen
-                foreach (var predicate in predicates ?? new List<Expression<Func<RoleModulePermissionsDTO, bool>>>())
+                foreach (var predicate in predicates ?? new List<Expression<Func<RoleModulePermissionDTO, bool>>>())
                 {
                     if (TryGetFilterValue(predicate, "RoleCode", out string roleCode))
                     {
                         var role = await _roleRepository.GetByCodeAsync(roleCode);
-                        if (role == null) return new List<RoleModulePermissionsDTO>();
+                        if (role == null) return new List<RoleModulePermissionDTO>();
                         roleModuleFilter = a => a.RoleId == role.Id;
                     }
                     if (TryGetFilterValue(predicate, "ModuleCode", out string moduleCode))
                     {
                         var module = await _moduleRepository.GetByCodeAsync(moduleCode);
-                        if (module == null) return new List<RoleModulePermissionsDTO>();
+                        if (module == null) return new List<RoleModulePermissionDTO>();
                         roleModuleFilter = a => a.ModuleId == module.Id;
                     }
                     if (TryGetFilterValue(predicate, "PermissionCode", out string permissionCode))
                     {
                         var permission = await _permissionsRepository.GetByCodeAsync(permissionCode);
-                        if (permission == null) return new List<RoleModulePermissionsDTO>();
+                        if (permission == null) return new List<RoleModulePermissionDTO>();
                         roleModuleFilter = a => a.PermissionId == permission.Id;
                     }
                 }
 
                 // Obtener datos de la base de datos con los filtros aplicados
-                var roleModulePermissions = await _repository.GetAllAsync(roleModuleFilter);
-                var roleModulePermissionsDTOs = _mapper.Map<List<RoleModulePermissionsDTO>>(roleModulePermissions);
+                var roleModulePermissions = await _roleModulePermissionRepository.GetAllAsync(roleModuleFilter);
+                var roleModulePermissionsDTOs = _mapper.Map<List<RoleModulePermissionDTO>>(roleModulePermissions);
 
                 // Aplicar los filtros en memoria si aún quedan predicados
                 if (predicates != null && predicates.Any(p => !IsFilteringByCode(p)))
@@ -240,14 +246,14 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        private bool IsFilteringByCode(Expression<Func<RoleModulePermissionsDTO, bool>> predicate)
+        private bool IsFilteringByCode(Expression<Func<RoleModulePermissionDTO, bool>> predicate)
         {
             return TryGetFilterValue(predicate, "RoleCode", out _) ||
                    TryGetFilterValue(predicate, "ModuleCode", out _) ||
                    TryGetFilterValue(predicate, "PermissionCode", out _);
         }
 
-        private bool TryGetFilterValue(Expression<Func<RoleModulePermissionsDTO, bool>> predicate, string propertyName, out string value)
+        private bool TryGetFilterValue(Expression<Func<RoleModulePermissionDTO, bool>> predicate, string propertyName, out string value)
         {
             value = null;
 
@@ -263,7 +269,7 @@ namespace Integration.Application.Services.Security
             return false;
         }
 
-        public async Task<RoleModulePermissionsDTO> GetByRoleCodeModuleCodePermissionsCodeAsync(RoleModulePermissionsDTO roleModulePermissionsDTO)
+        public async Task<RoleModulePermissionDTO> GetByRoleCodeModuleCodePermissionsCodeAsync(RoleModulePermissionDTO roleModulePermissionsDTO)
         {
             _logger.LogInformation("Buscando RoleModulePermissions con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}.",
                 roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
@@ -271,39 +277,14 @@ namespace Integration.Application.Services.Security
             try
             {
                 // Buscar Role, Module y Permission por sus códigos
+                var roleModulePermission = _mapper.Map<Integration.Core.Entities.Security.RoleModulePermissions>(roleModulePermissionsDTO);
                 var role = await _roleRepository.GetByCodeAsync(roleModulePermissionsDTO.RoleCode);
-                if (role == null)
-                {
-                    _logger.LogWarning("No se encontró el RoleModulePermissions con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}.",
-                roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
-                    return null;
-                }
-
+                roleModulePermission.RoleId = role.Id;
                 var module = await _moduleRepository.GetByCodeAsync(roleModulePermissionsDTO.ModuleCode);
-                if (module == null)
-                {
-                    _logger.LogWarning("No se encontró el RoleModulePermissions con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}.",
-                roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
-                    return null;
-                }
-
+                roleModulePermission.ModuleId = module.Id;
                 var permission = await _permissionsRepository.GetByCodeAsync(roleModulePermissionsDTO.PermissionCode);
-                if (permission == null)
-                {
-                    _logger.LogWarning("No se encontró el RoleModulePermissions con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}.",
-                roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
-                    return null;
-                }
-
-                // Crear la entidad con los IDs obtenidos
-                var roleModulePermission = new RoleModulePermissions
-                {
-                    RoleId = role.Id,
-                    ModuleId = module.Id,
-                    PermissionId = permission.Id
-                };
-
-                var result = await _repository.GetByRoleIdModuleIdPermissionsIdAsync(roleModulePermission);
+                roleModulePermission.PermissionId = permission.Id;
+                var result = await _roleModulePermissionRepository.GetByRoleIdModuleIdPermissionsIdAsync(roleModulePermission);
 
                 if (result == null)
                 {
@@ -315,7 +296,7 @@ namespace Integration.Application.Services.Security
                     roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
 
                 // Mapear la entidad a DTO y retornar
-                return _mapper.Map<RoleModulePermissionsDTO>(result);
+                return _mapper.Map<RoleModulePermissionDTO>(result);
             }
             catch (Exception ex)
             {
@@ -325,7 +306,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<RoleModulePermissionsDTO> UpdateAsync(HeaderDTO header, RoleModulePermissionsDTO roleModulePermissionsDTO)
+        public async Task<RoleModulePermissionDTO> UpdateAsync(HeaderDTO header, RoleModulePermissionDTO roleModulePermissionsDTO)
         {
             _logger.LogInformation("Actualizando RoleModulePermissions con RoleCode : {RoleCode}, ModuleCode : {ModuleCode}, PermissionCode : {PermissionCode}.", roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
             try
@@ -343,14 +324,14 @@ namespace Integration.Application.Services.Security
                 roleModulePermission.ModuleId = module.Id;
                 var permission = await _permissionsRepository.GetByCodeAsync(roleModulePermissionsDTO.PermissionCode);
                 roleModulePermission.PermissionId = permission.Id;
-                var updatedRoleModulePermission = await _repository.UpdateAsync(roleModulePermission);
+                var updatedRoleModulePermission = await _roleModulePermissionRepository.UpdateAsync(roleModulePermission);
                 if (updatedRoleModulePermission == null)
                 {
                     _logger.LogWarning("No se pudo actualizar el RoleModulePermissions con RoleCode : {RoleCode}, ModuleCode : {ModuleCode}, PermissionCode : {PermissionCode}.", roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
                     return null;
                 }
                 _logger.LogInformation("RoleModulePermissions actualizado con éxito con RoleCode : {RoleCode}, ModuleCode : {ModuleCode}, PermissionCode : {PermissionCode}.", roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);
-                return _mapper.Map<RoleModulePermissionsDTO>(updatedRoleModulePermission);
+                return _mapper.Map<RoleModulePermissionDTO>(updatedRoleModulePermission);
             }
             catch (Exception ex)
             {
