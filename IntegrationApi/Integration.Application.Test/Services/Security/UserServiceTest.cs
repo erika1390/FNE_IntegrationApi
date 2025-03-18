@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
+using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
@@ -30,8 +31,10 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedUserDTO()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var userDTO = new UserDTO {
+            var userDTO = new UserDTO
+            {
                 Code = "USR0000001",
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
@@ -56,7 +59,8 @@ namespace Integration.Application.Test.Services.Security
                 LockoutEnabled = true,
                 AccessFailedCount = 0
             };
-            var user = new Integration.Core.Entities.Security.User {
+            var user = new Integration.Core.Entities.Security.User
+            {
                 Id = 1,
                 Code = "USR0000001",
                 FirstName = "Erika",
@@ -83,36 +87,81 @@ namespace Integration.Application.Test.Services.Security
                 AccessFailedCount = 0
             };
 
+            // ✅ Simular el usuario creador en el repositorio
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.User>(userDTO)).Returns(user);
             _repositoryMock.Setup(r => r.CreateAsync(user)).ReturnsAsync(user);
             _mapperMock.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
 
+            // Act
             var result = await _userService.CreateAsync(header, userDTO);
 
+            // Assert
             Assert.AreEqual(userDTO, result);
         }
+
 
         [Test]
         public async Task DeactivateAsync_ShouldReturnTrue_WhenUserIsDeactivate()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string userCode = "USR0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(userCode, "epulido")).ReturnsAsync(true);
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            // ✅ Simular que el usuario fue desactivado con éxito
+            _repositoryMock.Setup(r => r.DeactivateAsync(userCode, user.UserName)).ReturnsAsync(true);
+
+            // Act
             var result = await _userService.DeactivateAsync(header, userCode);
 
+            // Assert
             Assert.IsTrue(result);
         }
+
 
         [Test]
         public async Task DeactivateAsync_ShouldReturnFalse_WhenUserIsNotFound()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string userCode = "USR0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(userCode, "epulido")).ReturnsAsync(false);
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            // ✅ Simular que el usuario no fue desactivado
+            _repositoryMock.Setup(r => r.DeactivateAsync(userCode, user.UserName)).ReturnsAsync(false);
+
+            // Act
             var result = await _userService.DeactivateAsync(header, userCode);
 
+            // Assert
             Assert.IsFalse(result);
         }
 
