@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+
 using Integration.Application.Interfaces.Security;
-using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
+
 using Microsoft.Extensions.Logging;
+
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
