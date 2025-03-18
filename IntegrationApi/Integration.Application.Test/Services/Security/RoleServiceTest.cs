@@ -235,9 +235,25 @@ namespace Integration.Application.Test.Services.Security
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
             };
+
+            // ✅ Simular una aplicación válida en el repositorio
+            var application = new Integration.Core.Entities.Security.Application
+            {
+                Id = 1,
+                Code = "APP0000001",
+                Name = "Aplicación de Seguridad"
+            };
+
+            Assert.NotNull(user, "El usuario no debería ser nulo.");
             _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
 
+            Assert.NotNull(application, "La aplicación no debería ser nula.");
+            _applicationRepositoryMock.Setup(a => a.GetByCodeAsync(header.ApplicationCode)).ReturnsAsync(application);
+
+            Assert.NotNull(roleDTO, "El roleDTO no debería ser nulo.");
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(roleDTO)).Returns(role);
+            Assert.NotNull(role, "El objeto Role no debería ser nulo.");
+
             _repositoryMock.Setup(r => r.UpdateAsync(role)).ReturnsAsync(role);
             _mapperMock.Setup(m => m.Map<RoleDTO>(role)).Returns(roleDTO);
 
@@ -245,6 +261,7 @@ namespace Integration.Application.Test.Services.Security
             var result = await _roleService.UpdateAsync(header, roleDTO);
 
             // Assert
+            Assert.NotNull(result, "El resultado no debería ser nulo.");
             Assert.AreEqual(roleDTO, result);
         }
 
