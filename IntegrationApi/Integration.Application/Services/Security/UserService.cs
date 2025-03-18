@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
+
 using Microsoft.Extensions.Logging;
+
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
@@ -12,22 +15,39 @@ namespace Integration.Application.Services.Security
         private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
-        public UserService(IUserRepository repository, IMapper mapper, ILogger<UserService> logger)
+        private readonly IUserRepository _userRepository;
+        public UserService(IUserRepository repository, IMapper mapper, ILogger<UserService> logger, IUserRepository userRepository)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            _userRepository = userRepository;
         }
         public async Task<UserDTO> CreateAsync(HeaderDTO header, UserDTO userDTO)
         {
+            if (header == null || string.IsNullOrEmpty(header.UserCode))
+            {
+                throw new ArgumentNullException(nameof(header), "El encabezado o UserCode no pueden ser nulos.");
+            }
+            if (userDTO == null)
+            {
+                throw new ArgumentNullException(nameof(userDTO), "El usuario no puede ser nula.");
+            }
             _logger.LogInformation("Creando usuario: {Name}", userDTO.UserName);
             try
             {
+                var userCreate = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (userCreate == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 var user = _mapper.Map<Integration.Core.Entities.Security.User>(userDTO);
                 user.NormalizedUserName = user.UserName.ToUpper();
                 user.NormalizedEmail = user.Email.ToUpper();    
                 user.SecurityStamp = Guid.NewGuid().ToString();
                 user.ConcurrencyStamp = Guid.NewGuid().ToString();
+                user.CreatedBy = userCreate.UserName;
+                user.UpdatedBy = userCreate.UserName;
                 var result = await _repository.CreateAsync(user);
                 _logger.LogInformation("Usuario creado con éxito: UserCode: {UserCode}, Nombre: {Name}", result.Code, result.UserName);
                 return _mapper.Map<UserDTO>(result);
