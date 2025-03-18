@@ -238,7 +238,9 @@ namespace Integration.Application.Services.Security
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
+                var application = await _applicationRepository.GetByCodeAsync(header.ApplicationCode);
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
+                role.ApplicationId = application.Id;
                 role.UpdatedBy = user.UserName;
                 var updatedRole = await _roleRepository.UpdateAsync(role);
                 if (updatedRole == null)

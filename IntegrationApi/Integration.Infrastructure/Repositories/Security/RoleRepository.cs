@@ -162,7 +162,10 @@ namespace Integration.Infrastructure.Repositories.Security
             }
             try
             {
-                var roleEntity = await _context.Roles.FindAsync(role.Id);
+                var roleEntity = await _context.Roles
+                    .Where(a => a.Code == role.Code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (roleEntity == null)
                 {
                     _logger.LogWarning("No se encontró el rol con ID {RolId} para actualizar.", role.Id);

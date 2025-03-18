@@ -130,7 +130,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 else
                 {
                     _logger.LogInformation("Aplicación encontrada ApplicationeCode: {ApplicationeCode}, Nombre: {Name}",
-                        application.Id, application.Name);
+                        application.Code, application.Name);
                 }
                 return application;
             }
