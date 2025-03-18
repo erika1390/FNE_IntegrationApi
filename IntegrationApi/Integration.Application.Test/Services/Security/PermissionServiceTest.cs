@@ -150,21 +150,40 @@ namespace Integration.Application.Test.Services.Security
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var permissionDTO = new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy= "System"};
-            var permissionEntity = new Permission { Id = 1, Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "System"};
+            var permissionDTO = new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "System" };
+            var permissionEntity = new Permission { Id = 1, Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "System" };
+
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
             // Configuración del Mock del repositorio para devolver un permiso válido
             _repositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Permission>()))
                            .ReturnsAsync(permissionEntity);
+
             // Configuración del Mock del Mapper para convertir entre DTO y entidad
             _mapperMock.Setup(m => m.Map<Permission>(It.IsAny<PermissionDTO>())).Returns(permissionEntity);
             _mapperMock.Setup(m => m.Map<PermissionDTO>(It.IsAny<Permission>())).Returns(permissionDTO);
+
             // Act
             var result = await _permissionService.UpdateAsync(header, permissionDTO);
+
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(permissionDTO.Code, result.Code);
             Assert.AreEqual(permissionDTO.Name, result.Name);
         }
+
 
 
         [Test]
