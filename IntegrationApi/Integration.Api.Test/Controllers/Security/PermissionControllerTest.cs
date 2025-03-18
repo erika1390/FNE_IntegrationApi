@@ -233,14 +233,14 @@ namespace Integration.Api.Tests.Controllers.Security
         }
 
         [Test]
-        public async Task Delete_ShouldReturnOk_WhenPermissionIsDeleted()
+        public async Task Deactivate_ShouldReturnOk_WhenPermissionIsDeleted()
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.DeactivateAsync(header, "PER0000001")).ReturnsAsync(true);
 
             // Act
-            var result = await _controller.Delete(header, "PER0000001");
+            var result = await _controller.Deactivate(header, "PER0000001");
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -249,14 +249,14 @@ namespace Integration.Api.Tests.Controllers.Security
         }
 
         [Test]
-        public async Task Delete_ShouldReturnNotFound_WhenPermissionDoesNotExist()
+        public async Task Deactivate_ShouldReturnNotFound_WhenPermissionDoesNotExist()
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.DeactivateAsync(header, "PER0000001")).ReturnsAsync(false);
 
             // Act
-            var result = await _controller.Delete(header, "PER0000001");
+            var result = await _controller.Deactivate(header, "PER0000001");
 
             // Assert
             var notFoundResult = result as NotFoundObjectResult;
