@@ -19,7 +19,7 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task GetByCodeAsync_ShouldReturnCorrectUser()
         {
             // Arrange
-            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="System", FirstName="Erika", LastName="Pulido"};
+            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="epulido", FirstName="Erika", LastName="Pulido"};
             _mock.Setup(repo => repo.GetByCodeAsync("USR0000001"))
                 .ReturnsAsync(user);
 
@@ -52,8 +52,8 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             // Arrange
             var users = new List<User>
             {
-                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="System", FirstName="Erika", LastName="Pulido" },
-                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="System", FirstName="system1", LastName="system2" }
+                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="epulido", FirstName="Erika", LastName="Pulido" },
+                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="epulido", FirstName="system1", LastName="system2" }
             };
 
             Expression<Func<User, bool>> predicate = user => user.IsActive;
@@ -77,8 +77,8 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             // Arrange
             var users = new List<User>
             {
-                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="System", FirstName="Erika", LastName="Pulido" },
-                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="System", FirstName="system1", LastName="system2" }
+                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="epulido", FirstName="Erika", LastName="Pulido" },
+                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="epulido", FirstName="system1", LastName="system2" }
             };
 
             var predicates = new List<Expression<Func<User, bool>>>
@@ -105,7 +105,7 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task UpdateAsync_ShouldReturnUpdatedUser()
         {
             // Arrange
-            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy = "System", FirstName = "Erika", LastName = "Pulido" };
+            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy = "epulido", FirstName = "Erika", LastName = "Pulido" };
 
             _mock.Setup(repo => repo.UpdateAsync(It.IsAny<User>()))
                 .ReturnsAsync((User u) => u);
@@ -138,8 +138,8 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             // Arrange
             var activeUsers = new List<User>
             {
-                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="System", FirstName="Erika", LastName="Pulido" },
-                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="System", FirstName="system1", LastName="system2" }
+                new User {Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy ="epulido", FirstName="Erika", LastName="Pulido" },
+                new User { Id = 2, Code = "USR0000002", UserName = "test", IsActive = true, CreatedBy ="epulido", FirstName="system1", LastName="system2" }
             };
 
             _mock.Setup(repo => repo.GetAllActiveAsync())
@@ -157,7 +157,7 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task CreateAsync_ShouldReturnCreatedUser()
         {
             // Arrange
-            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy = "System", FirstName = "Erika", LastName = "Pulido" };
+            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy = "epulido", FirstName = "Erika", LastName = "Pulido" };
 
             _mock.Setup(repo => repo.CreateAsync(It.IsAny<User>()))
                 .ReturnsAsync((User u) => u);

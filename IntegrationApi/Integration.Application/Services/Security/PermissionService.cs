@@ -55,7 +55,7 @@ namespace Integration.Application.Services.Security
 
         public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
-            _logger.LogInformation("Eliminando permiso con PermissionId: {PermissionId}", code);
+            _logger.LogInformation("Desactivar permiso con codigo: {PermissionCodigo}", code);
             try
             {
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
@@ -66,17 +66,17 @@ namespace Integration.Application.Services.Security
                 bool success = await _repository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
-                    _logger.LogInformation("Permiso con ID {PermissionId} eliminada correctamente.", code);
+                    _logger.LogInformation("Permiso con codigo {PermissionCodigo} desactivar correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el permiso con PermissionId {PermissionId} para eliminar.", code);
+                    _logger.LogWarning("No se encontró el permiso con codigo {PermissionCodigo} para desactivar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el permiso con PermissionId {PermissionId}.", code);
+                _logger.LogError(ex, "Error al desactivar el permiso con codigo {PermissionCodigo}.", code);
                 throw;
             }
         }
@@ -98,15 +98,15 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<PermissionDTO>> GetAllAsync(Expression<Func<PermissionDTO, bool>> filterDto)
+        public async Task<List<PermissionDTO>> GetAllAsync(Expression<Func<PermissionDTO, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo todos los permisos y aplicando el filtro en memoria.");
                 var permissions = await _repository.GetAllAsync(a => true);
                 var permissionsDTOs = _mapper.Map<List<PermissionDTO>>(permissions);
-                var filteredApplications = permissionsDTOs.AsQueryable().Where(filterDto).ToList();
-                return filteredApplications;
+                var filteredPermissions = permissionsDTOs.AsQueryable().Where(predicate).ToList();
+                return filteredPermissions;
             }
             catch (Exception ex)
             {

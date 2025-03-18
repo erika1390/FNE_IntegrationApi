@@ -17,7 +17,7 @@ namespace Integration.Core.Entities.Security
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         [MaxLength(50)]
-        public required string CreatedBy { get; set; } = "System";
+        public required string CreatedBy { get; set; }
         [MaxLength(50)]
         public string? UpdatedBy { get; set; }
         public bool IsActive { get; set; } = true;

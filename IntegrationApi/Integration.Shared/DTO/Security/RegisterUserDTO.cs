@@ -21,6 +21,6 @@ namespace Integration.Shared.DTO.Security
         [Required(ErrorMessage = "El apellido es obligatorio.")]
         [MaxLength(50, ErrorMessage = "El apellido no puede exceder los 50 caracteres.")]
         public string? LastName { get; set; }
-        public string CreatedBy { get; set; } = "System";
+        public string CreatedBy { get; set; }
     }
 }

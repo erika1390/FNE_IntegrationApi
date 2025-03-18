@@ -44,7 +44,7 @@ namespace Integration.Application.Test.Services.Security
             {
                 Name = "Aplicaciones",
                 Code = "MOD0000001",
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true
             };
 
@@ -63,7 +63,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -104,7 +104,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -135,7 +135,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -163,7 +163,7 @@ namespace Integration.Application.Test.Services.Security
 
             var moduleDTOs = new List<ModuleDTO>
             {
-                new ModuleDTO { Name = "Aplicaciones", Code = "MOD0000001", CreatedBy = "System", IsActive = true }
+                new ModuleDTO { Name = "Aplicaciones", Code = "MOD0000001", CreatedBy = "epulido", IsActive = true }
             };
 
             _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(modules);
@@ -177,7 +177,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetByCodeAsync_ShouldReturnModuleDTO_WhenApplicationExists()
         {
             var module = new Integration.Core.Entities.Security.Module { Id = 1, Name = "Aplicaciones", Code = "MOD0000001" };
-            var moduleDTO = new ModuleDTO { Name = "Aplicaciones", Code = "MOD0000001", CreatedBy = "System", IsActive = true};
+            var moduleDTO = new ModuleDTO { Name = "Aplicaciones", Code = "MOD0000001", CreatedBy = "epulido", IsActive = true};
 
             _repositoryMock.Setup(r => r.GetByCodeAsync("MOD0000001")).ReturnsAsync(module);
             _mapperMock.Setup(m => m.Map<ModuleDTO>(module)).Returns(moduleDTO);
@@ -205,7 +205,7 @@ namespace Integration.Application.Test.Services.Security
             {
                 Name = "Aplicaciones",
                 Code = "MOD0000001",
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true
             };
 
@@ -219,7 +219,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -266,7 +266,7 @@ namespace Integration.Application.Test.Services.Security
 
             var moduleDTOs = new List<ModuleDTO>
             {
-                new ModuleDTO { Name = "Aplicaciones", Code = "MOD0000001", CreatedBy = "System", IsActive = true }
+                new ModuleDTO { Name = "Aplicaciones", Code = "MOD0000001", CreatedBy = "epulido", IsActive = true }
             };
 
             var application = new Integration.Core.Entities.Security.Application { Id = 1, Code = "APP0000001", Name = "Integration" };
@@ -297,7 +297,7 @@ namespace Integration.Application.Test.Services.Security
 
             var moduleDTOs = new List<ModuleDTO>
             {
-                new ModuleDTO { Name = "Aplicaciones", Code = "MOD0000001", CreatedBy = "System", IsActive = true }
+                new ModuleDTO { Name = "Aplicaciones", Code = "MOD0000001", CreatedBy = "epulido", IsActive = true }
             };
 
             var predicates = new List<Expression<Func<ModuleDTO, bool>>>

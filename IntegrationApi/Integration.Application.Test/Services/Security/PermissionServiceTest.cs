@@ -43,7 +43,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -75,7 +75,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -107,7 +107,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -142,7 +142,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetByCodeAsync_ShouldReturnModuleDTO_WhenPermissionExists()
         {
             var permission = new Integration.Core.Entities.Security.Permission { Id = 1, Name = "Consultar", Code = "PER0000001" };
-            var permissionDTO = new PermissionDTO { Name = "Consultar", Code = "PER0000001", CreatedBy = "System", IsActive = true};
+            var permissionDTO = new PermissionDTO { Name = "Consultar", Code = "PER0000001", CreatedBy = "epulido", IsActive = true};
 
             _repositoryMock.Setup(r => r.GetByCodeAsync("PER0000001")).ReturnsAsync(permission);
             _mapperMock.Setup(m => m.Map<PermissionDTO>(permission)).Returns(permissionDTO);
@@ -167,8 +167,8 @@ namespace Integration.Application.Test.Services.Security
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var permissionDTO = new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "System" };
-            var permissionEntity = new Permission { Id = 1, Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "System" };
+            var permissionDTO = new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "epulido" };
+            var permissionEntity = new Permission { Id = 1, Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "epulido" };
 
             // ✅ Simular un usuario válido en el repositorio
             var user = new User
@@ -177,7 +177,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"

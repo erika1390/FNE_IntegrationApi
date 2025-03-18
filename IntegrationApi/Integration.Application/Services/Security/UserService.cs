@@ -62,7 +62,7 @@ namespace Integration.Application.Services.Security
 
         public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
-            _logger.LogInformation("Eliminando usuario con UserCode: {UserCode}", code);
+            _logger.LogInformation("Desactivar usuario con UserCode: {UserCode}", code);
             try
             {
                 var user = await _repository.GetByCodeAsync(header.UserCode);
@@ -73,17 +73,17 @@ namespace Integration.Application.Services.Security
                 bool success = await _repository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
-                    _logger.LogInformation("Usuario con UserCode {UserCode} eliminada correctamente.", code);
+                    _logger.LogInformation("Usuario con codigo {UserCode} desactivado correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el usuario con UserCode {UserCode} para eliminar.", code);
+                    _logger.LogWarning("No se encontró el usuario con codigo {UserCode} para desactivar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el usuario con UserCode {UserCode}.", code);
+                _logger.LogError(ex, "Error al desactivar el usuario con codigo {UserCode}.", code);
                 throw;
             }
         }

@@ -35,7 +35,7 @@ namespace Integration.Api.Tests.Controllers.Security
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var roles = new List<RoleDTO>
             {
-                new RoleDTO { Code = "ROL0000001", Name = "System", IsActive = true, CreatedBy="System" }
+                new RoleDTO { Code = "ROL0000001", Name = "Administrador", IsActive = true, CreatedBy="epulido" }
             };
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(roles);
 
@@ -69,7 +69,7 @@ namespace Integration.Api.Tests.Controllers.Security
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var role = new RoleDTO { Code = "ROL0000001", Name = "System", IsActive = true, CreatedBy = "System" };
+            var role = new RoleDTO { Code = "ROL0000001", Name = "Administrador", IsActive = true, CreatedBy = "epulido" };
             _serviceMock.Setup(s => s.GetByCodeAsync("ROL0000001")).ReturnsAsync(role);
 
             // Act
@@ -105,9 +105,9 @@ namespace Integration.Api.Tests.Controllers.Security
             var role = new RoleDTO
             {
                 Code = "ROL0000001",
-                Name = "System",
+                Name = "Administrador",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IRoleService>();
@@ -162,9 +162,9 @@ namespace Integration.Api.Tests.Controllers.Security
             var role = new RoleDTO
             {
                 Code = "ROL0000001",
-                Name = "System",
+                Name = "Administrador",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IRoleService>();
@@ -202,9 +202,9 @@ namespace Integration.Api.Tests.Controllers.Security
             var role = new RoleDTO
             {
                 Code = "ROL0000001",
-                Name = "System",
+                Name = "Administrador",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IRoleService>();

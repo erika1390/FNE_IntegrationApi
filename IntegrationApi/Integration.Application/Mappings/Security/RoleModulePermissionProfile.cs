@@ -3,9 +3,9 @@ using Integration.Core.Entities.Security;
 using Integration.Shared.DTO.Security;
 namespace Integration.Application.Mappings.Security
 {
-    public class RoleModuleProfile : Profile
+    public class RoleModulePermissionProfile : Profile
     {
-        public RoleModuleProfile()
+        public RoleModulePermissionProfile()
         {
             CreateMap<Role, RoleDTO>();
             CreateMap<Module, ModuleDTO>();
@@ -14,9 +14,6 @@ namespace Integration.Application.Mappings.Security
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
                 .ForMember(dest => dest.Module, opt => opt.MapFrom(src => src.Module))
                 .ForMember(dest => dest.Permission, opt => opt.MapFrom(src => src.Permission))
-                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
-                .ForMember(dest => dest.ModuleId, opt => opt.MapFrom(src => src.ModuleId))
-                .ForMember(dest => dest.PermissionId, opt => opt.MapFrom(src => src.PermissionId))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt))
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))

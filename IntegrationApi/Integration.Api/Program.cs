@@ -45,7 +45,7 @@ builder.Services.AddAutoMapper(typeof(ModuleProfile));
 builder.Services.AddAutoMapper(typeof(PermissionProfile));
 builder.Services.AddAutoMapper(typeof(RoleProfile));
 builder.Services.AddAutoMapper(typeof(UserProfile));
-builder.Services.AddAutoMapper(typeof(RoleModuleProfile));
+builder.Services.AddAutoMapper(typeof(RoleModulePermissionProfile));
 builder.Services.AddAutoMapper(typeof(UserRoleProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
@@ -71,7 +71,7 @@ builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<IRoleModuleRepository, RoleModuleRepository>();
+builder.Services.AddScoped<IRoleModulePermissionsRepository, RoleModulePermissionsRepository>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

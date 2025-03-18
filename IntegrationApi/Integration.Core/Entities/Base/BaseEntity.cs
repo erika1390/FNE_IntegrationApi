@@ -12,7 +12,7 @@ namespace Integration.Core.Entities.Base
 
         [Required]
         [MaxLength(50)]
-        public string CreatedBy { get; set; } = "System";
+        public string CreatedBy { get; set; }
 
         [MaxLength(50)]
         public string? UpdatedBy { get; set; }

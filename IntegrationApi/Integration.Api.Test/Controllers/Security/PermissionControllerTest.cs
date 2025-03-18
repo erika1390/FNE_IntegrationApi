@@ -34,7 +34,7 @@ namespace Integration.Api.Tests.Controllers.Security
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var permissions = new List<PermissionDTO>
             {
-                new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy ="System"}
+                new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy ="epulido"}
             };
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(permissions);
 
@@ -68,7 +68,7 @@ namespace Integration.Api.Tests.Controllers.Security
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var permission = new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "System" };
+            var permission = new PermissionDTO { Code = "PER0000001", Name = "Consultar", IsActive = true, CreatedBy = "epulido" };
             _serviceMock.Setup(s => s.GetByCodeAsync("PER0000001")).ReturnsAsync(permission);
 
             // Act
@@ -106,7 +106,7 @@ namespace Integration.Api.Tests.Controllers.Security
                 Code = "PER0000001",
                 Name = "Consultar",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IPermissionService>();
@@ -163,7 +163,7 @@ namespace Integration.Api.Tests.Controllers.Security
                 Code = "PER0000001",
                 Name = "Consultar",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IPermissionService>();
@@ -203,7 +203,7 @@ namespace Integration.Api.Tests.Controllers.Security
                 Code = "PER0000001",
                 Name = "Consultar",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IPermissionService>();

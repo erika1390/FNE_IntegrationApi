@@ -35,7 +35,7 @@ namespace Integration.Application.Test.Services.Security
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
+            var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "epulido", IsActive = true };
 
             var role = new Integration.Core.Entities.Security.Role
             {
@@ -43,7 +43,7 @@ namespace Integration.Application.Test.Services.Security
                 Name = "Administrador",
                 Code = "ROL0000001",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             // ✅ Simular un usuario válido en el repositorio
@@ -53,7 +53,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -125,7 +125,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -157,7 +157,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -178,8 +178,8 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnListOfRoleDTOs()
         {
-            var Roles = new List<Integration.Core.Entities.Security.Role> { new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" } };
-            var RoleDTOs = new List<RoleDTO> { new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true } };
+            var Roles = new List<Integration.Core.Entities.Security.Role> { new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "epulido" } };
+            var RoleDTOs = new List<RoleDTO> { new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "epulido", IsActive = true } };
 
             _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(Roles);
             _mapperMock.Setup(m => m.Map<IEnumerable<RoleDTO>>(Roles)).Returns(RoleDTOs);
@@ -193,8 +193,8 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetByCodeAsync_ShouldReturnRoleDTO_WhenRoleExists()
         {
             string roleCode = "ROL0000001";
-            var Role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" };
-            var RoleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
+            var Role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "epulido" };
+            var RoleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "epulido", IsActive = true };
 
             _repositoryMock.Setup(r => r.GetByCodeAsync(roleCode)).ReturnsAsync(Role);
             _mapperMock.Setup(m => m.Map<RoleDTO>(Role)).Returns(RoleDTO);
@@ -220,8 +220,8 @@ namespace Integration.Application.Test.Services.Security
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
-            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" };
+            var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "epulido", IsActive = true };
+            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "epulido" };
 
             // ✅ Simular un usuario válido en el repositorio
             var user = new User
@@ -230,7 +230,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -274,10 +274,10 @@ namespace Integration.Application.Test.Services.Security
                 new Integration.Core.Entities.Security.Role
                 {
                     Id = 1,
-                    Name = "System",
+                    Name = "Administrador",
                     Code = "ROL0000001",
                     ApplicationId = 1,
-                    CreatedBy ="System"
+                    CreatedBy ="epulido"
                 }
             };
 
@@ -285,9 +285,9 @@ namespace Integration.Application.Test.Services.Security
             {
                 new RoleDTO
                 {
-                    Name = "System",
+                    Name = "Administrador",
                     Code = "ROL0000001",
-                    CreatedBy ="System",
+                    CreatedBy ="epulido",
                     IsActive = true
                 }
             };
@@ -308,8 +308,7 @@ namespace Integration.Application.Test.Services.Security
             _mapperMock.Setup(m => m.Map<List<RoleDTO>>(roles))
                        .Returns(roleDTOs);
 
-            // Filtramos por el nombre "System" que SÍ existe en la lista de roles simulada.
-            Expression<Func<RoleDTO, bool>> filter = dto => dto.Name == "System";
+            Expression<Func<RoleDTO, bool>> filter = dto => dto.Name == "Administrador";
 
             // Act
             var result = await _roleService.GetAllAsync(filter);
@@ -327,17 +326,17 @@ namespace Integration.Application.Test.Services.Security
         {
             var roles = new List<Integration.Core.Entities.Security.Role>
             {
-                new Integration.Core.Entities.Security.Role { Id = 1, Name = "System", Code = "ROL0000001", ApplicationId = 1, CreatedBy = "System"}
+                new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", ApplicationId = 1, CreatedBy = "epulido"}
             };
 
             var roleDTOs = new List<RoleDTO>
             {
-                new RoleDTO { Name = "System", Code = "ROL0000001", CreatedBy ="System", IsActive = true }
+                new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy ="epulido", IsActive = true }
             };
 
             var predicates = new List<Expression<Func<RoleDTO, bool>>>
             {
-                dto => dto.Name == "System",
+                dto => dto.Name == "Administrador",
                 dto => dto.Code == "ROL0000001"
             };
 

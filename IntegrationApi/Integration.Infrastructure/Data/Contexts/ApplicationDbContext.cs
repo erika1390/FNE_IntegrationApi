@@ -48,12 +48,12 @@ namespace Integration.Infrastructure.Data.Contexts
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedAt = DateTime.UtcNow;
-                    entity.CreatedBy = "System"; // Reemplázalo con el usuario autenticado
+                    entity.CreatedBy = "epulido"; // Reemplázalo con el usuario autenticado
                 }
                 else
                 {
                     entity.UpdatedAt = DateTime.UtcNow;
-                    entity.UpdatedBy = "System"; // Reemplázalo con el usuario autenticado
+                    entity.UpdatedBy = "epulido"; // Reemplázalo con el usuario autenticado
                 }
             }
 

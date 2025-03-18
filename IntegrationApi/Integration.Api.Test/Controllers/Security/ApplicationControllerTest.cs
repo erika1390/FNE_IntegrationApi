@@ -34,7 +34,7 @@ namespace Integration.Api.Tests.Controllers.Security
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var applications = new List<ApplicationDTO>
             {
-                new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" }
+                new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "epulido" }
             };
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(applications);
             var result = await _controller.GetAllActive(header);
@@ -66,7 +66,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task GetByCode_ShouldReturnOk_WhenApplicationExists()
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" };
+            var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "epulido" };
             _serviceMock.Setup(s => s.GetByCodeAsync("APP0000001")).ReturnsAsync(application);
             var result = await _controller.GetByCode(header,"APP0000001");
             var okResult = result as OkObjectResult;
@@ -111,7 +111,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Create_ShouldReturnCreatedAtAction_WhenApplicationIsCreated()
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" };
+            var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "epulido" };
             _validatorMock.Setup(v => v.ValidateAsync(application, It.IsAny<CancellationToken>()))
                           .ReturnsAsync(new ValidationResult());
             _serviceMock.Setup(s => s.CreateAsync(header, application)).ReturnsAsync(application);
@@ -144,7 +144,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnOk_WhenApplicationIsUpdated()
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" };
+            var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "epulido" };
             _validatorMock.Setup(v => v.ValidateAsync(application, It.IsAny<CancellationToken>()))
                           .ReturnsAsync(new ValidationResult());
             _serviceMock.Setup(s => s.UpdateAsync(header, application)).ReturnsAsync(application);
@@ -162,7 +162,7 @@ namespace Integration.Api.Tests.Controllers.Security
         public async Task Update_ShouldReturnNotFound_WhenApplicationDoesNotExist()
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "System" };
+            var application = new ApplicationDTO { Code = "APP0000001", Name = "Integration", IsActive = true, CreatedBy = "epulido" };
             _validatorMock.Setup(v => v.ValidateAsync(application, It.IsAny<CancellationToken>()))
                           .ReturnsAsync(new ValidationResult());
             _serviceMock.Setup(s => s.UpdateAsync(header, application)).ReturnsAsync((ApplicationDTO)null);

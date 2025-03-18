@@ -57,7 +57,7 @@ namespace Integration.Application.Services.Security
         }
         public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
-            _logger.LogInformation("Eliminando rol con RoleCode: {RoleCode}", code);
+            _logger.LogInformation("Desactivar rol con RoleCode: {RoleCode}", code);
             try
             {
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
@@ -68,17 +68,17 @@ namespace Integration.Application.Services.Security
                 bool success = await _roleRepository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
-                    _logger.LogInformation("Rol con RoleCode {RoleCode} eliminada correctamente.", code);
+                    _logger.LogInformation("Rol con codigo {RoleCode} desactivado correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode} para eliminar.", code);
+                    _logger.LogWarning("No se encontró el rol con codigo {RoleCode} para desactivar.", code);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el rol con RoleCode {RoleCode}.", code);
+                _logger.LogError(ex, "Error al desactivar el rol con codigo {RoleCode}.", code);
                 throw;
             }
         }

@@ -34,7 +34,7 @@ namespace Integration.Api.Tests.Controllers.Security
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var modules = new List<ModuleDTO>
             {
-                new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, CreatedBy="System" }
+                new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, CreatedBy="epulido" }
             };
             _serviceMock.Setup(s => s.GetAllActiveAsync()).ReturnsAsync(modules);
 
@@ -68,7 +68,7 @@ namespace Integration.Api.Tests.Controllers.Security
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var module = new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, CreatedBy = "System" };
+            var module = new ModuleDTO { Code = "MOD0000001", Name = "Aplicaciones", IsActive = true, CreatedBy = "epulido" };
             _serviceMock.Setup(s => s.GetByCodeAsync("MOD0000001")).ReturnsAsync(module);
 
             // Act
@@ -106,7 +106,7 @@ namespace Integration.Api.Tests.Controllers.Security
                 Code = "MOD0000001",
                 Name = "Aplicaciones",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IModuleService>();
@@ -161,7 +161,7 @@ namespace Integration.Api.Tests.Controllers.Security
                 Code = "MOD0000001",
                 Name = "Aplicaciones",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IModuleService>();
@@ -200,7 +200,7 @@ namespace Integration.Api.Tests.Controllers.Security
                 Code = "MOD0000001",
                 Name = "Aplicaciones",
                 IsActive = true,
-                CreatedBy = "System"
+                CreatedBy = "epulido"
             };
 
             var serviceMock = new Mock<IModuleService>();

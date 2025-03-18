@@ -33,9 +33,9 @@ namespace Integration.Application.Test.Services.Security
         public async Task CreateAsync_ShouldReturnCreatedApplicationDTO()
         {
             // Arrange
-            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var applicationDTO = new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true };
-            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" };
+            var header = new HeaderDTO { ApplicationCode = "APP0000002", UserCode = "USR0000001" };
+            var applicationDTO = new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000002", CreatedBy = "epulido", IsActive = true };
+            var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000002" };
             // ✅ Simular un usuario válido en el repositorio
             var user = new User
             {
@@ -43,7 +43,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -73,7 +73,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -103,7 +103,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
@@ -124,7 +124,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetAllActiveAsync_ShouldReturnListOfApplicationDTOs()
         {
             var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" } };
-            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true } };
+            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "epulido", IsActive = true } };
             _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(applications);
             _mapperMock.Setup(m => m.Map<IEnumerable<ApplicationDTO>>(applications)).Returns(applicationDTOs);
             var result = await _applicationService.GetAllActiveAsync();
@@ -135,7 +135,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetAllAsync_WithSinglePredicate_ShouldReturnFilteredApplicationDTOs()
         {
             var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" } };
-            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true } };
+            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "epulido", IsActive = true } };
             Expression<Func<ApplicationDTO, bool>> filter = dto => dto.Name == "Saga 2.0";
             _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Application, bool>>>())).ReturnsAsync(applications);
             _mapperMock.Setup(m => m.Map<List<ApplicationDTO>>(applications)).Returns(applicationDTOs);
@@ -147,7 +147,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetAllAsync_WithMultiplePredicates_ShouldReturnFilteredApplicationDTOs()
         {
             var applications = new List<Integration.Core.Entities.Security.Application> { new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" } };
-            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true } };
+            var applicationDTOs = new List<ApplicationDTO> { new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "epulido", IsActive = true } };
             var predicates = new List<Expression<Func<ApplicationDTO, bool>>> { dto => dto.Name == "Saga 2.0", dto => dto.Code == "APP0000001" };
             _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Application, bool>>>())).ReturnsAsync(applications);
             _mapperMock.Setup(m => m.Map<List<ApplicationDTO>>(applications)).Returns(applicationDTOs);
@@ -159,7 +159,7 @@ namespace Integration.Application.Test.Services.Security
         public async Task GetByCodeAsync_ShouldReturnApplicationDTO_WhenApplicationExists()
         {
             var application = new Integration.Core.Entities.Security.Application { Id = 1, Name = "Saga 2.0", Code = "APP0000001" };
-            var applicationDTO = new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "System", IsActive = true };
+            var applicationDTO = new ApplicationDTO { Name = "Saga 2.0", Code = "APP0000001", CreatedBy = "epulido", IsActive = true };
             _repositoryMock.Setup(r => r.GetByCodeAsync("APP0000001")).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<ApplicationDTO>(application)).Returns(applicationDTO);
             var result = await _applicationService.GetByCodeAsync("APP0000001");
@@ -189,7 +189,7 @@ namespace Integration.Application.Test.Services.Security
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
                 CreatedAt = DateTime.Now,
-                CreatedBy = "System",
+                CreatedBy = "epulido",
                 IsActive = true,
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
