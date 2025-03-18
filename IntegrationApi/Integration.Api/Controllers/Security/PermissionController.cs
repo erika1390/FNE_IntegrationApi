@@ -1,16 +1,21 @@
 ﻿using FluentValidation;
+
+using Integration.Api.Filters;
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Linq.Expressions;
 namespace Integration.Api.Controllers.Security
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [ServiceFilter(typeof(ValidateHeadersFilter))]
     public class PermissionController : ControllerBase
     {
         private readonly IPermissionService _service;
