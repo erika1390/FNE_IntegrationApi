@@ -9,6 +9,7 @@ using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 
 using System.Linq.Expressions;
+using System.Security;
 namespace Integration.Application.Services.Security
 {
     public class RoleService : IRoleService
@@ -53,7 +54,8 @@ namespace Integration.Application.Services.Security
                 _logger.LogError("Error al mapear RoleDTO a Role.");
                 throw new Exception("Error al mapear RoleDTO a Role.");
             }
-
+            roleEntity.CreatedBy = user.UserName;
+            roleEntity.UpdatedBy = user.UserName;
             var createdRole = await _roleRrepository.CreateAsync(roleEntity);
             if (createdRole == null)
             {
@@ -245,7 +247,13 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Actualizando rol con RoleCode: {RoleCode}, Nombre: {Name}", roleDTO.Code, roleDTO.Name);
             try
             {
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
+                role.UpdatedBy = user.UserName;
                 var updatedRole = await _roleRrepository.UpdateAsync(role);
                 if (updatedRole == null)
                 {

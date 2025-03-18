@@ -176,16 +176,33 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task UpdateAsync_ShouldReturnUpdatedRoleDTO()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
-            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001" , CreatedBy = "System" };
+            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" };
+
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(roleDTO)).Returns(role);
             _repositoryMock.Setup(r => r.UpdateAsync(role)).ReturnsAsync(role);
             _mapperMock.Setup(m => m.Map<RoleDTO>(role)).Returns(roleDTO);
 
+            // Act
             var result = await _roleService.UpdateAsync(header, roleDTO);
 
+            // Assert
             Assert.AreEqual(roleDTO, result);
         }
 
