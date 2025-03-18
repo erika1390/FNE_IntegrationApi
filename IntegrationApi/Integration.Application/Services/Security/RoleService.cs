@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
+
 using Microsoft.Extensions.Logging;
+
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
@@ -13,20 +16,39 @@ namespace Integration.Application.Services.Security
         private readonly IMapper _mapper;
         private readonly ILogger<RoleService> _logger;
         private readonly IApplicationRepository _applicationRepository;
-        public RoleService(IRoleRepository roleRepository, IMapper mapper, ILogger<RoleService> logger, IApplicationRepository applicationRepository)
+        private readonly IUserRepository _userRepository;
+        public RoleService(IRoleRepository roleRepository, IMapper mapper, ILogger<RoleService> logger, IApplicationRepository applicationRepository, IUserRepository userRepository)
         {
             _roleRrepository = roleRepository;
             _mapper = mapper;
             _logger = logger;
             _applicationRepository = applicationRepository;
+            _userRepository = userRepository;
         }
         public async Task<RoleDTO> CreateAsync(HeaderDTO header, RoleDTO roleDTO)
         {
+            if (header == null || string.IsNullOrEmpty(header.UserCode))
+            {
+                throw new ArgumentNullException(nameof(header), "El encabezado o UserCode no pueden ser nulos.");
+            }
+            if (roleDTO == null)
+            {
+                throw new ArgumentNullException(nameof(roleDTO), "El rol no puede ser nula.");
+            }
             _logger.LogInformation("Creando rol: {Name}", roleDTO.Name);
             try
             {
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
+                var application = await _applicationRepository.GetByCodeAsync(header.ApplicationCode);
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
                 role.NormalizedName = role.Name.ToUpper();
+                role.ApplicationId = application.Id;
+                role.CreatedBy = user.UserName;
+                role.UpdatedBy = user.UserName;
                 var result = await _roleRrepository.CreateAsync(role);
                 _logger.LogInformation("Rol creado con éxito: {RoleId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<RoleDTO>(result);
