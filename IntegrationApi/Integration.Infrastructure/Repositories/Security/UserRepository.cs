@@ -57,6 +57,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 }
                 user.IsActive = false;
                 user.UpdatedAt = DateTime.UtcNow;
+                user.UpdatedBy = userName;
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Usuario desactivado: {UserId}", code);
