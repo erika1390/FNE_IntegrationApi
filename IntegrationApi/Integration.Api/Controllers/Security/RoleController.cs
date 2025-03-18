@@ -241,7 +241,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpDelete("{code}")]
-        public async Task<IActionResult> Delete([FromHeader] HeaderDTO header, string code)
+        public async Task<IActionResult> Deactivate([FromHeader] HeaderDTO header, string code)
         {
             if (code == null)
             {
