@@ -8,6 +8,7 @@ using Integration.Shared.DTO.Security;
 
 using Microsoft.Extensions.Logging;
 
+using System.Data;
 using System.Linq.Expressions;
 namespace Integration.Application.Services.Security
 {
@@ -27,10 +28,21 @@ namespace Integration.Application.Services.Security
 
         public async Task<PermissionDTO> CreateAsync(HeaderDTO header, PermissionDTO permissionDTO)
         {
+            if (header == null || string.IsNullOrEmpty(header.UserCode))
+            {
+                throw new ArgumentNullException(nameof(header), "El encabezado o UserCode no pueden ser nulos.");
+            }
             _logger.LogInformation("Creando permiso: {Name}", permissionDTO.Name);
             try
             {
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 var permission = _mapper.Map<Integration.Core.Entities.Security.Permission>(permissionDTO);
+                permission.CreatedBy = user.UserName;
+                permission.UpdatedBy = user.UserName;
                 var result = await _repository.CreateAsync(permission);
                 _logger.LogInformation("Permiso creado con éxito: {PermissionId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<PermissionDTO>(result);
