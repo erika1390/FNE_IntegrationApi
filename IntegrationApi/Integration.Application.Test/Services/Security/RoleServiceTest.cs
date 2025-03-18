@@ -270,7 +270,6 @@ namespace Integration.Application.Test.Services.Security
                 {
                     Name = "System",
                     Code = "ROL0000001",
-                    ApplicationCode = "APP0000001",
                     CreatedBy ="System",
                     IsActive = true
                 }
@@ -316,7 +315,7 @@ namespace Integration.Application.Test.Services.Security
 
             var roleDTOs = new List<RoleDTO>
             {
-                new RoleDTO { Name = "System", Code = "ROL0000001", ApplicationCode = "APP0000001", CreatedBy ="System", IsActive = true }
+                new RoleDTO { Name = "System", Code = "ROL0000001", CreatedBy ="System", IsActive = true }
             };
 
             var predicates = new List<Expression<Func<RoleDTO, bool>>>
