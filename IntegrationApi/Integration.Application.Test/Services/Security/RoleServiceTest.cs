@@ -36,7 +36,15 @@ namespace Integration.Application.Test.Services.Security
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
-            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" };
+
+            var role = new Integration.Core.Entities.Security.Role
+            {
+                Id = 1,
+                Name = "Administrador",
+                Code = "ROL0000001",
+                IsActive = true,
+                CreatedBy = "System"
+            };
 
             // ✅ Simular un usuario válido en el repositorio
             var user = new User
@@ -51,22 +59,56 @@ namespace Integration.Application.Test.Services.Security
                 Email = "epulido@minsalud.gov.co"
             };
 
+            var application = new Integration.Core.Entities.Security.Application
+            {
+                Id = 100, // Simular un ID válido
+                Code = "APP0000001",
+                Name = "Test Application"
+            };
+
             Assert.NotNull(user);
-            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+            Assert.NotNull(application);
 
-            Assert.NotNull(roleDTO);
-            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(roleDTO)).Returns(role);
-            Assert.NotNull(role);
+            // Configurar simulación del repositorio de usuarios
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode))
+                               .ReturnsAsync(user);
 
-            _repositoryMock.Setup(r => r.CreateAsync(role)).ReturnsAsync(role);
-            _mapperMock.Setup(m => m.Map<RoleDTO>(role)).Returns(roleDTO);
+            // Configurar simulación del repositorio de aplicaciones
+            _applicationRepositoryMock.Setup(r => r.GetByCodeAsync(header.ApplicationCode))
+                                      .ReturnsAsync(application);
+
+            // Simulación del mapeo RoleDTO → Role
+            _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(roleDTO))
+                       .Returns(role);
+
+            var mappedRole = _mapperMock.Object.Map<Integration.Core.Entities.Security.Role>(roleDTO);
+            Assert.NotNull(mappedRole);
+
+            // Asignar el ApplicationId manualmente en la prueba
+            mappedRole.ApplicationId = application.Id;
+            mappedRole.CreatedBy = user.UserName;
+            mappedRole.UpdatedBy = user.UserName;
+
+            // Simulación de la creación del rol en el repositorio
+            _repositoryMock.Setup(r => r.CreateAsync(mappedRole))
+                               .ReturnsAsync(mappedRole);
+
+            var createdRole = await _repositoryMock.Object.CreateAsync(mappedRole);
+            Assert.NotNull(createdRole);
+
+            // Simulación del mapeo Role → RoleDTO
+            _mapperMock.Setup(m => m.Map<RoleDTO>(createdRole))
+                       .Returns(roleDTO);
 
             // Act
             var result = await _roleService.CreateAsync(header, roleDTO);
 
             // Assert
             Assert.NotNull(result);
-            Assert.AreEqual(roleDTO, result);
+            Assert.AreEqual(roleDTO.Name, result.Name);
+            Assert.AreEqual(roleDTO.Code, result.Code);
+            Assert.AreEqual(roleDTO.CreatedBy, result.CreatedBy);
+            Assert.AreEqual(roleDTO.IsActive, result.IsActive);
         }
 
         [Test]

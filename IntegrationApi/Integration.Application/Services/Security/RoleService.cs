@@ -3,6 +3,7 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 
@@ -14,14 +15,14 @@ namespace Integration.Application.Services.Security
 {
     public class RoleService : IRoleService
     {
-        private readonly IRoleRepository _roleRrepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<RoleService> _logger;
         private readonly IApplicationRepository _applicationRepository;
         private readonly IUserRepository _userRepository;
         public RoleService(IRoleRepository roleRepository, IMapper mapper, ILogger<RoleService> logger, IApplicationRepository applicationRepository, IUserRepository userRepository)
         {
-            _roleRrepository = roleRepository;
+            _roleRepository = roleRepository;
             _mapper = mapper;
             _logger = logger;
             _applicationRepository = applicationRepository;
@@ -33,44 +34,28 @@ namespace Integration.Application.Services.Security
             {
                 throw new ArgumentNullException(nameof(header), "El encabezado o UserCode no pueden ser nulos.");
             }
-
-            if (roleDTO == null)
-            {
-                throw new ArgumentNullException(nameof(roleDTO), "El rol no puede ser nulo.");
-            }
-
             _logger.LogInformation("Creando rol: {Name}", roleDTO.Name);
-
-            var user = await _userRepository.GetByCodeAsync(header.UserCode);
-            if (user == null)
+            try
             {
-                _logger.LogError("No se encontró el usuario con código {UserCode}", header.UserCode);
-                throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el rol con código {header.UserCode}.");
+                }
+                var application = await _applicationRepository.GetByCodeAsync(header.ApplicationCode);
+                var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
+                role.ApplicationId = application.Id;
+                role.CreatedBy = user.UserName;
+                role.UpdatedBy = user.UserName;
+                var result = await _roleRepository.CreateAsync(role);
+                _logger.LogInformation("Rol creado con éxito: RoleCode {RoleCode}, Nombre: {Name}", result.Code, result.Name);
+                return _mapper.Map<RoleDTO>(result);
             }
-
-            var roleEntity = _mapper.Map<Role>(roleDTO);
-            if (roleEntity == null)
+            catch (Exception ex)
             {
-                _logger.LogError("Error al mapear RoleDTO a Role.");
-                throw new Exception("Error al mapear RoleDTO a Role.");
+                _logger.LogError(ex, "Error al crear el rol: {Name}", roleDTO.Name);
+                throw;
             }
-            roleEntity.CreatedBy = user.UserName;
-            roleEntity.UpdatedBy = user.UserName;
-            var createdRole = await _roleRrepository.CreateAsync(roleEntity);
-            if (createdRole == null)
-            {
-                _logger.LogError("Error al crear el rol en la base de datos.");
-                throw new Exception("Error al crear el rol en la base de datos.");
-            }
-
-            var result = _mapper.Map<RoleDTO>(createdRole);
-            if (result == null)
-            {
-                _logger.LogError("Error al mapear el rol creado a RoleDTO.");
-                throw new Exception("Error al mapear el rol creado a RoleDTO.");
-            }
-
-            return result;
         }
         public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
@@ -82,7 +67,7 @@ namespace Integration.Application.Services.Security
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                bool success = await _roleRrepository.DeactivateAsync(code, user.UserName);
+                bool success = await _roleRepository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
                     _logger.LogInformation("Rol con RoleCode {RoleCode} eliminada correctamente.", code);
@@ -105,7 +90,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Obteniendo todos los roles.");
             try
             {
-                var roles = await _roleRrepository.GetAllActiveAsync();
+                var roles = await _roleRepository.GetAllActiveAsync();
                 var roleDTO = _mapper.Map<IEnumerable<RoleDTO>>(roles);
                 _logger.LogInformation("{Count} roles obtenidos con éxito.", roleDTO.Count());
                 return roleDTO;
@@ -137,7 +122,7 @@ namespace Integration.Application.Services.Security
                     applicationId = application.Id;
                     roleFilter = a => a.ApplicationId == applicationId.Value;
                 }
-                var modules = await _roleRrepository.GetAllAsync(roleFilter);
+                var modules = await _roleRepository.GetAllAsync(roleFilter);
                 var modulesDTOs = _mapper.Map<List<RoleDTO>>(modules);
                 if (predicado != null && !IsFilteringByApplicationCode(predicado, out _))
                 {
@@ -206,7 +191,7 @@ namespace Integration.Application.Services.Security
                 {
                     roleFilter = a => a.ApplicationId == applicationId.Value;
                 }
-                var roles = await _roleRrepository.GetAllAsync(roleFilter);
+                var roles = await _roleRepository.GetAllAsync(roleFilter);
                 var roleDTOs = _mapper.Map<List<RoleDTO>>(roles);
                 foreach (var filter in otherFilters)
                 {
@@ -226,7 +211,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Buscando rol con RoleCode: {RoleCode}", code);
             try
             {
-                var permission = await _roleRrepository.GetByCodeAsync(code);
+                var permission = await _roleRepository.GetByCodeAsync(code);
                 if (permission == null)
                 {
                     _logger.LogWarning("No se encontró el rol con RoleCode {RoleCode}.", code);
@@ -254,7 +239,7 @@ namespace Integration.Application.Services.Security
                 }
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
                 role.UpdatedBy = user.UserName;
-                var updatedRole = await _roleRrepository.UpdateAsync(role);
+                var updatedRole = await _roleRepository.UpdateAsync(role);
                 if (updatedRole == null)
                 {
                     _logger.LogWarning("No se pudo actualizar el rol con RoleCode {RoleCode}.", roleDTO.Code);
