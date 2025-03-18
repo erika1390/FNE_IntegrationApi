@@ -17,7 +17,7 @@ namespace Integration.Application.Test.Services.Security
         private Mock<IMapper> _mapperMock;
         private Mock<ILogger<RoleService>> _loggerMock;
         private IRoleService _roleService;
-
+        private Mock<IUserRepository> _userRepositoryMock;
         [SetUp]
         public void SetUp()
         {
@@ -25,7 +25,8 @@ namespace Integration.Application.Test.Services.Security
             _applicationRepositoryMock = new Mock<IApplicationRepository>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<RoleService>>();
-            _roleService = new RoleService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object, _applicationRepositoryMock.Object);
+            _userRepositoryMock = new Mock<IUserRepository>();
+            _roleService = new RoleService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object, _applicationRepositoryMock.Object, _userRepositoryMock.Object);
         }
 
         [Test]

@@ -31,16 +31,33 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedPermissionDTO()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var permissionDTO = new PermissionDTO { Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true };
             var permission = new Integration.Core.Entities.Security.Permission { Id = 1, Name = "Consultar Aplicacion", Code = "PER0000001" };
+
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Permission>(permissionDTO)).Returns(permission);
             _repositoryMock.Setup(r => r.CreateAsync(permission)).ReturnsAsync(permission);
             _mapperMock.Setup(m => m.Map<PermissionDTO>(permission)).Returns(permissionDTO);
 
+            // Act
             var result = await _permissionService.CreateAsync(header, permissionDTO);
 
+            // Assert
             Assert.AreEqual(permissionDTO, result);
         }
 

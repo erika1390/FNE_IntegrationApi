@@ -16,14 +16,15 @@ namespace Integration.Application.Test.Services.Security
         private Mock<IMapper> _mapperMock;
         private Mock<ILogger<UserService>> _loggerMock;
         private IUserService _userService;
-
+        private Mock<IUserRepository> _userRepositoryMock;
         [SetUp]
         public void SetUp()
         {
             _repositoryMock = new Mock<IUserRepository>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<UserService>>();
-            _userService = new UserService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object);
+            _userRepositoryMock = new Mock<IUserRepository>();
+            _userService = new UserService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object, _userRepositoryMock.Object);
         }
 
         [Test]
