@@ -227,16 +227,28 @@ namespace Integration.Application.Services.Security
 
         public async Task<RoleDTO> UpdateAsync(HeaderDTO header, RoleDTO roleDTO)
         {
-            _logger.LogInformation("Actualizando rol con RoleCode: {RoleCode}, Nombre: {Name}", roleDTO.Code, roleDTO.Name);
+            _logger.LogInformation("Actualizando rol con RoleCode: {RoleCode}, Nombre: {Name}", roleDTO?.Code, roleDTO?.Name);
             try
             {
+                if (header == null || roleDTO == null)
+                {
+                    throw new ArgumentNullException(nameof(header), "El encabezado y el rol no pueden ser nulos.");
+                }
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
                 var application = await _applicationRepository.GetByCodeAsync(header.ApplicationCode);
+                if (application == null)
+                {
+                    throw new Exception($"No se encontró la aplicación con código {header.ApplicationCode}.");
+                }
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
+                if (role == null)
+                {
+                    throw new Exception("Error al mapear RoleDTO a Role.");
+                }
                 role.ApplicationId = application.Id;
                 role.UpdatedBy = user.UserName;
                 var updatedRole = await _roleRepository.UpdateAsync(role);
@@ -246,11 +258,16 @@ namespace Integration.Application.Services.Security
                     return null;
                 }
                 _logger.LogInformation("Rol actualizado con éxito: {RoleCode}, Nombre: {Name}", updatedRole.Code, updatedRole.Name);
-                return _mapper.Map<RoleDTO>(updatedRole);
+                var result = _mapper.Map<RoleDTO>(updatedRole);
+                if (result == null)
+                {
+                    throw new Exception("Error al mapear el rol actualizado a RoleDTO.");
+                }
+                return result;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rol con RoleCode {RoleCode}.", roleDTO.Code);
+                _logger.LogError(ex, "Error al actualizar el rol con RoleCode {RoleCode}.", roleDTO?.Code);
                 throw;
             }
         }
