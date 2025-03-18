@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using Integration.Application.Interfaces.Security;
+using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
@@ -31,11 +32,47 @@ namespace Integration.Application.Services.Security
             {
                 throw new ArgumentNullException(nameof(header), "El encabezado o UserCode no pueden ser nulos.");
             }
+
             if (roleDTO == null)
             {
-                throw new ArgumentNullException(nameof(roleDTO), "El rol no puede ser nula.");
+                throw new ArgumentNullException(nameof(roleDTO), "El rol no puede ser nulo.");
             }
+
             _logger.LogInformation("Creando rol: {Name}", roleDTO.Name);
+
+            var user = await _userRepository.GetByCodeAsync(header.UserCode);
+            if (user == null)
+            {
+                _logger.LogError("No se encontró el usuario con código {UserCode}", header.UserCode);
+                throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+            }
+
+            var roleEntity = _mapper.Map<Role>(roleDTO);
+            if (roleEntity == null)
+            {
+                _logger.LogError("Error al mapear RoleDTO a Role.");
+                throw new Exception("Error al mapear RoleDTO a Role.");
+            }
+
+            var createdRole = await _roleRrepository.CreateAsync(roleEntity);
+            if (createdRole == null)
+            {
+                _logger.LogError("Error al crear el rol en la base de datos.");
+                throw new Exception("Error al crear el rol en la base de datos.");
+            }
+
+            var result = _mapper.Map<RoleDTO>(createdRole);
+            if (result == null)
+            {
+                _logger.LogError("Error al mapear el rol creado a RoleDTO.");
+                throw new Exception("Error al mapear el rol creado a RoleDTO.");
+            }
+
+            return result;
+        }
+        public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
+        {
+            _logger.LogInformation("Eliminando rol con RoleCode: {RoleCode}", code);
             try
             {
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
@@ -43,29 +80,7 @@ namespace Integration.Application.Services.Security
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                var application = await _applicationRepository.GetByCodeAsync(header.ApplicationCode);
-                var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
-                role.NormalizedName = role.Name.ToUpper();
-                role.ApplicationId = application.Id;
-                role.CreatedBy = user.UserName;
-                role.UpdatedBy = user.UserName;
-                var result = await _roleRrepository.CreateAsync(role);
-                _logger.LogInformation("Rol creado con éxito: {RoleId}, Nombre: {Name}", result.Id, result.Name);
-                return _mapper.Map<RoleDTO>(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al crear el rol: {Name}", roleDTO.Name);
-                throw;
-            }
-        }
-
-        public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
-        {
-            _logger.LogInformation("Eliminando rol con RoleCode: {RoleCode}", code);
-            try
-            {
-                bool success = await _roleRrepository.DeactivateAsync(code);
+                bool success = await _roleRrepository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
                     _logger.LogInformation("Rol con RoleCode {RoleCode} eliminada correctamente.", code);

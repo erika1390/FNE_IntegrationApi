@@ -97,7 +97,7 @@ namespace Integration.Application.Test.Services.Security
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string userCode = "USR0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(userCode)).ReturnsAsync(true);
+            _repositoryMock.Setup(r => r.DeactivateAsync(userCode, "epulido")).ReturnsAsync(true);
 
             var result = await _userService.DeactivateAsync(header, userCode);
 
@@ -109,7 +109,7 @@ namespace Integration.Application.Test.Services.Security
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string userCode = "USR0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(userCode)).ReturnsAsync(false);
+            _repositoryMock.Setup(r => r.DeactivateAsync(userCode, "epulido")).ReturnsAsync(false);
 
             var result = await _userService.DeactivateAsync(header, userCode);
 

@@ -42,29 +42,12 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-        public async Task<bool> DeleteAsync(int id)
+
+        public Task<bool> DeactivateAsync(string userCode, string roleCode, string userName)
         {
-            try
-            {
-                var userRole = await _context.UserRoles.FindAsync(id);
-                if (userRole == null)
-                {
-                    _logger.LogWarning("No se encontró el UserRole con ID {Id} para eliminar.", id);
-                    return false;
-                }
-                userRole.IsActive = false;
-                userRole.UpdatedAt = DateTime.UtcNow;
-                _context.UserRoles.Update(userRole);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("UserRoles desactivado: {Id}", id);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al eliminar el UserRoles con ID {Id}.", id);
-                return false;
-            }
+            throw new NotImplementedException();
         }
+
         public async Task<IEnumerable<UserRole>> GetAllActiveAsync()
         {
             try
@@ -111,7 +94,7 @@ namespace Integration.Infrastructure.Repositories.Security
             throw new NotImplementedException();
         }
 
-        public Task<UserRole> GetByIdAsync(int id)
+        public Task<UserRole> GetByUserCodeRoleCodeAsync(string userCode, string roleCode)
         {
             throw new NotImplementedException();
         }

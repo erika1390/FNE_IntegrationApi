@@ -5,7 +5,7 @@ namespace Integration.Infrastructure.Interfaces.Security
     public interface IUserRepository
     {
         Task<User> CreateAsync(User user);
-        Task<bool> DeactivateAsync(string code);
+        Task<bool> DeactivateAsync(string code, string userName);
         Task<IEnumerable<User>> GetAllActiveAsync();
         Task<List<User>> GetAllAsync(Expression<Func<User, bool>> predicado);
         Task<List<User>> GetAllAsync(List<Expression<Func<User, bool>>> predicados);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Services.Security;
+using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
@@ -32,42 +33,105 @@ namespace Integration.Application.Test.Services.Security
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedRoleDTO()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var roleDTO = new RoleDTO { Name = "Administrador", Code = "ROL0000001", CreatedBy = "System", IsActive = true };
-            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System"};
+            var role = new Integration.Core.Entities.Security.Role { Id = 1, Name = "Administrador", Code = "ROL0000001", CreatedBy = "System" };
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+
+            Assert.NotNull(user);
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            Assert.NotNull(roleDTO);
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.Role>(roleDTO)).Returns(role);
+            Assert.NotNull(role);
+
             _repositoryMock.Setup(r => r.CreateAsync(role)).ReturnsAsync(role);
             _mapperMock.Setup(m => m.Map<RoleDTO>(role)).Returns(roleDTO);
 
+            // Act
             var result = await _roleService.CreateAsync(header, roleDTO);
 
+            // Assert
+            Assert.NotNull(result);
             Assert.AreEqual(roleDTO, result);
         }
 
         [Test]
         public async Task DeleteAsync_ShouldReturnTrue_WhenRoleIsDeleted()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string roleCode = "ROL0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(roleCode)).ReturnsAsync(true);
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            // ✅ Simular que el rol fue eliminado con éxito
+            _repositoryMock.Setup(r => r.DeactivateAsync(roleCode, user.UserName)).ReturnsAsync(true);
+
+            // Act
             var result = await _roleService.DeactivateAsync(header, roleCode);
 
+            // Assert
             Assert.IsTrue(result);
         }
+
 
         [Test]
         public async Task DeleteAsync_ShouldReturnFalse_WhenRoleIsNotFound()
         {
+            // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             string roleCode = "ROL0000001";
-            _repositoryMock.Setup(r => r.DeactivateAsync(roleCode)).ReturnsAsync(false);
 
+            // ✅ Simular un usuario válido en el repositorio
+            var user = new User
+            {
+                Code = "USR0000001",
+                FirstName = "Erika",
+                LastName = "Pulido Moreno",
+                CreatedAt = DateTime.Now,
+                CreatedBy = "System",
+                IsActive = true,
+                UserName = "epulido",
+                Email = "epulido@minsalud.gov.co"
+            };
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+
+            // ✅ Simular que el rol no fue encontrado
+            _repositoryMock.Setup(r => r.DeactivateAsync(roleCode, user.UserName)).ReturnsAsync(false);
+
+            // Act
             var result = await _roleService.DeactivateAsync(header, roleCode);
 
+            // Assert
             Assert.IsFalse(result);
         }
+
 
         [Test]
         public async Task GetAllActiveAsync_ShouldReturnListOfRoleDTOs()

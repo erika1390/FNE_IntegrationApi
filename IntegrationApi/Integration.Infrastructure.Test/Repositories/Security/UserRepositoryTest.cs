@@ -122,11 +122,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task DeactivateAsync_ShouldReturnTrue()
         {
             // Arrange
-            _mock.Setup(repo => repo.DeactivateAsync("USR0000001"))
+            _mock.Setup(repo => repo.DeactivateAsync("USR0000001", "epulido"))
                 .ReturnsAsync(true);
 
             // Act
-            var result = await _mock.Object.DeactivateAsync("USR0000001");
+            var result = await _mock.Object.DeactivateAsync("USR0000001", "epulido");
 
             // Assert
             Assert.IsTrue(result);

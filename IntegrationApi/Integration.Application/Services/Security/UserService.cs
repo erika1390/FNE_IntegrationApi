@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using Integration.Application.Interfaces.Security;
+using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
@@ -64,7 +65,12 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Eliminando usuario con UserCode: {UserCode}", code);
             try
             {
-                bool success = await _repository.DeactivateAsync(code);
+                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (user == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
+                bool success = await _repository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
                     _logger.LogInformation("Usuario con UserCode {UserCode} eliminada correctamente.", code);

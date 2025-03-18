@@ -57,7 +57,7 @@ namespace Integration.Application.Services.Security
 
         public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
-            _logger.LogInformation("Eliminando modulo con ModuleCode: {ModuleCode}", code);
+            _logger.LogInformation("Desactivando aplicación con ModuleCode: {ModuleCode}", code);
             try
             {
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
@@ -68,11 +68,11 @@ namespace Integration.Application.Services.Security
                 bool success = await _moduleRepository.DeactivateAsync(code, user.UserName);
                 if (success)
                 {
-                    _logger.LogInformation("Modulo con ModuleCode {ModuleCode} eliminada correctamente.", code);
+                    _logger.LogInformation("Modulo con ModuleCode {ModuleCode} desactivada correctamente.", code);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el modulo con ModuleCode {ModuleCode} para eliminar.", code);
+                    _logger.LogWarning("No se encontró el modulo con ModuleCode {ModuleCode} para desactivar.", code);
                 }
                 return success;
             }
