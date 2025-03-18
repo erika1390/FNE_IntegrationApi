@@ -164,7 +164,10 @@ namespace Integration.Infrastructure.Repositories.Security
             }
             try
             {
-                var existingUser = await _context.Users.FindAsync(user.Id);
+                var existingUser = await _context.Users
+                    .Where(a => a.Code == user.Code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (existingUser == null)
                 {
                     _logger.LogWarning("No se encontró el usuario con ID {UserId} para actualizar.", user.Id);

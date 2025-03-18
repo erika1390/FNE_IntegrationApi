@@ -17,15 +17,15 @@ namespace Integration.Application.Test.Services.Security
         private Mock<IMapper> _mapperMock;
         private Mock<ILogger<UserService>> _loggerMock;
         private IUserService _userService;
-        private Mock<IUserRepository> _userRepositoryMock;
+        private Mock<IAuthenticationService> _authenticationServiceMock;
         [SetUp]
         public void SetUp()
         {
             _repositoryMock = new Mock<IUserRepository>();
             _mapperMock = new Mock<IMapper>();
             _loggerMock = new Mock<ILogger<UserService>>();
-            _userRepositoryMock = new Mock<IUserRepository>();
-            _userService = new UserService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object, _userRepositoryMock.Object);
+            _authenticationServiceMock = new Mock<IAuthenticationService>();
+            _userService = new UserService(_repositoryMock.Object, _mapperMock.Object, _loggerMock.Object, _authenticationServiceMock.Object);
         }
 
         [Test]
@@ -49,9 +49,7 @@ namespace Integration.Application.Test.Services.Security
                 Email = "epulido@minsalud.gov.co",
                 NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
                 EmailConfirmed = true,
-                PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                SecurityStamp = "QJZQ4Q",
-                ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
+                Password = "AQAAAAEAACcQAAAAEJ9zQ6",
                 PhoneNumber = "3001234567",
                 PhoneNumberConfirmed = true,
                 TwoFactorEnabled = false,
@@ -88,7 +86,7 @@ namespace Integration.Application.Test.Services.Security
             };
 
             // ✅ Simular el usuario creador en el repositorio
-            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+            _repositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
 
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.User>(userDTO)).Returns(user);
             _repositoryMock.Setup(r => r.CreateAsync(user)).ReturnsAsync(user);
@@ -121,7 +119,7 @@ namespace Integration.Application.Test.Services.Security
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
             };
-            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+            _repositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
 
             // ✅ Simular que el usuario fue desactivado con éxito
             _repositoryMock.Setup(r => r.DeactivateAsync(userCode, user.UserName)).ReturnsAsync(true);
@@ -153,7 +151,7 @@ namespace Integration.Application.Test.Services.Security
                 UserName = "epulido",
                 Email = "epulido@minsalud.gov.co"
             };
-            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+            _repositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
 
             // ✅ Simular que el usuario no fue desactivado
             _repositoryMock.Setup(r => r.DeactivateAsync(userCode, user.UserName)).ReturnsAsync(false);
@@ -212,9 +210,7 @@ namespace Integration.Application.Test.Services.Security
                     Email = "epulido@minsalud.gov.co",
                     NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
                     EmailConfirmed = true,
-                    PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "QJZQ4Q",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
+                    Password = "AQAAAAEAACcQAAAAEJ9zQ6",
                     PhoneNumber = "3001234567",
                     PhoneNumberConfirmed = true,
                     TwoFactorEnabled = false,
@@ -277,9 +273,7 @@ namespace Integration.Application.Test.Services.Security
                 Email = "epulido@minsalud.gov.co",
                 NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
                 EmailConfirmed = true,
-                PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                SecurityStamp = "QJZQ4Q",
-                ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
+                Password = "AQAAAAEAACcQAAAAEJ9zQ6",
                 PhoneNumber = "3001234567",
                 PhoneNumberConfirmed = true,
                 TwoFactorEnabled = false,
@@ -321,9 +315,7 @@ namespace Integration.Application.Test.Services.Security
                 Email = "epulido@minsalud.gov.co",
                 NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
                 EmailConfirmed = true,
-                PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                SecurityStamp = "QJZQ4Q",
-                ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
+                Password = "AQAAAAEAACcQAAAAEJ9zQ6",
                 PhoneNumber = "3001234567",
                 PhoneNumberConfirmed = true,
                 TwoFactorEnabled = false,
@@ -411,9 +403,7 @@ namespace Integration.Application.Test.Services.Security
                     Email = "epulido@minsalud.gov.co",
                     NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
                     EmailConfirmed = true,
-                    PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "QJZQ4Q",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
+                    Password = "AQAAAAEAACcQAAAAEJ9zQ6",
                     PhoneNumber = "3001234567",
                     PhoneNumberConfirmed = true,
                     TwoFactorEnabled = false,
@@ -476,9 +466,7 @@ namespace Integration.Application.Test.Services.Security
                     Email = "epulido@minsalud.gov.co",
                     NormalizedEmail = "EPULIDO@MINSALUD.GOV.CO",
                     EmailConfirmed = true,
-                    PasswordHash = "AQAAAAEAACcQAAAAEJ9zQ6",
-                    SecurityStamp = "QJZQ4Q",
-                    ConcurrencyStamp = "d1b1b2b3-4b5b-6b7b-8b9b-0b1b2b3b4b5",
+                    Password = "AQAAAAEAACcQAAAAEJ9zQ6",
                     PhoneNumber = "3001234567",
                     PhoneNumberConfirmed = true,
                     TwoFactorEnabled = false,

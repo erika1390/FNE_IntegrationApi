@@ -15,13 +15,13 @@ namespace Integration.Application.Services.Security
         private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
-        private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository repository, IMapper mapper, ILogger<UserService> logger, IUserRepository userRepository)
+        private readonly IAuthenticationService _authenticationService;
+        public UserService(IUserRepository repository, IMapper mapper, ILogger<UserService> logger, IAuthenticationService authenticationService)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
-            _userRepository = userRepository;
+            _authenticationService = authenticationService;
         }
         public async Task<UserDTO> CreateAsync(HeaderDTO header, UserDTO userDTO)
         {
@@ -36,7 +36,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Creando usuario: {Name}", userDTO.UserName);
             try
             {
-                var userCreate = await _userRepository.GetByCodeAsync(header.UserCode);
+                var userCreate = await _repository.GetByCodeAsync(header.UserCode);
                 if (userCreate == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
@@ -48,6 +48,7 @@ namespace Integration.Application.Services.Security
                 user.ConcurrencyStamp = Guid.NewGuid().ToString();
                 user.CreatedBy = userCreate.UserName;
                 user.UpdatedBy = userCreate.UserName;
+                user.PasswordHash = await _authenticationService.GenerarPasswordHashAsync(userDTO.Password);
                 var result = await _repository.CreateAsync(user);
                 _logger.LogInformation("Usuario creado con éxito: UserCode: {UserCode}, Nombre: {Name}", result.Code, result.UserName);
                 return _mapper.Map<UserDTO>(result);
@@ -64,7 +65,7 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Eliminando usuario con UserCode: {UserCode}", code);
             try
             {
-                var user = await _userRepository.GetByCodeAsync(header.UserCode);
+                var user = await _repository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
