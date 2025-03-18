@@ -39,7 +39,7 @@ namespace Integration.Application.Services.Security
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                var application = await _applicationRepository.GetByCodeAsync(moduleDTO.ApplicationCode);
+                var application = await _applicationRepository.GetByCodeAsync(header.ApplicationCode);
                 var module = _mapper.Map<Integration.Core.Entities.Security.Module>(moduleDTO);
                 module.ApplicationId = application.Id;
                 module.CreatedBy = user.UserName;
@@ -233,7 +233,7 @@ namespace Integration.Application.Services.Security
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                var application = await _applicationRepository.GetByCodeAsync(moduleDTO.ApplicationCode);
+                var application = await _applicationRepository.GetByCodeAsync(header.ApplicationCode);
                 var moduleExist = await _moduleRepository.GetByCodeAsync(moduleDTO.Code); 
                 var module = _mapper.Map<Integration.Core.Entities.Security.Module>(moduleDTO);
                 module.ApplicationId = application.Id;

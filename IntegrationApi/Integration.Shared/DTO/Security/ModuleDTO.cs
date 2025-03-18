@@ -4,7 +4,6 @@ namespace Integration.Shared.DTO.Security
     {
         public required string Code { get; set; }
         public required string Name { get; set; }
-        public required string ApplicationCode { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public required string CreatedBy { get; set; }
