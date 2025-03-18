@@ -43,6 +43,7 @@ namespace Integration.Application.Services.Security
                 var module = _mapper.Map<Integration.Core.Entities.Security.Module>(moduleDTO);
                 module.ApplicationId = application.Id;
                 module.CreatedBy = user.UserName;
+                module.UpdatedBy = user.UserName;
                 var result = await _moduleRepository.CreateAsync(module);
                 _logger.LogInformation("Modulo creado con éxito: {ModuleId}, Nombre: {Name}", result.Id, result.Name);
                 return _mapper.Map<ModuleDTO>(result);

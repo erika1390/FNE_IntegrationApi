@@ -163,10 +163,13 @@ namespace Integration.Infrastructure.Repositories.Security
             }
             try
             {
-                var permissionEntity = await _context.Permissions.FindAsync(permission.Id);
+                var permissionEntity = await _context.Permissions
+                    .Where(a => a.Code == permission.Code)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
                 if (permissionEntity == null)
                 {
-                    _logger.LogWarning("No se encontró el permiso con ID {PermissionId} para actualizar.", permission.Id);
+                    _logger.LogWarning("No se encontró el permiso con PermissionCode {PermissionCode} para actualizar.", permission.Code);
                     return null;
                 }
                 permissionEntity.Name = permission.Name;
@@ -175,7 +178,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 permissionEntity.IsActive = permission.IsActive;
                 _context.Permissions.Update(permissionEntity);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Permiso actualizado: {PermissionId}, Nombre: {Name}", permission.Id, permission.Name);
+                _logger.LogInformation("Permiso actualizado: PermissionCode: {PermissionCode}, Nombre: {Name}", permission.Id, permission.Name);
                 return permissionEntity;
             }
             catch (DbUpdateException ex)
