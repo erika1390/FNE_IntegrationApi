@@ -59,21 +59,21 @@ namespace Integration.Api.Controllers.Security
 
                 return BadRequest(ResponseApi<RoleModulePermissionDTO>.Error("El code node debe ser nulo o vacio."));
             }
-            _logger.LogInformation("Buscando RoleModulePermission con {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}: {RoleCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
+            _logger.LogInformation("Buscando RoleModulePermission con {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
             try
             {
                 var result = await _service.GetByRoleCodeModuleCodePermissionsCodeAsync(roleModulePermissionDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se encontró el RoleModulePermission con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}: {RoleCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
+                    _logger.LogWarning("No se encontró el RoleModulePermission con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
                     return NotFound(ResponseApi<RoleModulePermissionDTO>.Error("RoleModulePermission no encontrada."));
                 }
-                _logger.LogInformation("RoleModulePermission encontrada con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}: {RoleCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
+                _logger.LogInformation("RoleModulePermission encontrada con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
                 return Ok(ResponseApi<RoleModulePermissionDTO>.Success(result));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el RoleModulePermission con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}: {RoleCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
+                _logger.LogError(ex, "Error al obtener el RoleModulePermission con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
                 return StatusCode(500, ResponseApi<RoleModulePermissionDTO>.Error("Error interno del servidor."));
             }
         }
