@@ -50,7 +50,7 @@ namespace Integration.Infrastructure.Repositories.Security
                     .FirstOrDefaultAsync();
                 if (module == null)
                 {
-                    _logger.LogWarning("No se encontró el módulo con ModuleCode {ModuleCode} para eliminar.", code);
+                    _logger.LogWarning("No se encontró el módulo con ModuleCode {ModuleCode} para desactivar.", code);
                     return false;
                 }
                 module.IsActive = false;
@@ -64,12 +64,12 @@ namespace Integration.Infrastructure.Repositories.Security
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error de base de datos al eliminar el módulo con ModuleCode {ModuleCode}.", code);
+                _logger.LogError(ex, "Error de base de datos al desactivar el módulo con ModuleCode {ModuleCode}.", code);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error de base de datos al eliminar el módulo con ModuleCode {ModuleCode}.", code);
+                _logger.LogError(ex, "Error de base de datos al desactivar el módulo con ModuleCode {ModuleCode}.", code);
                 return false;
             }
         }

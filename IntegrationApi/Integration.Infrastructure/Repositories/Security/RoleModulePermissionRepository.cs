@@ -59,7 +59,6 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-
         public async Task<bool> DeactivateAsync(RoleModulePermissions roleModulePermissions)
         {
             try
