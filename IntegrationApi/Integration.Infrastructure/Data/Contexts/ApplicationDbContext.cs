@@ -250,56 +250,6 @@ namespace Integration.Infrastructure.Data.Contexts
                     AccessFailedCount = 0
                 }
             );
-            //builder.Entity<Role>().HasData(
-            //    new Role
-            //    {
-            //        Id = 1,
-            //        Code = "ROL0000001",
-            //        Name = "Administrador",
-            //        ApplicationId = 1,
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    },
-            //    new Role
-            //    {
-            //        Id = 2,
-            //        Code = "ROL0000002",
-            //        Name = "Administrador",
-            //        ApplicationId = 2,
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    },
-            //    new Role
-            //    {
-            //        Id = 3,
-            //        Code = "ROL0000003",
-            //        Name = "Administrador",
-            //        ApplicationId = 3,
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    },
-            //    new Role
-            //    {
-            //        Id = 4,
-            //        Code = "ROL0000004",
-            //        Name = "Contratista",
-            //        ApplicationId = 2,
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    }
-            //);
         }
 
         /// <summary>
