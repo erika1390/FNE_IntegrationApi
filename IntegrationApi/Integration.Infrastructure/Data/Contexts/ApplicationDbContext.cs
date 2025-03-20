@@ -31,7 +31,7 @@ namespace Integration.Infrastructure.Data.Contexts
         {
             base.OnModelCreating(builder);
 
-            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);            
         }
 
         /// <summary>
