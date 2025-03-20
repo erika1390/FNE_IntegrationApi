@@ -3,14 +3,12 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
-using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 
 using Microsoft.Extensions.Logging;
 
 using System.Linq.Expressions;
-using System.Reflection.PortableExecutable;
 
 namespace Integration.Application.Services.Security
 {
