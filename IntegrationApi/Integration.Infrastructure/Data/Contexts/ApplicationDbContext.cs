@@ -5,8 +5,6 @@ using Integration.Core.Interfaces.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using System.Reflection.Emit;
-
 namespace Integration.Infrastructure.Data.Contexts
 {
     public class ApplicationDbContext : IdentityDbContext<
@@ -156,74 +154,74 @@ namespace Integration.Infrastructure.Data.Contexts
                     IsActive = true
                 }
             );
-            //builder.Entity<Permission>().HasData(
-            //    new Permission
-            //    {
-            //        Id = 1,
-            //        Code = "PER0000001",
-            //        Name = "Consultar",
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    },
-            //    new Permission
-            //    {
-            //        Id = 2,
-            //        Code = "PER0000002",
-            //        Name = "Crear",
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    },
-            //    new Permission
-            //    {
-            //        Id = 3,
-            //        Code = "PER0000003",
-            //        Name = "Modificar",
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    },
-            //    new Permission
-            //    {
-            //        Id = 4,
-            //        Code = "PER0000004",
-            //        Name = "Desactivar",
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    },
-            //    new Permission
-            //    {
-            //        Id = 5,
-            //        Code = "PER0000005",
-            //        Name = "Cargar",
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    },
-            //    new Permission
-            //    {
-            //        Id = 6,
-            //        Code = "PER0000006",
-            //        Name = "Descargar",
-            //        CreatedAt = StaticCreatedAt,
-            //        UpdatedAt = StaticCreatedAt,
-            //        CreatedBy = "epulido",
-            //        UpdatedBy = "epulido",
-            //        IsActive = true
-            //    }
-            //);
+            builder.Entity<Permission>().HasData(
+                new Permission
+                {
+                    Id = 1,
+                    Code = "PER0000001",
+                    Name = "Consultar",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "epulido",
+                    UpdatedBy = "epulido",
+                    IsActive = true
+                },
+                new Permission
+                {
+                    Id = 2,
+                    Code = "PER0000002",
+                    Name = "Crear",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "epulido",
+                    UpdatedBy = "epulido",
+                    IsActive = true
+                },
+                new Permission
+                {
+                    Id = 3,
+                    Code = "PER0000003",
+                    Name = "Modificar",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "epulido",
+                    UpdatedBy = "epulido",
+                    IsActive = true
+                },
+                new Permission
+                {
+                    Id = 4,
+                    Code = "PER0000004",
+                    Name = "Desactivar",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "epulido",
+                    UpdatedBy = "epulido",
+                    IsActive = true
+                },
+                new Permission
+                {
+                    Id = 5,
+                    Code = "PER0000005",
+                    Name = "Cargar",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "epulido",
+                    UpdatedBy = "epulido",
+                    IsActive = true
+                },
+                new Permission
+                {
+                    Id = 6,
+                    Code = "PER0000006",
+                    Name = "Descargar",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "epulido",
+                    UpdatedBy = "epulido",
+                    IsActive = true
+                }
+            );
             builder.Entity<User>().HasData(
                 new User { 
                     Id = 1, 
