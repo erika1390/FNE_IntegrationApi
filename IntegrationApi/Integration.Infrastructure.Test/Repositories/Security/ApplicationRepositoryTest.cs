@@ -60,11 +60,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             Expression<Func<Application, bool>> predicate = app => app.IsActive;
             var expectedResults = applications.Where(predicate.Compile()).ToList();
 
-            _mock.Setup(repo => repo.GetAllAsync(predicate))
+            _mock.Setup(repo => repo.GetByFilterAsync(predicate))
                 .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _mock.Object.GetAllAsync(predicate);
+            var result = await _mock.Object.GetByFilterAsync(predicate);
 
             // Assert
             Assert.NotNull(result);
@@ -91,11 +91,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
 
             var expectedResults = applications.Where(app => predicates.All(p => p.Compile()(app))).ToList();
 
-            _mock.Setup(repo => repo.GetAllAsync(predicates))
+            _mock.Setup(repo => repo.GetByMultipleFiltersAsync(predicates))
                 .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _mock.Object.GetAllAsync(predicates);
+            var result = await _mock.Object.GetByMultipleFiltersAsync(predicates);
 
             // Assert
             Assert.NotNull(result);

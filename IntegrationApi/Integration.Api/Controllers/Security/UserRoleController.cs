@@ -213,7 +213,7 @@ namespace Integration.Api.Controllers.Security
                 }
 
                 _logger.LogInformation("UserRole creado con éxito con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
-                return CreatedAtAction(nameof(GetByUserCodeRoleCode), new { userRoleDTO = result },
+                return CreatedAtAction(nameof(GetByCodes), new { userRoleDTO = result },
                     ResponseApi<UserRoleDTO>.Success(result, "UserRole creado con éxito."));
             }
             catch (Exception ex)

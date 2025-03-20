@@ -91,7 +91,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Permission>> GetAllAsync(Expression<Func<Permission, bool>> predicate)
+        public async Task<List<Permission>> GetByFilterAsync(Expression<Func<Permission, bool>> predicate)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Permission>> GetAllAsync(List<Expression<Func<Permission, bool>>> predicates)
+        public async Task<List<Permission>> GetByMultipleFiltersAsync(List<Expression<Func<Permission, bool>>> predicates)
         {
             try
             {

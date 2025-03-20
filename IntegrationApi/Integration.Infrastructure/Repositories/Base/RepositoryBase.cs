@@ -40,12 +40,12 @@ namespace Integration.Infrastructure.Repositories.Base
             throw new NotImplementedException();
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicado)
+        public async Task<List<T>> GetByFilterAsync(Expression<Func<T, bool>> predicado)
         {
             return await _dbSet.Where(predicado).ToListAsync();
         }
 
-        public async Task<List<T>> GetAllAsync(List<Expression<Func<T, bool>>> predicados)
+        public async Task<List<T>> GetByMultipleFiltersAsync(List<Expression<Func<T, bool>>> predicados)
         {
             var query = _dbSet.AsQueryable();
             foreach (var item in predicados)

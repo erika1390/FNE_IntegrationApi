@@ -210,10 +210,10 @@ namespace Integration.Application.Test.Services.Security
             var permissionDTOs = new List<PermissionDTO> { new PermissionDTO { Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true } };
             Expression<Func<PermissionDTO, bool>> filter = dto => dto.Name == "Consultar Aplicacion";
 
-            _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Permission, bool>>>())).ReturnsAsync(permissions);
+            _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Permission, bool>>>())).ReturnsAsync(permissions);
             _mapperMock.Setup(m => m.Map<List<PermissionDTO>>(permissions)).Returns(permissionDTOs);
 
-            var result = await _permissionService.GetAllAsync(filter);
+            var result = await _permissionService.GetByFilterAsync(filter);
 
             Assert.AreEqual(permissionDTOs, result);
         }
@@ -225,10 +225,10 @@ namespace Integration.Application.Test.Services.Security
             var permissionDTOs = new List<PermissionDTO> { new PermissionDTO { Name = "Consultar Aplicacion", Code = "PER0000001", CreatedBy = "User", IsActive = true } };
             var predicates = new List<Expression<Func<PermissionDTO, bool>>> { dto => dto.Name == "Consultar Aplicacion", dto => dto.Code == "PER0000001" };
 
-            _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Permission, bool>>>())).ReturnsAsync(permissions);
+            _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Permission, bool>>>())).ReturnsAsync(permissions);
             _mapperMock.Setup(m => m.Map<List<PermissionDTO>>(permissions)).Returns(permissionDTOs);
 
-            var result = await _permissionService.GetAllAsync(predicates);
+            var result = await _permissionService.GetByMultipleFiltersAsync(predicates);
 
             Assert.AreEqual(permissionDTOs, result);
         }

@@ -49,7 +49,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCodes([FromHeader] HeaderDTO header, string code)
+        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
         {
             if (string.IsNullOrEmpty(code))
             {
@@ -103,7 +103,7 @@ namespace Integration.Api.Controllers.Security
                 ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<ApplicationDTO, bool>> filter = Expression.Lambda<Func<ApplicationDTO, bool>>(comparison, param);
-                var result = await _service.GetAllAsync(new List<Expression<Func<ApplicationDTO, bool>>> { filter });
+                var result = await _service.GetByMultipleFiltersAsync(new List<Expression<Func<ApplicationDTO, bool>>> { filter });
                 return Ok(ResponseApi<IEnumerable<ApplicationDTO>>.Success(result));
             }
             catch (Exception ex)
@@ -146,7 +146,7 @@ namespace Integration.Api.Controllers.Security
                     finalExpression = finalExpression == null ? comparison : Expression.AndAlso(finalExpression, comparison);
                 }
                 var filterExpression = Expression.Lambda<Func<ApplicationDTO, bool>>(finalExpression, param);
-                var result = await _service.GetAllAsync(new List<Expression<Func<ApplicationDTO, bool>>> { filterExpression });
+                var result = await _service.GetByMultipleFiltersAsync(new List<Expression<Func<ApplicationDTO, bool>>> { filterExpression });
                 return Ok(ResponseApi<IEnumerable<ApplicationDTO>>.Success(result));
             }
             catch (Exception ex)
@@ -192,7 +192,6 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<ApplicationDTO>.Error("Error interno del servidor."));
             }
         }
-
 
         [HttpPut]
         public async Task<IActionResult> Update([FromHeader] HeaderDTO header, [FromBody] ApplicationDTO applicationDTO)

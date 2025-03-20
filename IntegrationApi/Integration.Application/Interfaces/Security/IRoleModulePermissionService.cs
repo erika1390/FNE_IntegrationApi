@@ -7,9 +7,9 @@ namespace Integration.Application.Interfaces.Security
 {
     public interface IRoleModulePermissionService
     {
-        Task<RoleModulePermissionDTO> GetByRoleCodeModuleCodePermissionsCodeAsync(RoleModulePermissionDTO roleModulePermissionsDTO);
-        Task<List<RoleModulePermissionDTO>> GetAllAsync(Expression<Func<RoleModulePermissionDTO, bool>> predicate);
-        Task<List<RoleModulePermissionDTO>> GetAllAsync(List<Expression<Func<RoleModulePermissionDTO, bool>>> predicates);
+        Task<RoleModulePermissionDTO> GetByCodesAsync(RoleModulePermissionDTO roleModulePermissionsDTO);
+        Task<List<RoleModulePermissionDTO>> GetByFilterAsync(Expression<Func<RoleModulePermissionDTO, bool>> predicate);
+        Task<List<RoleModulePermissionDTO>> GetByMultipleFiltersAsync(List<Expression<Func<RoleModulePermissionDTO, bool>>> predicates);
         Task<IEnumerable<RoleModulePermissionDTO>> GetAllActiveAsync();
         Task<RoleModulePermissionDTO> CreateAsync(HeaderDTO header, RoleModulePermissionDTO roleModulePermissionsDTO);
         Task<RoleModulePermissionDTO> UpdateAsync(HeaderDTO header, RoleModulePermissionDTO roleModulePermissionsDTO);

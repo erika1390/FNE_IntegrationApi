@@ -118,7 +118,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<RoleModulePermissionDTO>> GetAllAsync(Expression<Func<RoleModulePermissionDTO, bool>> predicado)
+        public async Task<List<RoleModulePermissionDTO>> GetByFilterAsync(Expression<Func<RoleModulePermissionDTO, bool>> predicado)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace Integration.Application.Services.Security
             return null;
         }
 
-        public async Task<List<RoleModulePermissionDTO>> GetAllAsync(List<Expression<Func<RoleModulePermissionDTO, bool>>> predicates)
+        public async Task<List<RoleModulePermissionDTO>> GetByMultipleFiltersAsync(List<Expression<Func<RoleModulePermissionDTO, bool>>> predicates)
         {
             try
             {
@@ -269,7 +269,7 @@ namespace Integration.Application.Services.Security
             return false;
         }
 
-        public async Task<RoleModulePermissionDTO> GetByRoleCodeModuleCodePermissionsCodeAsync(RoleModulePermissionDTO roleModulePermissionsDTO)
+        public async Task<RoleModulePermissionDTO> GetByCodesAsync(RoleModulePermissionDTO roleModulePermissionsDTO)
         {
             _logger.LogInformation("Buscando RoleModulePermissions con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}.",
                 roleModulePermissionsDTO.RoleCode, roleModulePermissionsDTO.ModuleCode, roleModulePermissionsDTO.PermissionCode);

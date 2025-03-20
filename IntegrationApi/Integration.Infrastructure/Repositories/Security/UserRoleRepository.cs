@@ -150,14 +150,14 @@ namespace Integration.Infrastructure.Repositories.Security
         {
             try
             {
-                var module = await _context.UserRoles
+                var userRole = await _context.UserRoles
                 .Where(a => a.UserId==userId
                 && a.RoleId == roleId)
                 .Include(rm => rm.Role)
                 .Include(rm => rm.User)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
-                if (module == null)
+                if (userRole == null)
                 {
                     _logger.LogWarning("No se encontró el userRole con userId {userId}, roleId {roleId}.", userId, roleId);
                     return null;
@@ -165,7 +165,7 @@ namespace Integration.Infrastructure.Repositories.Security
 
                 _logger.LogInformation("UserRole encontrado: userId {userId}, roleId {roleId}.", userId, roleId);
 
-                return module;
+                return userRole;
             }
             catch (Exception ex)
             {

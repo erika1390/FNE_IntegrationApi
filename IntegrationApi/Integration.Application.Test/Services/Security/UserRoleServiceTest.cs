@@ -114,7 +114,7 @@ namespace Integration.Application.Test.Services.Security
             _roleRepositoryMock.Setup(r => r.GetByCodeAsync("ROL0000001")).ReturnsAsync(role);
             _userRoleRepositoryMock.Setup(r => r.DeactivateAsync(user.Id, role.Id, user.UserName)).ReturnsAsync(true);
 
-            var result = await _service.DeactivateAsync(header, "USR0000001", "ROL0000001", "epulido");
+            var result = await _service.DeactivateAsync(header, "USR0000001", "ROL0000001");
 
             Assert.IsTrue(result);
         }

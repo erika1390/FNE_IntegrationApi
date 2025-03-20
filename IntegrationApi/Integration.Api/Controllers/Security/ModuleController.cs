@@ -51,6 +51,33 @@ namespace Integration.Api.Controllers.Security
             }
         }
 
+        [HttpGet("{code}")]
+        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
+        {
+            if (code == null)
+            {
+                _logger.LogWarning("Se recibió un ModuleCode no válido ({ModuleCode}) en la solicitud de búsqueda.", code);
+                return BadRequest(ResponseApi<ModuleDTO>.Error("El ModuleCode no debe ser nulo o vacio"));
+            }
+            _logger.LogInformation("Buscando modulo con ModuleCode: {ModuleCode}", code);
+            try
+            {
+                var result = await _service.GetByCodeAsync(code);
+                if (result == null)
+                {
+                    _logger.LogWarning("No se encontró el modulo con ModuleCode {ModuleCode}.", code);
+                    return NotFound(ResponseApi<ModuleDTO>.Error("Modulo no encontrada."));
+                }
+                _logger.LogInformation("Modulo encontrada: ModuleCode={ModuleCode}, Nombre={Name}", result.Code, result.Name);
+                return Ok(ResponseApi<ModuleDTO>.Success(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el modulo con ModuleCode {ModuleCode}.", code);
+                return StatusCode(500, ResponseApi<ModuleDTO>.Error("Error interno del servidor."));
+            }
+        }
+
         /// <summary>
         /// Obtiene módulos basados en un solo filtro.
         /// </summary>
@@ -82,7 +109,7 @@ namespace Integration.Api.Controllers.Security
                 ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<ModuleDTO, bool>> filter = Expression.Lambda<Func<ModuleDTO, bool>>(comparison, param);
-                var result = await _service.GetAllAsync(filter);
+                var result = await _service.GetByFilterAsync(filter);
                 return Ok(ResponseApi<IEnumerable<ModuleDTO>>.Success(result));
             }
             catch (Exception ex)
@@ -139,7 +166,7 @@ namespace Integration.Api.Controllers.Security
                 }
 
                 // Llamar al servicio con múltiples filtros
-                var result = await _service.GetAllAsync(filterExpressions);
+                var result = await _service.GetByMultipleFiltersAsync(filterExpressions);
 
                 return Ok(ResponseApi<IEnumerable<ModuleDTO>>.Success(result));
             }
@@ -149,34 +176,6 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<IEnumerable<ModuleDTO>>.Error("Error interno del servidor."));
             }
         }
-
-        [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
-        {
-            if (code==null)
-            {
-                _logger.LogWarning("Se recibió un ModuleCode no válido ({ModuleCode}) en la solicitud de búsqueda.", code);
-                return BadRequest(ResponseApi<ModuleDTO>.Error("El ModuleCode no debe ser nulo o vacio"));
-            }
-            _logger.LogInformation("Buscando modulo con ModuleCode: {ModuleCode}", code);
-            try
-            {
-                var result = await _service.GetByCodeAsync(code);
-                if (result == null)
-                {
-                    _logger.LogWarning("No se encontró el modulo con ModuleCode {ModuleCode}.", code);
-                    return NotFound(ResponseApi<ModuleDTO>.Error("Modulo no encontrada."));
-                }
-                _logger.LogInformation("Modulo encontrada: ModuleCode={ModuleCode}, Nombre={Name}", result.Code, result.Name);
-                return Ok(ResponseApi<ModuleDTO>.Success(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el modulo con ModuleCode {ModuleCode}.", code);
-                return StatusCode(500, ResponseApi<ModuleDTO>.Error("Error interno del servidor."));
-            }
-        }
-
 
         /// <summary>
         /// Crea un nuevo módulo.
@@ -218,7 +217,6 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<ModuleDTO>.Error("Error interno del servidor."));
             }
         }
-
 
         /// <summary>
         /// Actualiza un módulo existente.

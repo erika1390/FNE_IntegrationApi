@@ -101,7 +101,7 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-        public async Task<List<ModuleDTO>> GetAllAsync(Expression<Func<ModuleDTO, bool>> predicate)
+        public async Task<List<ModuleDTO>> GetByFilterAsync(Expression<Func<ModuleDTO, bool>> predicate)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace Integration.Application.Services.Security
                     applicationId = application.Id;
                     moduleFilter = a => a.ApplicationId == applicationId.Value;
                 }
-                var modules = await _moduleRepository.GetAllAsync(moduleFilter);
+                var modules = await _moduleRepository.GetByFilterAsync(moduleFilter);
                 var modulesDTOs = _mapper.Map<List<ModuleDTO>>(modules);
                 if (predicate != null && !IsFilteringByApplicationCode(predicate, out _))
                 {
@@ -151,7 +151,7 @@ namespace Integration.Application.Services.Security
 
             return false;
         }
-        public async Task<List<ModuleDTO>> GetAllAsync(List<Expression<Func<ModuleDTO, bool>>> predicates)
+        public async Task<List<ModuleDTO>> GetByMultipleFiltersAsync(List<Expression<Func<ModuleDTO, bool>>> predicates)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace Integration.Application.Services.Security
                 {
                     moduleFilter = a => a.ApplicationId == applicationId.Value;
                 }
-                var modules = await _moduleRepository.GetAllAsync(moduleFilter);
+                var modules = await _moduleRepository.GetByFilterAsync(moduleFilter);
                 var moduleDTOs = _mapper.Map<List<ModuleDTO>>(modules);
                 foreach (var filter in otherFilters)
                 {

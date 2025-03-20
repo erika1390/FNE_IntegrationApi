@@ -10,8 +10,8 @@ namespace Integration.Application.Interfaces.Security
         Task<ModuleDTO> CreateAsync(HeaderDTO header, ModuleDTO moduleDTO);
         Task<bool> DeactivateAsync(HeaderDTO header, string code);
         Task<IEnumerable<ModuleDTO>> GetAllActiveAsync();
-        Task<List<ModuleDTO>> GetAllAsync(Expression<Func<ModuleDTO, bool>> predicate);
-        Task<List<ModuleDTO>> GetAllAsync(List<Expression<Func<ModuleDTO, bool>>> predicates);
+        Task<List<ModuleDTO>> GetByFilterAsync(Expression<Func<ModuleDTO, bool>> predicate);
+        Task<List<ModuleDTO>> GetByMultipleFiltersAsync(List<Expression<Func<ModuleDTO, bool>>> predicates);
         Task<ModuleDTO> GetByCodeAsync(string code);
         Task<ModuleDTO> UpdateAsync(HeaderDTO header, ModuleDTO moduleDTO);
     }

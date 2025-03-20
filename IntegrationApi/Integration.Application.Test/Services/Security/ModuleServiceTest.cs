@@ -274,7 +274,7 @@ namespace Integration.Application.Test.Services.Security
             _applicationRepositoryMock.Setup(a => a.GetByCodeAsync("APP0000001"))
                                       .ReturnsAsync(application);
 
-            _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Module, bool>>>()))
+            _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Module, bool>>>()))
                            .ReturnsAsync(modules);
 
             _mapperMock.Setup(m => m.Map<List<ModuleDTO>>(modules))
@@ -282,7 +282,7 @@ namespace Integration.Application.Test.Services.Security
 
             Expression<Func<ModuleDTO, bool>> filter = dto => dto.Name == "Aplicaciones";
 
-            var result = await _moduleService.GetAllAsync(filter);
+            var result = await _moduleService.GetByFilterAsync(filter);
 
             Assert.AreEqual(moduleDTOs, result);
         }
@@ -306,13 +306,13 @@ namespace Integration.Application.Test.Services.Security
                 dto => dto.Code == "MOD0000001"
             };
 
-            _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Module, bool>>>()))
+            _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Module, bool>>>()))
                            .ReturnsAsync(modules);
 
             _mapperMock.Setup(m => m.Map<List<ModuleDTO>>(modules))
                        .Returns(moduleDTOs);
 
-            var result = await _moduleService.GetAllAsync(predicates);
+            var result = await _moduleService.GetByMultipleFiltersAsync(predicates);
 
             Assert.AreEqual(moduleDTOs, result);
         }

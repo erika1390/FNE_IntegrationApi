@@ -5,8 +5,8 @@ namespace Integration.Infrastructure.Interfaces.Base
     public interface IRepositoryBase<T> where T : BaseEntity
     {
         Task<T> GetByCodeAsync(string code);
-        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
-        Task<List<T>> GetAllAsync(List<Expression<Func<T, bool>>> predicates);
+        Task<List<T>> GetByFilterAsync(Expression<Func<T, bool>> predicate);
+        Task<List<T>> GetByMultipleFiltersAsync(List<Expression<Func<T, bool>>> predicates);
         Task<IEnumerable<T>> GetAllActiveAsync();
         Task<T> CreateAsync(T entidad);
         Task<T> UpdateAsync(T entidad);

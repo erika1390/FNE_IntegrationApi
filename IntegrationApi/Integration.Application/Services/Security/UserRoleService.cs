@@ -56,7 +56,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<bool> DeactivateAsync(HeaderDTO header, string userCode, string roleCode, string userName)
+        public async Task<bool> DeactivateAsync(HeaderDTO header, string userCode, string roleCode)
         {
             _logger.LogInformation("Desactivando aplicación con UserRole: UserCode: {UserCode}, RoleCode: {RoleCode}", userCode, roleCode);
             try
@@ -64,7 +64,7 @@ namespace Integration.Application.Services.Security
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
-                    throw new Exception($"No se encontró el UserRole con UserCode {header.UserCode}, RoleCode {roleCode}.");
+                    throw new Exception($"No se encontró el UserRole con UserCode {userCode}, RoleCode {roleCode}.");
                 }
                 var role = await _roleRepository.GetByCodeAsync(roleCode);
                 bool success = await _userRoleRepository.DeactivateAsync(user.Id, role.Id, user.UserName);

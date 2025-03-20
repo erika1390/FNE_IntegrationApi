@@ -62,7 +62,7 @@ namespace Integration.Api.Controllers.Security
             _logger.LogInformation("Buscando RoleModulePermission con {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
             try
             {
-                var result = await _service.GetByRoleCodeModuleCodePermissionsCodeAsync(roleModulePermissionDTO);
+                var result = await _service.GetByCodesAsync(roleModulePermissionDTO);
                 if (result == null)
                 {
                     _logger.LogWarning("No se encontró el RoleModulePermission con RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
@@ -109,7 +109,7 @@ namespace Integration.Api.Controllers.Security
                 ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<RoleModulePermissionDTO, bool>> filter = Expression.Lambda<Func<RoleModulePermissionDTO, bool>>(comparison, param);
-                var result = await _service.GetAllAsync(filter);
+                var result = await _service.GetByFilterAsync(filter);
                 return Ok(ResponseApi<IEnumerable<RoleModulePermissionDTO>>.Success(result));
             }
             catch (Exception ex)
@@ -166,7 +166,7 @@ namespace Integration.Api.Controllers.Security
                 }
 
                 // Llamar al servicio con múltiples filtros
-                var result = await _service.GetAllAsync(filterExpressions);
+                var result = await _service.GetByMultipleFiltersAsync(filterExpressions);
 
                 return Ok(ResponseApi<IEnumerable<RoleModulePermissionDTO>>.Success(result));
             }
@@ -202,7 +202,7 @@ namespace Integration.Api.Controllers.Security
                 }
 
                 _logger.LogInformation("RoleModulePermission creado con éxito: RoleCode: {RoleCode}, ModuleCode: {ModuleCode}, PermissionCode: {PermissionCode}: {RoleCode}", roleModulePermissionDTO.RoleCode, roleModulePermissionDTO.ModuleCode, roleModulePermissionDTO.PermissionCode);
-                return CreatedAtAction(nameof(GetByRoleCodeModuleCodePermissionsCode), new { roleModulePermission = result },
+                return CreatedAtAction(nameof(GetByCodes), new { roleModulePermission = result },
                     ResponseApi<RoleModulePermissionDTO>.Success(result, "RoleModulePermissionDTO creado con éxito."));
             }
             catch (Exception ex)
@@ -211,7 +211,6 @@ namespace Integration.Api.Controllers.Security
                 return StatusCode(500, ResponseApi<RoleModulePermissionDTO>.Error("Error interno del servidor."));
             }
         }
-
 
         [HttpPut]
         public async Task<IActionResult> Update([FromHeader] HeaderDTO header, [FromBody] RoleModulePermissionDTO roleModulePermissionDTO)

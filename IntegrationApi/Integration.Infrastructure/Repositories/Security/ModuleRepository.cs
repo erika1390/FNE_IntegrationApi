@@ -91,7 +91,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 return Enumerable.Empty<Module>();
             }
         }
-        public async Task<List<Module>> GetAllAsync(Expression<Func<Module, bool>> predicate)
+        public async Task<List<Module>> GetByFilterAsync(Expression<Func<Module, bool>> predicate)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-        public async Task<List<Module>> GetAllAsync(List<Expression<Func<Module, bool>>> predicates)
+        public async Task<List<Module>> GetByMultipleFiltersAsync(List<Expression<Func<Module, bool>>> predicates)
         {
             try
             {

@@ -43,9 +43,9 @@ builder.Services.AddAutoMapper(typeof(LogProfile));
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddAutoMapper(typeof(ModuleProfile));
 builder.Services.AddAutoMapper(typeof(PermissionProfile));
+builder.Services.AddAutoMapper(typeof(RoleModulePermissionProfile));
 builder.Services.AddAutoMapper(typeof(RoleProfile));
 builder.Services.AddAutoMapper(typeof(UserProfile));
-builder.Services.AddAutoMapper(typeof(RoleModulePermissionProfile));
 builder.Services.AddAutoMapper(typeof(UserRoleProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
@@ -56,7 +56,9 @@ builder.Services.AddValidatorsFromAssemblyContaining<ApplicationDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ModuleDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<PermissionDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<RoleDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<RoleModulePermissionDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UserDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserRoleDTOValidator>();
 
 // Si el servicio no es genérico, registra la implementación específica
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -68,6 +70,7 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleModulePermissionService, RoleModulePermissionService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();

@@ -98,12 +98,12 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<PermissionDTO>> GetAllAsync(Expression<Func<PermissionDTO, bool>> predicate)
+        public async Task<List<PermissionDTO>> GetByFilterAsync(Expression<Func<PermissionDTO, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo todos los permisos y aplicando el filtro en memoria.");
-                var permissions = await _repository.GetAllAsync(a => true);
+                var permissions = await _repository.GetByFilterAsync(a => true);
                 var permissionsDTOs = _mapper.Map<List<PermissionDTO>>(permissions);
                 var filteredPermissions = permissionsDTOs.AsQueryable().Where(predicate).ToList();
                 return filteredPermissions;
@@ -115,12 +115,12 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<PermissionDTO>> GetAllAsync(List<Expression<Func<PermissionDTO, bool>>> predicates)
+        public async Task<List<PermissionDTO>> GetByMultipleFiltersAsync(List<Expression<Func<PermissionDTO, bool>>> predicates)
         {
             try
             {
                 _logger.LogInformation("Obteniendo todos los permisos y aplicando múltiples filtros en memoria.");
-                var permissions = await _repository.GetAllAsync(a => true);
+                var permissions = await _repository.GetByFilterAsync(a => true);
                 var permissionDTOs = _mapper.Map<List<PermissionDTO>>(permissions);
                 IQueryable<PermissionDTO> query = permissionDTOs.AsQueryable();
                 foreach (var predicado in predicates)
