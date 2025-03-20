@@ -4,6 +4,7 @@ using Integration.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Integration.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250320215210_InitialInsertApplication")]
+    partial class InitialInsertApplication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,33 +138,11 @@ namespace Integration.Infrastructure.Migrations
                         {
                             Id = 1,
                             Code = "APP0000001",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 3, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "epulido",
                             IsActive = true,
                             Name = "Integrador",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Code = "APP0000002",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Saga 2.0",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Code = "APP0000003",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Sicof Lite",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedAt = new DateTime(2025, 3, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "epulido"
                         });
                 });
@@ -214,92 +195,6 @@ namespace Integration.Infrastructure.Migrations
                         .HasDatabaseName("IDX_Modules_Code");
 
                     b.ToTable("Modules", "Security");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ApplicationId = 1,
-                            Code = "MOD0000001",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Gestión de Aplicaciones",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ApplicationId = 1,
-                            Code = "MOD0000002",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Gestión de Módulos",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ApplicationId = 1,
-                            Code = "MOD0000003",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Gestión de Permisos",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ApplicationId = 1,
-                            Code = "MOD0000004",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Gestión de Roles",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ApplicationId = 1,
-                            Code = "MOD0000005",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Gestión de Usuarios",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ApplicationId = 1,
-                            Code = "MOD0000006",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Asignación de Permisos por Rol",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ApplicationId = 1,
-                            Code = "MOD0000007",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Asignación de Roles por Usuario",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        });
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Permission", b =>
@@ -609,7 +504,7 @@ namespace Integration.Infrastructure.Migrations
                             AccessFailedCount = 0,
                             Code = "USR0000001",
                             ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 3, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "epulido",
                             DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "epulido@minsalud.gov.co",
@@ -625,7 +520,7 @@ namespace Integration.Infrastructure.Migrations
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedAt = new DateTime(2025, 3, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "epulido",
                             UserName = "epulido"
                         });
