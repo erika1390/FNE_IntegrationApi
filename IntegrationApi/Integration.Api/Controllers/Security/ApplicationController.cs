@@ -49,7 +49,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("{code}")]
-        public async Task<IActionResult> GetByCode([FromHeader] HeaderDTO header, string code)
+        public async Task<IActionResult> GetByCodes([FromHeader] HeaderDTO header, string code)
         {
             if (string.IsNullOrEmpty(code))
             {
@@ -76,7 +76,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("filter")]
-        public async Task<IActionResult> GetApplications([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetByFilter([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("filters")]
-        public async Task<IActionResult> GetApplications([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetByMultipleFilters([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
         {
             try
             {

@@ -55,7 +55,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene módulos basados en un solo filtro.
         /// </summary>
         [HttpGet("filter")]
-        public async Task<IActionResult> GetModules([FromHeader] HeaderDTO header,  [FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetByFilter([FromHeader] HeaderDTO header,  [FromQuery] string filterField, [FromQuery] string filterValue)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene módulos basados en múltiples filtros.
         /// </summary>
         [HttpGet("filters")]
-        public async Task<IActionResult> GetModules([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetByMultipleFilters([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se encontró el modulo con ModuleCode {ModuleCode}.", code);
                     return NotFound(ResponseApi<ModuleDTO>.Error("Modulo no encontrada."));
                 }
-                _logger.LogInformation("|Modulo encontrada: ModuleCode={ModuleCode}, Nombre={Name}", result.Code, result.Name);
+                _logger.LogInformation("Modulo encontrada: ModuleCode={ModuleCode}, Nombre={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<ModuleDTO>.Success(result));
             }
             catch (Exception ex)

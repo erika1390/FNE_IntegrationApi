@@ -81,7 +81,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene roles basados en un solo filtro.
         /// </summary>
         [HttpGet("filter")]
-        public async Task<IActionResult> GetRoles([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)
+        public async Task<IActionResult> GetByFilter([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace Integration.Api.Controllers.Security
         /// Obtiene roles basados en múltiples filtros.
         /// </summary>
         [HttpGet("filters")]
-        public async Task<IActionResult> GetRoles([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
+        public async Task<IActionResult> GetByMultipleFilters([FromHeader] HeaderDTO header, [FromQuery] Dictionary<string, string> filters)
         {
             try
             {
