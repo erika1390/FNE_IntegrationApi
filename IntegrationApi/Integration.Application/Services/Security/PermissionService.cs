@@ -115,7 +115,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<PermissionDTO>> GetAllAsync(List<Expression<Func<PermissionDTO, bool>>> predicados)
+        public async Task<List<PermissionDTO>> GetAllAsync(List<Expression<Func<PermissionDTO, bool>>> predicates)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace Integration.Application.Services.Security
                 var permissions = await _repository.GetAllAsync(a => true);
                 var permissionDTOs = _mapper.Map<List<PermissionDTO>>(permissions);
                 IQueryable<PermissionDTO> query = permissionDTOs.AsQueryable();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     query = query.Where(predicado);
                 }

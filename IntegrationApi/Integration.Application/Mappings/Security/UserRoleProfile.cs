@@ -11,9 +11,6 @@ namespace Integration.Application.Mappings.Security
             CreateMap<User, UserDTO>(); 
             CreateMap<Role, RoleDTO>();
             CreateMap<UserRoleDTO, UserRole>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserRoleId))
-                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt))
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))

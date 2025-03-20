@@ -2,9 +2,8 @@
 {
     public class UserRoleDTO
     {
-        public int UserRoleId { get; set; }
-        public int UserId { get; set; }
-        public int RoleId { get; set; }
+        public required string UserCode { get; set; }
+        public required string RoleCode { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public required string CreatedBy { get; set; }

@@ -8,8 +8,8 @@ namespace Integration.Application.Interfaces.Security
         Task<UserDTO> CreateAsync(HeaderDTO header, UserDTO userDTO);
         Task<bool> DeactivateAsync(HeaderDTO header, string code);
         Task<IEnumerable<UserDTO>> GetAllActiveAsync();
-        Task<List<UserDTO>> GetAllAsync(Expression<Func<UserDTO, bool>> predicado);
-        Task<List<UserDTO>> GetAllAsync(List<Expression<Func<UserDTO, bool>>> predicados);
+        Task<List<UserDTO>> GetAllAsync(Expression<Func<UserDTO, bool>> predicate);
+        Task<List<UserDTO>> GetAllAsync(List<Expression<Func<UserDTO, bool>>> predicates);
         Task<UserDTO> GetByCodeAsync(string code);
         Task<UserDTO> UpdateAsync(HeaderDTO header, UserDTO userDTO);
     }

@@ -65,7 +65,7 @@ namespace Integration.Application.Services.Security
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
-                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                    throw new Exception($"No se encontró el modulo con código {header.UserCode}.");
                 }
                 bool success = await _moduleRepository.DeactivateAsync(code, user.UserName);
                 if (success)
@@ -101,14 +101,14 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-        public async Task<List<ModuleDTO>> GetAllAsync(Expression<Func<ModuleDTO, bool>> predicado)
+        public async Task<List<ModuleDTO>> GetAllAsync(Expression<Func<ModuleDTO, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo todos los módulos y aplicando el filtro.");
                 int? applicationId = null;
                 Expression<Func<Integration.Core.Entities.Security.Module, bool>> moduleFilter = a => true;
-                if (predicado != null && IsFilteringByApplicationCode(predicado, out string applicationCode))
+                if (predicate != null && IsFilteringByApplicationCode(predicate, out string applicationCode))
                 {
                     _logger.LogInformation("Buscando ID de la aplicación con código: {ApplicationCode}", applicationCode);
                     var application = await _applicationRepository.GetByCodeAsync(applicationCode);
@@ -123,9 +123,9 @@ namespace Integration.Application.Services.Security
                 }
                 var modules = await _moduleRepository.GetAllAsync(moduleFilter);
                 var modulesDTOs = _mapper.Map<List<ModuleDTO>>(modules);
-                if (predicado != null && !IsFilteringByApplicationCode(predicado, out _))
+                if (predicate != null && !IsFilteringByApplicationCode(predicate, out _))
                 {
-                    modulesDTOs = modulesDTOs.AsQueryable().Where(predicado).ToList();
+                    modulesDTOs = modulesDTOs.AsQueryable().Where(predicate).ToList();
                 }
                 return modulesDTOs;
             }
@@ -135,11 +135,11 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-        private bool IsFilteringByApplicationCode(Expression<Func<ModuleDTO, bool>> predicado, out string applicationCode)
+        private bool IsFilteringByApplicationCode(Expression<Func<ModuleDTO, bool>> predicate, out string applicationCode)
         {
             applicationCode = null;
 
-            if (predicado.Body is BinaryExpression binaryExp)
+            if (predicate.Body is BinaryExpression binaryExp)
             {
                 if (binaryExp.Left is MemberExpression member && member.Member.Name == "ApplicationCode" &&
                     binaryExp.Right is ConstantExpression constant)
@@ -151,7 +151,7 @@ namespace Integration.Application.Services.Security
 
             return false;
         }
-        public async Task<List<ModuleDTO>> GetAllAsync(List<Expression<Func<ModuleDTO, bool>>> predicados)
+        public async Task<List<ModuleDTO>> GetAllAsync(List<Expression<Func<ModuleDTO, bool>>> predicates)
         {
             try
             {
@@ -160,7 +160,7 @@ namespace Integration.Application.Services.Security
                 int? applicationId = null;
                 string applicationCode = null;
                 List<Expression<Func<ModuleDTO, bool>>> otherFilters = new List<Expression<Func<ModuleDTO, bool>>>();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     if (IsFilteringByApplicationCode(predicado, out string extractedCode))
                     {

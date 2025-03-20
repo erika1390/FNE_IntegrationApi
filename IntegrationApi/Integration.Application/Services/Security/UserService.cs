@@ -105,14 +105,14 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<UserDTO>> GetAllAsync(Expression<Func<UserDTO, bool>> filterDto)
+        public async Task<List<UserDTO>> GetAllAsync(Expression<Func<UserDTO, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo todos los usuarios y aplicando el filtro en memoria.");
                 var users = await _repository.GetAllAsync(a => true);
                 var usersDTOs = _mapper.Map<List<UserDTO>>(users);
-                var filteredApplications = usersDTOs.AsQueryable().Where(filterDto).ToList();
+                var filteredApplications = usersDTOs.AsQueryable().Where(predicate).ToList();
                 return filteredApplications;
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<UserDTO>> GetAllAsync(List<Expression<Func<UserDTO, bool>>> predicados)
+        public async Task<List<UserDTO>> GetAllAsync(List<Expression<Func<UserDTO, bool>>> predicates)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace Integration.Application.Services.Security
                 var users = await _repository.GetAllAsync(a => true);
                 var usersDTOs = _mapper.Map<List<UserDTO>>(users);
                 IQueryable<UserDTO> query = usersDTOs.AsQueryable();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     query = query.Where(predicado);
                 }

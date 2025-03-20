@@ -180,9 +180,9 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        private string GetFilterValue(Expression<Func<RoleModulePermissionDTO, bool>> predicado, string propertyName)
+        private string GetFilterValue(Expression<Func<RoleModulePermissionDTO, bool>> predicate, string propertyName)
         {
-            if (predicado.Body is BinaryExpression binaryExp &&
+            if (predicate.Body is BinaryExpression binaryExp &&
                 binaryExp.Left is MemberExpression member &&
                 member.Member.Name == propertyName &&
                 binaryExp.Right is ConstantExpression constant)

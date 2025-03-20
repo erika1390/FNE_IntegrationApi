@@ -100,14 +100,14 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> predicado)
+        public async Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> predicate)
         {
             try
             {
                 _logger.LogInformation("Obteniendo todos los roles y aplicando el filtro.");
                 int? applicationId = null;
                 Expression<Func<Integration.Core.Entities.Security.Role, bool>> roleFilter = a => true;
-                if (predicado != null && IsFilteringByApplicationCode(predicado, out string applicationCode))
+                if (predicate != null && IsFilteringByApplicationCode(predicate, out string applicationCode))
                 {
                     _logger.LogInformation("Buscando ID de la aplicación con código: {ApplicationCode}", applicationCode);
                     var application = await _applicationRepository.GetByCodeAsync(applicationCode);
@@ -122,9 +122,9 @@ namespace Integration.Application.Services.Security
                 }
                 var modules = await _roleRepository.GetAllAsync(roleFilter);
                 var modulesDTOs = _mapper.Map<List<RoleDTO>>(modules);
-                if (predicado != null && !IsFilteringByApplicationCode(predicado, out _))
+                if (predicate != null && !IsFilteringByApplicationCode(predicate, out _))
                 {
-                    modulesDTOs = modulesDTOs.AsQueryable().Where(predicado).ToList();
+                    modulesDTOs = modulesDTOs.AsQueryable().Where(predicate).ToList();
                 }
                 return modulesDTOs;
             }
@@ -134,11 +134,11 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
-        private bool IsFilteringByApplicationCode(Expression<Func<RoleDTO, bool>> predicado, out string applicationCode)
+        private bool IsFilteringByApplicationCode(Expression<Func<RoleDTO, bool>> predicate, out string applicationCode)
         {
             applicationCode = null;
 
-            if (predicado.Body is BinaryExpression binaryExp)
+            if (predicate.Body is BinaryExpression binaryExp)
             {
                 if (binaryExp.Left is MemberExpression member && member.Member.Name == "ApplicationCode" &&
                     binaryExp.Right is ConstantExpression constant)
@@ -150,7 +150,7 @@ namespace Integration.Application.Services.Security
 
             return false;
         }
-        public async Task<List<RoleDTO>> GetAllAsync(List<Expression<Func<RoleDTO, bool>>> predicados)
+        public async Task<List<RoleDTO>> GetAllAsync(List<Expression<Func<RoleDTO, bool>>> predicates)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace Integration.Application.Services.Security
                 int? applicationId = null;
                 string applicationCode = null;
                 List<Expression<Func<RoleDTO, bool>>> otherFilters = new List<Expression<Func<RoleDTO, bool>>>();
-                foreach (var predicado in predicados)
+                foreach (var predicado in predicates)
                 {
                     if (IsFilteringByApplicationCode(predicado, out string extractedCode))
                     {
