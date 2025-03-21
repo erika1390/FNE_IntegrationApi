@@ -80,7 +80,7 @@ namespace Integration.Api.Controllers.Security
             ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
             BinaryExpression comparison = Expression.Equal(property, constant);
             Expression<Func<UserDTO, bool>> filter = Expression.Lambda<Func<UserDTO, bool>>(comparison, param);
-            var result = await _service.GetAllAsync(new List<Expression<Func<UserDTO, bool>>> { filter });
+            var result = await _service.GetByMultipleFiltersAsync(new List<Expression<Func<UserDTO, bool>>> { filter });
             return Ok(ResponseApi<IEnumerable<UserDTO>>.Success(result));
         }
 
@@ -115,7 +115,7 @@ namespace Integration.Api.Controllers.Security
                 finalExpression = finalExpression == null ? comparison : Expression.AndAlso(finalExpression, comparison);
             }
             var filterExpression = Expression.Lambda<Func<UserDTO, bool>>(finalExpression, param);
-            var result = await _service.GetAllAsync(new List<Expression<Func<UserDTO, bool>>> { filterExpression });
+            var result = await _service.GetByMultipleFiltersAsync(new List<Expression<Func<UserDTO, bool>>> { filterExpression });
             return Ok(ResponseApi<IEnumerable<UserDTO>>.Success(result));
         }
 

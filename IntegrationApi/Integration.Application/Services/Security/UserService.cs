@@ -106,7 +106,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<UserDTO>> GetAllAsync(Expression<Func<UserDTO, bool>> predicate)
+        public async Task<List<UserDTO>> GetByFilterAsync(Expression<Func<UserDTO, bool>> predicate)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<UserDTO>> GetAllAsync(List<Expression<Func<UserDTO, bool>>> predicates)
+        public async Task<List<UserDTO>> GetByMultipleFiltersAsync(List<Expression<Func<UserDTO, bool>>> predicates)
         {
             try
             {

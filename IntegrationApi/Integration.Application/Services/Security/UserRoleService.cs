@@ -3,12 +3,15 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Integration.Application.Services.Security
@@ -108,28 +111,71 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<UserRoleDTO>> GetAllAsync(Expression<Func<UserRoleDTO, bool>> predicate)
+        public async Task<List<UserRoleDTO>> GetByFilterAsync(Expression<Func<UserRoleDTO, bool>> predicate)
         {
             try
             {
-                _logger.LogInformation("Obteniendo todos los UserRoles y aplicando el filtro.");
-                Expression<Func<UserRole, bool>> entityPredicate = x => true;
+                _logger.LogInformation("Obteniendo usuarops por rol y aplicando los filtros.");
+
+                // Inicializar filtro base
+                Expression<Func<UserRole, bool>> userRoleFilter = a => true;
+
+                // Obtener filtros de RoleCode y UserCode
+                string roleCode = null, userCode = null;
+
                 if (predicate != null)
                 {
-                    var compiledPredicate = predicate.Compile();
-                    entityPredicate = u => compiledPredicate(_mapper.Map<UserRoleDTO>(u));
+                    roleCode = GetFilterValue(predicate, "RoleCode");
+                    userCode = GetFilterValue(predicate, "UserCode");
                 }
-                var userRoles = await _userRoleRepository.GetAllAsync(entityPredicate);
-                return _mapper.Map<List<UserRoleDTO>>(userRoles);
+
+                // Aplicar filtro de RoleCode
+                if (!string.IsNullOrEmpty(roleCode))
+                {
+                    var role = await _roleRepository.GetByCodeAsync(roleCode);
+                    if (role == null) return new List<UserRoleDTO>();
+                    userRoleFilter = a => a.RoleId == role.Id;
+                }
+
+                // Aplicar filtro de UserCode
+                if (!string.IsNullOrEmpty(userCode))
+                {
+                    var user = await _userRepository.GetByCodeAsync(userCode);
+                    if (user == null) return new List<UserRoleDTO>();
+                    userRoleFilter = a => a.UserId == user.Id;
+                }
+
+                // Obtener los permisos filtrados desde la base de datos
+                var userRoles = await _userRoleRepository.GetAllAsync(userRoleFilter);
+                var userRoleDTOs = _mapper.Map<List<UserRoleDTO>>(userRoles);
+
+                // Aplicar otros filtros en memoria si es necesario
+                if (predicate != null && string.IsNullOrEmpty(roleCode) && string.IsNullOrEmpty(userCode))
+                {
+                    userRoleDTOs = userRoleDTOs.AsQueryable().Where(predicate).ToList();
+                }
+                return userRoleDTOs;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en el servicio al obtener UserRoles.");
+                _logger.LogError(ex, "Error en el servicio al obtener los permisos.");
                 throw;
             }
         }
 
-        public async Task<List<UserRoleDTO>> GetAllAsync(List<Expression<Func<UserRoleDTO, bool>>> predicates)
+        private string GetFilterValue(Expression<Func<UserRoleDTO, bool>> predicate, string propertyName)
+        {
+            if (predicate.Body is BinaryExpression binaryExp &&
+            binaryExp.Left is MemberExpression member &&
+                member.Member.Name == propertyName &&
+                binaryExp.Right is ConstantExpression constant)
+            {
+                return constant.Value?.ToString();
+            }
+            return null;
+        }
+
+        public async Task<List<UserRoleDTO>> GetByMultipleFiltersAsync(List<Expression<Func<UserRoleDTO, bool>>> predicates)
         {
             try
             {

@@ -100,7 +100,7 @@ namespace Integration.Application.Services.Security
             }
         }
 
-        public async Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> predicate)
+        public async Task<List<RoleDTO>> GetByFilterAsync(Expression<Func<RoleDTO, bool>> predicate)
         {
             try
             {
@@ -150,7 +150,7 @@ namespace Integration.Application.Services.Security
 
             return false;
         }
-        public async Task<List<RoleDTO>> GetAllAsync(List<Expression<Func<RoleDTO, bool>>> predicates)
+        public async Task<List<RoleDTO>> GetByMultipleFiltersAsync(List<Expression<Func<RoleDTO, bool>>> predicates)
         {
             try
             {

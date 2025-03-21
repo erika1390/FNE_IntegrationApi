@@ -108,7 +108,7 @@ namespace Integration.Api.Controllers.Security
                 ConstantExpression constant = Expression.Constant(typedValue, propertyInfo.PropertyType);
                 BinaryExpression comparison = Expression.Equal(property, constant);
                 Expression<Func<RoleDTO, bool>> filter = Expression.Lambda<Func<RoleDTO, bool>>(comparison, param);
-                var result = await _service.GetAllAsync(filter);
+                var result = await _service.GetByFilterAsync(filter);
                 return Ok(ResponseApi<IEnumerable<RoleDTO>>.Success(result));
             }
             catch (Exception ex)
@@ -165,7 +165,7 @@ namespace Integration.Api.Controllers.Security
                 }
 
                 // Llamar al servicio con múltiples filtros
-                var result = await _service.GetAllAsync(filterExpressions);
+                var result = await _service.GetByMultipleFiltersAsync(filterExpressions);
 
                 return Ok(ResponseApi<IEnumerable<RoleDTO>>.Success(result));
             }

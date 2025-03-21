@@ -311,7 +311,7 @@ namespace Integration.Application.Test.Services.Security
             Expression<Func<RoleDTO, bool>> filter = dto => dto.Name == "Administrador";
 
             // Act
-            var result = await _roleService.GetAllAsync(filter);
+            var result = await _roleService.GetByFilterAsync(filter);
 
             // Assert
             Assert.NotNull(result);
@@ -346,7 +346,7 @@ namespace Integration.Application.Test.Services.Security
             _mapperMock.Setup(m => m.Map<List<RoleDTO>>(roles))
                        .Returns(roleDTOs);
 
-            var result = await _roleService.GetAllAsync(predicates);
+            var result = await _roleService.GetByMultipleFiltersAsync(predicates);
 
             Assert.AreEqual(roleDTOs, result);
         }

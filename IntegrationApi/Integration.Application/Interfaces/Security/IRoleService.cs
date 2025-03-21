@@ -8,8 +8,8 @@ namespace Integration.Application.Interfaces.Security
         Task<RoleDTO> CreateAsync(HeaderDTO header, RoleDTO roleDTO);
         Task<bool> DeactivateAsync(HeaderDTO header, string code);
         Task<IEnumerable<RoleDTO>> GetAllActiveAsync();
-        Task<List<RoleDTO>> GetAllAsync(Expression<Func<RoleDTO, bool>> predicate);
-        Task<List<RoleDTO>> GetAllAsync(List<Expression<Func<RoleDTO, bool>>> predicates);
+        Task<List<RoleDTO>> GetByFilterAsync(Expression<Func<RoleDTO, bool>> predicate);
+        Task<List<RoleDTO>> GetByMultipleFiltersAsync(List<Expression<Func<RoleDTO, bool>>> predicates);
         Task<RoleDTO> GetByCodeAsync(string code);
         Task<RoleDTO> UpdateAsync(HeaderDTO header, RoleDTO roleDTO);
     }
