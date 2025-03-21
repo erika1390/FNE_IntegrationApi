@@ -179,18 +179,69 @@ namespace Integration.Application.Services.Security
         {
             try
             {
-                _logger.LogInformation("Obteniendo todos los UserRoles y aplicando múltiples filtros.");
-                List<Expression<Func<UserRole, bool>>> entityPredicates = predicates
-                    .Select(predicate => (Expression<Func<UserRole, bool>>)(u => predicate.Compile()(_mapper.Map<UserRoleDTO>(u))))
-                    .ToList();
-                var userRoles = await _userRoleRepository.GetAllAsync(entityPredicates);
-                return _mapper.Map<List<UserRoleDTO>>(userRoles);
+                _logger.LogInformation("Obteniendo usuarios por rol con múltiples filtros.");
+
+                // Filtro base para la base de datos
+                Expression<Func<UserRole, bool>> userRoleFilter = a => true;
+
+                // Aplicar filtros en la base de datos si existen
+                foreach (var predicate in predicates ?? new List<Expression<Func<UserRoleDTO, bool>>>())
+                {
+                    if (TryGetFilterValue(predicate, "RoleCode", out string roleCode))
+                    {
+                        var role = await _roleRepository.GetByCodeAsync(roleCode);
+                        if (role == null) return new List<UserRoleDTO>();
+                        userRoleFilter = a => a.RoleId == role.Id;
+                    }
+                    if (TryGetFilterValue(predicate, "UserCode", out string userCode))
+                    {
+                        var user = await _userRepository.GetByCodeAsync(userCode);
+                        if (user == null) return new List<UserRoleDTO>();
+                        userRoleFilter = a => a.UserId == user.Id;
+                    }
+                }
+
+                // Obtener datos de la base de datos con los filtros aplicados
+                var userRole = await _userRoleRepository.GetAllAsync(userRoleFilter);
+                var userRoleDTOs = _mapper.Map<List<UserRoleDTO>>(userRole);
+
+                // Aplicar los filtros en memoria si aún quedan predicados
+                if (predicates != null && predicates.Any(p => !IsFilteringByCode(p)))
+                {
+                    userRoleDTOs = userRoleDTOs.AsQueryable()
+                        .Where(p => predicates.All(predicate => predicate.Compile()(p)))
+                        .ToList();
+                }
+
+                return userRoleDTOs;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error en el servicio al obtener los UserRoles con múltiples filtros.");
+                _logger.LogError(ex, "Error en el servicio al obtener los usuarios por rol.");
                 throw;
             }
+        }
+
+        private bool IsFilteringByCode(Expression<Func<UserRoleDTO, bool>> predicate)
+        {
+            return TryGetFilterValue(predicate, "RoleCode", out _) ||
+                   TryGetFilterValue(predicate, "UserCode", out _);
+        }
+
+        private bool TryGetFilterValue(Expression<Func<UserRoleDTO, bool>> predicate, string propertyName, out string value)
+        {
+            value = null;
+
+            if (predicate.Body is BinaryExpression binaryExp &&
+                binaryExp.Left is MemberExpression member &&
+                member.Member.Name == propertyName &&
+                binaryExp.Right is ConstantExpression constant)
+            {
+                value = constant.Value?.ToString();
+                return !string.IsNullOrEmpty(value);
+            }
+
+            return false;
         }
 
         public async Task<UserRoleDTO> GetByUserCodeRoleCodeAsync(string userCode, string roleCode)
