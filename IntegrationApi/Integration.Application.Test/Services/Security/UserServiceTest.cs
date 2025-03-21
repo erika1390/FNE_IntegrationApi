@@ -300,7 +300,8 @@ namespace Integration.Application.Test.Services.Security
         public async Task UpdateAsync_ShouldReturnUpdatedUserDTO()
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
-            var userDTO = new UserDTO {
+            var userDTO = new UserDTO
+            {
                 Code = "USR0000001",
                 FirstName = "Erika",
                 LastName = "Pulido Moreno",
@@ -323,7 +324,9 @@ namespace Integration.Application.Test.Services.Security
                 LockoutEnabled = true,
                 AccessFailedCount = 0
             };
-            var user = new Integration.Core.Entities.Security.User {
+
+            var user = new Integration.Core.Entities.Security.User
+            {
                 Id = 1,
                 Code = "USR0000001",
                 FirstName = "Erika",
@@ -349,10 +352,18 @@ namespace Integration.Application.Test.Services.Security
                 LockoutEnabled = true,
                 AccessFailedCount = 0
             };
+
+            // Simula la búsqueda que faltaba:
+            _repositoryMock
+                .Setup(r => r.GetByCodeAsync(userDTO.Code))
+                .ReturnsAsync(user);
+
             _mapperMock.Setup(m => m.Map<Integration.Core.Entities.Security.User>(userDTO)).Returns(user);
             _repositoryMock.Setup(r => r.UpdateAsync(user)).ReturnsAsync(user);
             _mapperMock.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
+
             var result = await _userService.UpdateAsync(header, userDTO);
+
             Assert.AreEqual(userDTO, result);
         }
 
@@ -413,7 +424,7 @@ namespace Integration.Application.Test.Services.Security
                 } 
             };
             Expression<Func<UserDTO, bool>> filter = dto => dto.UserName == "epulido";
-            _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.User, bool>>>())).ReturnsAsync(users);
+            _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.User, bool>>>())).ReturnsAsync(users);
             _mapperMock.Setup(m => m.Map<List<UserDTO>>(users)).Returns(userDTOs);
             var result = await _userService.GetByFilterAsync(filter);
             Assert.AreEqual(userDTOs, result);
@@ -476,7 +487,7 @@ namespace Integration.Application.Test.Services.Security
                 } 
             };
             var predicates = new List<Expression<Func<UserDTO, bool>>> { dto => dto.UserName == "epulido", dto => dto.IsActive };
-            _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.User, bool>>>())).ReturnsAsync(users);
+            _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.User, bool>>>())).ReturnsAsync(users);
             _mapperMock.Setup(m => m.Map<List<UserDTO>>(users)).Returns(userDTOs);
             var result = await _userService.GetByMultipleFiltersAsync(predicates);
             Assert.AreEqual(userDTOs, result);

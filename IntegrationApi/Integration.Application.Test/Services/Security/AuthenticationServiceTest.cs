@@ -111,7 +111,7 @@ namespace Integration.Application.Test.Services.Security
 
             // ✅ Configurar el mock del repositorio con una expresión válida
             _userRepositoryMock
-                .Setup(repo => repo.GetByFilterAsync(It.IsAny<Expression<Func<User, bool>>>()))
+                .Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(new List<User> { user });
 
             // Act
@@ -173,7 +173,7 @@ namespace Integration.Application.Test.Services.Security
 
             // ✅ Configurar el mock del repositorio con una expresión válida
             _userRepositoryMock
-                .Setup(repo => repo.GetByFilterAsync(It.IsAny<Expression<Func<User, bool>>>()))
+                .Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(new List<User> { user });
 
             // Act
@@ -203,7 +203,7 @@ namespace Integration.Application.Test.Services.Security
             var password = "SecurePassword123!";
 
             _userRepositoryMock
-             .Setup(repo => repo.GetByFilterAsync(It.IsAny<Expression<Func<User, bool>>>()))
+             .Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<User, bool>>>()))
              .ReturnsAsync(new List<User>()); // Simula que el usuario no existe
 
             // Act

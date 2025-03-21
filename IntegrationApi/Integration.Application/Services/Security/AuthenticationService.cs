@@ -37,7 +37,7 @@ namespace Integration.Application.Services.Security
         {
             _logger.LogInformation("Validando credenciales para usuario: {UserName}", userName);
 
-            var users = await _userRepository.GetByFilterAsync(u => u.UserName == userName && u.IsActive == true);
+            var users = await _userRepository.GetAllAsync(u => u.UserName == userName && u.IsActive == true);
 
             // ✅ Verificar si la lista de usuarios está vacía
             var user = users.FirstOrDefault();

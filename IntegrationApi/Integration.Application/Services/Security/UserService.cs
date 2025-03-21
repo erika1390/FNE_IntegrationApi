@@ -111,7 +111,7 @@ namespace Integration.Application.Services.Security
             try
             {
                 _logger.LogInformation("Obteniendo todos los usuarios y aplicando el filtro en memoria.");
-                var users = await _repository.GetByFilterAsync(a => true);
+                var users = await _repository.GetAllAsync(a => true);
                 var usersDTOs = _mapper.Map<List<UserDTO>>(users);
                 var filteredApplications = usersDTOs.AsQueryable().Where(predicate).ToList();
                 return filteredApplications;
@@ -128,7 +128,7 @@ namespace Integration.Application.Services.Security
             try
             {
                 _logger.LogInformation("Obteniendo todos los usuarios y aplicando múltiples filtros en memoria.");
-                var users = await _repository.GetByFilterAsync(a => true);
+                var users = await _repository.GetAllAsync(a => true);
                 var usersDTOs = _mapper.Map<List<UserDTO>>(users);
                 IQueryable<UserDTO> query = usersDTOs.AsQueryable();
                 foreach (var predicado in predicates)

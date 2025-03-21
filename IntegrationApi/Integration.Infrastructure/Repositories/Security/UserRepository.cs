@@ -91,7 +91,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<User>> GetByFilterAsync(Expression<Func<User, bool>> predicate)
+        public async Task<List<User>> GetAllAsync(Expression<Func<User, bool>> predicate)
         {
             try
             {

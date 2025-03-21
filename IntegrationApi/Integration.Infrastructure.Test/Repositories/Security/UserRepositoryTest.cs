@@ -59,11 +59,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             Expression<Func<User, bool>> predicate = user => user.IsActive;
             var expectedResults = users.Where(predicate.Compile()).ToList();
 
-            _mock.Setup(repo => repo.GetByFilterAsync(predicate))
+            _mock.Setup(repo => repo.GetAllAsync(predicate))
                 .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _mock.Object.GetByFilterAsync(predicate);
+            var result = await _mock.Object.GetAllAsync(predicate);
 
             // Assert
             Assert.NotNull(result);
