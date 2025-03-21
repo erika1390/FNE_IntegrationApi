@@ -180,11 +180,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             Expression<Func<UserRole, bool>> predicate = ur => ur.IsActive;
             var expectedResults = userRoles.Where(predicate.Compile()).ToList();
 
-            _mock.Setup(repo => repo.GetAllAsync(predicate))
+            _mock.Setup(repo => repo.GetByFilterAsync(predicate))
                 .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _mock.Object.GetAllAsync(predicate);
+            var result = await _mock.Object.GetByFilterAsync(predicate);
 
             // Assert
             Assert.NotNull(result);
@@ -211,11 +211,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
 
             var expectedResults = userRoles.Where(ur => predicates.All(p => p.Compile()(ur))).ToList();
 
-            _mock.Setup(repo => repo.GetAllAsync(predicates))
+            _mock.Setup(repo => repo.GetByMultipleFiltersAsync(predicates))
                 .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _mock.Object.GetAllAsync(predicates);
+            var result = await _mock.Object.GetByMultipleFiltersAsync(predicates);
 
             // Assert
             Assert.NotNull(result);

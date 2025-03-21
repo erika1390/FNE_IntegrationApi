@@ -59,11 +59,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             Expression<Func<Role, bool>> predicate = role => role.IsActive;
             var expectedResults = roles.Where(predicate.Compile()).ToList();
 
-            _repository.Setup(repo => repo.GetAllAsync(predicate))
+            _repository.Setup(repo => repo.GetByFilterAsync(predicate))
                 .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _repository.Object.GetAllAsync(predicate);
+            var result = await _repository.Object.GetByFilterAsync(predicate);
 
             // Assert
             Assert.NotNull(result);
@@ -89,11 +89,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
 
             var expectedResults = roles.Where(role => predicates.All(p => p.Compile()(role))).ToList();
 
-            _repository.Setup(repo => repo.GetAllAsync(predicates))
+            _repository.Setup(repo => repo.GetByMultipleFiltersAsync(predicates))
                 .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _repository.Object.GetAllAsync(predicates);
+            var result = await _repository.Object.GetByMultipleFiltersAsync(predicates);
 
             // Assert
             Assert.NotNull(result);

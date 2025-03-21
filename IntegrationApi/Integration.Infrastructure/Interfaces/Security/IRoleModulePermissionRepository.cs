@@ -5,8 +5,8 @@ namespace Integration.Infrastructure.Interfaces.Security
     public interface IRoleModulePermissionRepository
     {
         Task<RoleModulePermissions> GetByRoleIdModuleIdPermissionsIdAsync(RoleModulePermissions roleModulePermissions);
-        Task<List<RoleModulePermissions>> GetAllAsync(Expression<Func<RoleModulePermissions, bool>> predicate);
-        Task<List<RoleModulePermissions>> GetAllAsync(List<Expression<Func<RoleModulePermissions, bool>>> predicates);
+        Task<List<RoleModulePermissions>> GetByFilterAsync(Expression<Func<RoleModulePermissions, bool>> predicate);
+        Task<List<RoleModulePermissions>> GetByMultipleFiltersAsync(List<Expression<Func<RoleModulePermissions, bool>>> predicates);
         Task<IEnumerable<RoleModulePermissions>> GetAllActiveAsync();
         Task<RoleModulePermissions> CreateAsync(RoleModulePermissions roleModulePermissions);
         Task<RoleModulePermissions> UpdateAsync(RoleModulePermissions roleModulePermissions);

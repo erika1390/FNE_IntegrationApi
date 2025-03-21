@@ -302,7 +302,7 @@ namespace Integration.Application.Test.Services.Security
             _applicationRepositoryMock.Setup(a => a.GetByCodeAsync("APP0000001"))
                                       .ReturnsAsync(application);
 
-            _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Role, bool>>>()))
+            _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Role, bool>>>()))
                            .ReturnsAsync(roles);
 
             _mapperMock.Setup(m => m.Map<List<RoleDTO>>(roles))
@@ -340,7 +340,7 @@ namespace Integration.Application.Test.Services.Security
                 dto => dto.Code == "ROL0000001"
             };
 
-            _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Role, bool>>>()))
+            _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<Integration.Core.Entities.Security.Role, bool>>>()))
                            .ReturnsAsync(roles);
 
             _mapperMock.Setup(m => m.Map<List<RoleDTO>>(roles))

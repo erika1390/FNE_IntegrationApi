@@ -146,7 +146,7 @@ namespace Integration.Application.Services.Security
                 }
 
                 // Obtener los permisos filtrados desde la base de datos
-                var userRoles = await _userRoleRepository.GetAllAsync(userRoleFilter);
+                var userRoles = await _userRoleRepository.GetByFilterAsync(userRoleFilter);
                 var userRoleDTOs = _mapper.Map<List<UserRoleDTO>>(userRoles);
 
                 // Aplicar otros filtros en memoria si es necesario
@@ -202,7 +202,7 @@ namespace Integration.Application.Services.Security
                 }
 
                 // Obtener datos de la base de datos con los filtros aplicados
-                var userRole = await _userRoleRepository.GetAllAsync(userRoleFilter);
+                var userRole = await _userRoleRepository.GetByFilterAsync(userRoleFilter);
                 var userRoleDTOs = _mapper.Map<List<UserRoleDTO>>(userRole);
 
                 // Aplicar los filtros en memoria si aún quedan predicados

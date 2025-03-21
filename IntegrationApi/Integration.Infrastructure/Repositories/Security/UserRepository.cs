@@ -91,7 +91,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<User>> GetAllAsync(Expression<Func<User, bool>> predicate)
+        public async Task<List<User>> GetByFilterAsync(Expression<Func<User, bool>> predicate)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<User>> GetAllAsync(List<Expression<Func<User, bool>>> predicates)
+        public async Task<List<User>> GetByMultipleFiltersAsync(List<Expression<Func<User, bool>>> predicates)
         {
             try
             {

@@ -7,8 +7,8 @@ namespace Integration.Infrastructure.Interfaces.Security
         Task<User> CreateAsync(User user);
         Task<bool> DeactivateAsync(string code, string userName);
         Task<IEnumerable<User>> GetAllActiveAsync();
-        Task<List<User>> GetAllAsync(Expression<Func<User, bool>> predicado);
-        Task<List<User>> GetAllAsync(List<Expression<Func<User, bool>>> predicados);
+        Task<List<User>> GetByFilterAsync(Expression<Func<User, bool>> predicado);
+        Task<List<User>> GetByMultipleFiltersAsync(List<Expression<Func<User, bool>>> predicados);
         Task<User> GetByCodeAsync(string code);
         Task<User> UpdateAsync(User user);
     }

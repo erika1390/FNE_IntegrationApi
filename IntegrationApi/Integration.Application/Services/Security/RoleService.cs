@@ -120,7 +120,7 @@ namespace Integration.Application.Services.Security
                     applicationId = application.Id;
                     roleFilter = a => a.ApplicationId == applicationId.Value;
                 }
-                var modules = await _roleRepository.GetAllAsync(roleFilter);
+                var modules = await _roleRepository.GetByFilterAsync(roleFilter);
                 var modulesDTOs = _mapper.Map<List<RoleDTO>>(modules);
                 if (predicate != null && !IsFilteringByApplicationCode(predicate, out _))
                 {
@@ -189,7 +189,7 @@ namespace Integration.Application.Services.Security
                 {
                     roleFilter = a => a.ApplicationId == applicationId.Value;
                 }
-                var roles = await _roleRepository.GetAllAsync(roleFilter);
+                var roles = await _roleRepository.GetByFilterAsync(roleFilter);
                 var roleDTOs = _mapper.Map<List<RoleDTO>>(roles);
                 foreach (var filter in otherFilters)
                 {

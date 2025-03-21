@@ -106,7 +106,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<UserRole>> GetAllAsync(Expression<Func<UserRole, bool>> predicate)
+        public async Task<List<UserRole>> GetByFilterAsync(Expression<Func<UserRole, bool>> predicate)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<UserRole>> GetAllAsync(List<Expression<Func<UserRole, bool>>> predicates)
+        public async Task<List<UserRole>> GetByMultipleFiltersAsync(List<Expression<Func<UserRole, bool>>> predicates)
         {
             try
             {

@@ -86,11 +86,11 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             Expression<Func<RoleModulePermissions, bool>> predicate = rmp => rmp.IsActive;
             var expectedResults = roleModulePermissions.Where(predicate.Compile()).ToList();
 
-            _mock.Setup(repo => repo.GetAllAsync(predicate))
+            _mock.Setup(repo => repo.GetByFilterAsync(predicate))
                 .ReturnsAsync(expectedResults);
 
             // Act
-            var result = await _mock.Object.GetAllAsync(predicate);
+            var result = await _mock.Object.GetByFilterAsync(predicate);
 
             // Assert
             Assert.NotNull(result);

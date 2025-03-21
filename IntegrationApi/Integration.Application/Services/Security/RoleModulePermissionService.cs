@@ -162,7 +162,7 @@ namespace Integration.Application.Services.Security
                 }
 
                 // Obtener los permisos filtrados desde la base de datos
-                var roleModulePermissions = await _roleModulePermissionRepository.GetAllAsync(roleModuleFilter);
+                var roleModulePermissions = await _roleModulePermissionRepository.GetByFilterAsync(roleModuleFilter);
                 var roleModulePermissionsDTOs = _mapper.Map<List<RoleModulePermissionDTO>>(roleModulePermissions);
 
                 // Aplicar otros filtros en memoria si es necesario
@@ -226,7 +226,7 @@ namespace Integration.Application.Services.Security
                 }
 
                 // Obtener datos de la base de datos con los filtros aplicados
-                var roleModulePermissions = await _roleModulePermissionRepository.GetAllAsync(roleModuleFilter);
+                var roleModulePermissions = await _roleModulePermissionRepository.GetByFilterAsync(roleModuleFilter);
                 var roleModulePermissionsDTOs = _mapper.Map<List<RoleModulePermissionDTO>>(roleModulePermissions);
 
                 // Aplicar los filtros en memoria si aún quedan predicados
