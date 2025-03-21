@@ -200,6 +200,12 @@ namespace Integration.Infrastructure.Repositories.Security
                 userRoleEntity.IsActive = userRole.IsActive;
                 _context.UserRoles.Update(userRoleEntity);
                 await _context.SaveChangesAsync();
+
+                var updatedEntity = await _context.UserRoles
+                   .Include(rmp => rmp.Role)
+                   .Include(rmp => rmp.User)
+                   .FirstOrDefaultAsync(rmp => rmp.Id == userRoleEntity.Id);
+
                 _logger.LogInformation("UserRole actualizado: UserId {userId}, RoleId {roleId}", userRoleEntity.UserId, userRoleEntity.RoleId);
                 return userRoleEntity;
             }
