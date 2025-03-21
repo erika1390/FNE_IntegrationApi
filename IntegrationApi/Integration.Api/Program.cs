@@ -29,6 +29,8 @@ using Serilog;
 
 using System.Text;
 var builder = WebApplication.CreateBuilder(args);
+// Accede al entorno actual desde el builder:
+var environment = builder.Environment;
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -135,6 +137,22 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else if (app.Environment.IsStaging()) // <- Aquí es PREPRODUCCIÓN
+{
+    app.UseExceptionHandler("/staging-error");
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FNE Integration API (Staging)");
+    });
+    // Opcionalmente usar HSTS en preproducción si tu servidor lo admite:
+    app.UseHsts();
+}
+else if (app.Environment.IsProduction())
+{
+    app.UseExceptionHandler("/error");
+    app.UseHsts();
 }
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<LoggingMiddleware>();
