@@ -66,8 +66,8 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Desactivar usuario con UserCode: {UserCode}", code);
             try
             {
-                var userCreate = await _repository.GetByCodeAsync(header.UserCode);
-                if (userCreate == null)
+                var user = await _repository.GetByCodeAsync(header.UserCode);
+                if (user == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
@@ -170,24 +170,25 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Actualizando usuario con UserName: {UserName}", userDTO.UserName);
             try
             {
-                var userCreate = await _repository.GetByCodeAsync(header.UserCode);
-                if (userCreate == null)
+                var userHeader = await _repository.GetByCodeAsync(header.UserCode);
+                if (userHeader == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                var user = _mapper.Map<Integration.Core.Entities.Security.User>(userDTO);
-                var updatedUser = await _repository.UpdateAsync(user);
+                var userBody = _mapper.Map<Integration.Core.Entities.Security.User>(userDTO);
+                userBody.UpdatedBy = userHeader.UserName;
+                var updatedUser = await _repository.UpdateAsync(userBody);
                 if (updatedUser == null)
                 {
                     _logger.LogWarning("No se pudo actualizar el usuario con UserName {UserName}.", userDTO.UserName);
                     return null;
                 }
-                _logger.LogInformation("Usuario actualizado con éxito: {UserId}, UserName: {UserName}", updatedUser.Id, updatedUser.UserName);
+                _logger.LogInformation("Usuario actualizado con éxito: UserCode {UserCode}, UserName: {UserName}", updatedUser.Code, updatedUser.UserName);
                 return _mapper.Map<UserDTO>(updatedUser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el usuario con ID {UserName}.", userDTO.UserName);
+                _logger.LogError(ex, "Error al actualizar el usuario con UserName {UserName}.", userDTO.UserName);
                 throw;
             }
         }

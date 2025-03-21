@@ -29,6 +29,12 @@ namespace Integration.Infrastructure.Repositories.Security
             {
                 await _context.UserRoles.AddAsync(userRole);
                 await _context.SaveChangesAsync();
+
+                var createdEntity = await _context.UserRoles
+                   .Include(rmp => rmp.Role)
+                   .Include(rmp => rmp.User)
+                   .FirstOrDefaultAsync(rmp => rmp.Id == userRole.Id);
+
                 _logger.LogInformation("UserRole creado exitosamente: RoleId: {RoleId}, UserId: {UserId}", userRole.RoleId, userRole.UserId);
                 return userRole;
             }

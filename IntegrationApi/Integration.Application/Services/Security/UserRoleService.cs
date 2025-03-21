@@ -6,6 +6,7 @@ using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 using System.Linq.Expressions;
@@ -37,15 +38,18 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Creando UserRole: UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
             try
             {
-                var user = await _userRepository.GetByCodeAsync(header.UserCode);
-                if (user == null)
+                var userHeader = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (userHeader == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                var role = await _roleRepository.GetByCodeAsync(userRoleDTO.RoleCode);
+                var userBody = await _userRepository.GetByCodeAsync(userRoleDTO.UserCode);
+                var roleBody = await _roleRepository.GetByCodeAsync(userRoleDTO.RoleCode);
                 var userRole = _mapper.Map<Integration.Core.Entities.Security.UserRole>(userRoleDTO);
-                userRole.CreatedBy = user.UserName;
-                userRole.UpdatedBy = user.UserName;
+                userRole.UserId = userBody.Id;
+                userRole.RoleId = roleBody.Id;
+                userRole.CreatedBy = userHeader.UserName;
+                userRole.UpdatedBy = userHeader.UserName;
                 var result = await _userRoleRepository.CreateAsync(userRole);
                 _logger.LogInformation("UserRole creado con éxito: UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 return _mapper.Map<UserRoleDTO>(result);
@@ -62,13 +66,14 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Desactivando aplicación con UserRole: UserCode: {UserCode}, RoleCode: {RoleCode}", userCode, roleCode);
             try
             {
-                var user = await _userRepository.GetByCodeAsync(header.UserCode);
-                if (user == null)
+                var userHeader = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (userHeader == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                var role = await _roleRepository.GetByCodeAsync(roleCode);
-                bool success = await _userRoleRepository.DeactivateAsync(user.Id, role.Id, user.UserName);
+                var userBody = await _userRepository.GetByCodeAsync(userCode);
+                var roleBody = await _roleRepository.GetByCodeAsync(roleCode);
+                bool success = await _userRoleRepository.DeactivateAsync(userBody.Id, roleBody.Id, userHeader.UserName);
                 if (success)
                 {
                     _logger.LogInformation("UserRole con UserCode {UserCode}, RoleCode {RoleCode} desactivada correctamente.", userCode, roleCode);
@@ -170,18 +175,19 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("UserRole creado exitosamente: UserCode: {UserCode}, RoleCode: {RoleCode}.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
             try
             {
-                var user = await _userRepository.GetByCodeAsync(header.UserCode);
-                if (user == null)
+                var userHeader = await _userRepository.GetByCodeAsync(header.UserCode);
+                if (userHeader == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                var role = await _roleRepository.GetByCodeAsync(userRoleDTO.RoleCode);
-                var userRoleExist = await _userRoleRepository.GetByUserIdRoleIdAsync(user.Id, role.Id);
+                var userBody = await _userRepository.GetByCodeAsync(userRoleDTO.UserCode);
+                var roleBody = await _roleRepository.GetByCodeAsync(userRoleDTO.RoleCode);
+                var userRoleExist = await _userRoleRepository.GetByUserIdRoleIdAsync(userBody.Id, roleBody.Id);
                 var userRole = _mapper.Map<Integration.Core.Entities.Security.UserRole>(userRoleDTO);
-                userRole.RoleId = role.Id;
-                userRole.UserId = user.Id;
+                userRole.UserId = userBody.Id; 
+                userRole.RoleId = roleBody.Id;                
                 userRole.Id = userRoleExist.Id;
-                userRole.UpdatedBy = user.UserName;
+                userRole.UpdatedBy = userHeader.UserName;
                 var updatedUserRole = await _userRoleRepository.UpdateAsync(userRole);
                 if (updatedUserRole == null)
                 {
