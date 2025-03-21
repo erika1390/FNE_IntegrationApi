@@ -112,7 +112,7 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task DeleteAsync_ShouldReturnTrue_WhenRoleIsDeleted()
+        public async Task DeactivateAsync_ShouldReturnTrue_WhenRoleIsDeleted()
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
@@ -144,7 +144,7 @@ namespace Integration.Application.Test.Services.Security
 
 
         [Test]
-        public async Task DeleteAsync_ShouldReturnFalse_WhenRoleIsNotFound()
+        public async Task DeactivateAsync_ShouldReturnFalse_WhenRoleIsNotFound()
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };

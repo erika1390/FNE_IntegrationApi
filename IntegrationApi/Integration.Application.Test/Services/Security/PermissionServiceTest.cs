@@ -62,7 +62,7 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task DeleteAsync_ShouldReturnTrue_WhenPermissionIsDeleted()
+        public async Task DeactivateAsync_ShouldReturnTrue_WhenPermissionIsDeleted()
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
@@ -94,7 +94,7 @@ namespace Integration.Application.Test.Services.Security
 
 
         [Test]
-        public async Task DeleteAsync_ShouldReturnFalse_WhenPermissionIsNotFound()
+        public async Task DeactivateAsync_ShouldReturnFalse_WhenPermissionIsNotFound()
         {
             // Arrange
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
