@@ -33,8 +33,11 @@ namespace Integration.Api.Filters
             if (string.IsNullOrWhiteSpace(header.ApplicationCode))
                 errors.Add("El campo ApplicationCode es obligatorio.");
 
+            if (string.IsNullOrWhiteSpace(header.RolCode))
+                errors.Add("El campo RolCode es obligatorio.");
+
             if (string.IsNullOrWhiteSpace(header.UserCode))
-                errors.Add("El campo UserCode es obligatorio.");
+                errors.Add("El campo UserCode es obligatorio.");            
 
             if (string.IsNullOrWhiteSpace(header.Authorization))
                 errors.Add("El campo Authorization es obligatorio.");

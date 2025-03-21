@@ -40,8 +40,9 @@ namespace Integration.Application.Services.Security
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
-                    throw new Exception($"No se encontró el UserRole con código UserCode: {userRoleDTO.UserCode}, RoleCode: {userRoleDTO.RoleCode}.");
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
+                var role = await _roleRepository.GetByCodeAsync(userRoleDTO.RoleCode);
                 var userRole = _mapper.Map<Integration.Core.Entities.Security.UserRole>(userRoleDTO);
                 userRole.CreatedBy = user.UserName;
                 userRole.UpdatedBy = user.UserName;
@@ -64,7 +65,7 @@ namespace Integration.Application.Services.Security
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
-                    throw new Exception($"No se encontró el UserRole con UserCode {userCode}, RoleCode {roleCode}.");
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
                 var role = await _roleRepository.GetByCodeAsync(roleCode);
                 bool success = await _userRoleRepository.DeactivateAsync(user.Id, role.Id, user.UserName);
@@ -172,7 +173,7 @@ namespace Integration.Application.Services.Security
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
-                    throw new Exception($"No se encontró el UserRole con código UserCode: {userRoleDTO.UserCode}, RoleCode: {userRoleDTO.RoleCode}.");
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
                 var role = await _roleRepository.GetByCodeAsync(userRoleDTO.RoleCode);
                 var userRoleExist = await _userRoleRepository.GetByUserIdRoleIdAsync(user.Id, role.Id);

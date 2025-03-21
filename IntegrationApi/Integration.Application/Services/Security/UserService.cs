@@ -2,6 +2,7 @@
 
 using Integration.Application.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 
@@ -65,8 +66,8 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Desactivar usuario con UserCode: {UserCode}", code);
             try
             {
-                var user = await _repository.GetByCodeAsync(header.UserCode);
-                if (user == null)
+                var userCreate = await _repository.GetByCodeAsync(header.UserCode);
+                if (userCreate == null)
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
@@ -169,6 +170,11 @@ namespace Integration.Application.Services.Security
             _logger.LogInformation("Actualizando usuario con UserName: {UserName}", userDTO.UserName);
             try
             {
+                var userCreate = await _repository.GetByCodeAsync(header.UserCode);
+                if (userCreate == null)
+                {
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
+                }
                 var user = _mapper.Map<Integration.Core.Entities.Security.User>(userDTO);
                 var updatedUser = await _repository.UpdateAsync(user);
                 if (updatedUser == null)

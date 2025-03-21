@@ -37,14 +37,14 @@ namespace Integration.Application.Services.Security
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
-                    throw new Exception($"No se encontró el rol con código {header.UserCode}.");
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
                 var application = await _applicationRepository.GetByCodeAsync(header.ApplicationCode);
                 var role = _mapper.Map<Integration.Core.Entities.Security.Role>(roleDTO);
                 role.ApplicationId = application.Id;
                 role.CreatedBy = user.UserName;
                 role.UpdatedBy = user.UserName;
-                role.NormalizedName = roleDTO.Name.ToUpper();
+                role.NormalizedName = role.Code +"_"+ roleDTO.Name.ToUpper();
                 var result = await _roleRepository.CreateAsync(role);
                 _logger.LogInformation("Rol creado con éxito: RoleCode {RoleCode}, Nombre: {Name}", result.Code, result.Name);
                 return _mapper.Map<RoleDTO>(result);

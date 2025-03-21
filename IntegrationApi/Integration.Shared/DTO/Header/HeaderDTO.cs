@@ -10,6 +10,10 @@ namespace Integration.Shared.DTO.Header
         [Required(ErrorMessage = "El campo ApplicationCode es obligatorio.")]
         public string ApplicationCode { get; set; }
 
+        [FromHeader(Name = "RolCode")]
+        [Required(ErrorMessage = "El campo RolCode es obligatorio.")]
+        public string RolCode { get; set; }
+        
         [FromHeader(Name = "UserCode")]
         [Required(ErrorMessage = "El campo UserCode es obligatorio.")]
         public string UserCode { get; set; }

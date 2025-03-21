@@ -172,7 +172,7 @@ namespace Integration.Infrastructure.Repositories.Security
                     return null;
                 }
                 roleEntity.Name = role.Name;
-                roleEntity.NormalizedName = role.Name.ToUpper();
+                roleEntity.NormalizedName = role.Code + "_" + role.Name.ToUpper();
                 roleEntity.UpdatedBy = role.UpdatedBy;
                 roleEntity.UpdatedAt = DateTime.UtcNow;
                 roleEntity.IsActive = role.IsActive;

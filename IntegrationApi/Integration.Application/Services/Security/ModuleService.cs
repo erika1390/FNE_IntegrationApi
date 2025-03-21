@@ -65,7 +65,7 @@ namespace Integration.Application.Services.Security
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
                 if (user == null)
                 {
-                    throw new Exception($"No se encontró el modulo con código {header.UserCode}.");
+                    throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
                 bool success = await _moduleRepository.DeactivateAsync(code, user.UserName);
                 if (success)
