@@ -1,15 +1,17 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
+
 using Integration.Api.Controllers.Security;
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using Moq;
-using FluentValidation.Results;
-using System.Reflection.PortableExecutable;
-using Integration.Shared.DTO.Header;
-namespace Integration.Api.Tests.Controllers.Security
+namespace Integration.Api.Test.Controllers.Security
 {
     [TestFixture]
     public class ApplicationControllerTest
@@ -177,7 +179,7 @@ namespace Integration.Api.Tests.Controllers.Security
         }
 
         [Test]
-        public async Task Delete_ShouldReturnOk_WhenApplicationIsDeleted()
+        public async Task Deactivate_ShouldReturnOk_WhenApplicationIsDeleted()
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.DeactivateAsync(header, "APP0000001")).ReturnsAsync(true);
@@ -192,7 +194,7 @@ namespace Integration.Api.Tests.Controllers.Security
         }
 
         [Test]
-        public async Task Delete_ShouldReturnNotFound_WhenApplicationDoesNotExist()
+        public async Task Deactivate_ShouldReturnNotFound_WhenApplicationDoesNotExist()
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             _serviceMock.Setup(s => s.DeactivateAsync(header, "APP0000001")).ReturnsAsync(false);
@@ -207,7 +209,7 @@ namespace Integration.Api.Tests.Controllers.Security
         }
 
         [Test]
-        public async Task Delete_ShouldReturnBadRequest_WhenCodeIsEmpty()
+        public async Task Deactivate_ShouldReturnBadRequest_WhenCodeIsEmpty()
         {
             var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
             var result = await _controller.Deactivate(header, "");

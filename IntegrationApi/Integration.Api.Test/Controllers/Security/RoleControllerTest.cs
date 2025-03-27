@@ -10,7 +10,7 @@ using Integration.Shared.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-namespace Integration.Api.Tests.Controllers.Security
+namespace Integration.Api.Test.Controllers.Security
 {
     [TestFixture]
     public class RoleControllerTest

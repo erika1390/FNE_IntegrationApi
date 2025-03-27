@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-namespace Integration.Api.Tests.Controllers.Security
+namespace Integration.Api.Test.Controllers.Security
 {
     [TestFixture]
     public class AuthControllerTest
