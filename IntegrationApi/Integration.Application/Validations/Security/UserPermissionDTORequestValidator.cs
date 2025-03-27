@@ -4,9 +4,9 @@ using Integration.Shared.DTO.Security;
 
 namespace Integration.Application.Validations.Security
 {
-    public class UserPermissionDTOValidator : AbstractValidator<UserPermissionDTORequest>
+    public class UserPermissionDTORequestValidator : AbstractValidator<UserPermissionDTORequest>
     { 
-        public UserPermissionDTOValidator() 
+        public UserPermissionDTORequestValidator() 
         {
             RuleFor(x => x.UserCode)
                 .NotEmpty().WithMessage("El código del usuario es obligatorio.")
