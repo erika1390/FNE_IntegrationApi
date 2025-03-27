@@ -8,7 +8,7 @@ namespace Integration.Application.Validations.Security
         {
             RuleFor(role => role.Code)
                 .NotEmpty().WithMessage("El código del rol es requerido.")
-                .MaximumLength(10).WithMessage("El código del rol no puede exceder los 50 caracteres.");
+                .MaximumLength(10).WithMessage("El código del rol no puede exceder los 10 caracteres.");
 
             RuleFor(role => role.Name)
                 .NotEmpty().WithMessage("El nombre del rol es requerido.")

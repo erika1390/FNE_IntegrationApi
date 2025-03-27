@@ -10,11 +10,11 @@ namespace Integration.Application.Validations.Security
         {
             RuleFor(x => x.UserCode)
                 .NotEmpty().WithMessage("El código del usuario es obligatorio.")
-                .MaximumLength(10).WithMessage("El código del usuario no puede exceder los 20 caracteres.");
+                .MaximumLength(10).WithMessage("El código del usuario no puede exceder los 10 caracteres.");
 
             RuleFor(x => x.RoleCode)
                 .NotEmpty().WithMessage("El código del rol es obligatorio.")
-                .MaximumLength(10).WithMessage("El código del rol no puede exceder los 20 caracteres.");
+                .MaximumLength(10).WithMessage("El código del rol no puede exceder los 10 caracteres.");
 
             RuleFor(x => x.CreatedAt)
                 .NotEmpty().WithMessage("La fecha de creación es obligatoria.")
