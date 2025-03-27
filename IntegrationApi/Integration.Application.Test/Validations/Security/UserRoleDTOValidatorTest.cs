@@ -31,7 +31,7 @@ namespace Integration.Application.Test.Validations.Security
             var model = new UserRoleDTO { UserCode = new string('U', 11), RoleCode = "ROL0000001", CreatedAt = DateTime.UtcNow, CreatedBy = "admin", IsActive = true };
             var result = _validator.TestValidate(model);
             result.ShouldHaveValidationErrorFor(x => x.UserCode)
-                .WithErrorMessage("El código del usuario no puede exceder los 20 caracteres.");
+                .WithErrorMessage("El código del usuario no puede exceder los 10 caracteres.");
         }
 
         [Test]
@@ -46,10 +46,18 @@ namespace Integration.Application.Test.Validations.Security
         [Test]
         public void Should_Have_Error_When_RoleCode_Exceeds_MaxLength()
         {
-            var model = new UserRoleDTO { UserCode = "USR0000001", RoleCode = new string('R', 11), CreatedAt = DateTime.UtcNow, CreatedBy = "admin", IsActive = true };
+            var model = new UserRoleDTO
+            {
+                UserCode = "USR0000001",
+                RoleCode = new string('R', 11), // Excede los 10 caracteres permitidos
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = "admin",
+                IsActive = true
+            };
+
             var result = _validator.TestValidate(model);
             result.ShouldHaveValidationErrorFor(x => x.RoleCode)
-                .WithErrorMessage("El código del rol no puede exceder los 20 caracteres.");
+                .WithErrorMessage("El código del rol no puede exceder los 10 caracteres."); // ✅ Mensaje correcto según el validador
         }
 
         [Test]
