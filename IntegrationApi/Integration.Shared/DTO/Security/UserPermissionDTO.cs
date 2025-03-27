@@ -1,6 +1,6 @@
 ﻿namespace Integration.Shared.DTO.Security
 {
-    public class UserPermissionDTOResponse
+    public class UserPermissionDTO
     {
         public required string CodeUser { get; set; }
         public required string UserName { get; set; }

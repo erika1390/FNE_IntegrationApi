@@ -17,7 +17,7 @@ namespace Integration.Application.Services.Security
             _logger = logger;
             _applicationRepository = applicationRepository;
         }
-        public async Task<IEnumerable<UserPermissionDTOResponse>> GetAllActiveByUserCodeAsync(string userCode, string applicationCode)
+        public async Task<IEnumerable<UserPermissionDTO>> GetAllActiveByUserCodeAsync(string userCode, string applicationCode)
         {
             _logger.LogInformation("Obteniendo todos los UserPermissionDTOResponse.");
             try

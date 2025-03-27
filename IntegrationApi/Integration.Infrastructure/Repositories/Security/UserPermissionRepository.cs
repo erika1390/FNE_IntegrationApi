@@ -17,7 +17,7 @@ namespace Integration.Infrastructure.Repositories.Security
             _context = context;
             _logger = logger;
         }
-        public async Task<IEnumerable<UserPermissionDTOResponse>> GetAllActiveByUserIdAsync(string userCode, int applicationId)
+        public async Task<IEnumerable<UserPermissionDTO>> GetAllActiveByUserIdAsync(string userCode, int applicationId)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace Integration.Infrastructure.Repositories.Security
                           && rmp.IsActive
                           && ur.IsActive
                           && u.Code == userCode
-                    select new UserPermissionDTOResponse
+                    select new UserPermissionDTO
                     {
                         CodeUser = u.Code,
                         UserName = u.UserName,
@@ -55,7 +55,7 @@ namespace Integration.Infrastructure.Repositories.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener permisos por módulo para el usuario {UserCode}.", userCode);
-                return Enumerable.Empty<UserPermissionDTOResponse>();
+                return Enumerable.Empty<UserPermissionDTO>();
             }
         }
     }

@@ -45,9 +45,9 @@ namespace Integration.Application.Test.Services.Security
                 CreatedAt = DateTime.Now,
                 IsActive = true 
             };
-            var expectedPermissions = new List<UserPermissionDTOResponse>
+            var expectedPermissions = new List<UserPermissionDTO>
             {
-                new UserPermissionDTOResponse
+                new UserPermissionDTO
                 {
                     CodeUser = userCode,
                     CodeRole = "ROL0000001",

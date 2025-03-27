@@ -20,9 +20,9 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         public async Task GetAllActiveByUserIdAsync_ShouldReturnPermissions_WhenUserHasPermissions()
         {
             // Arrange
-            var expectedPermissions = new List<UserPermissionDTOResponse>
+            var expectedPermissions = new List<UserPermissionDTO>
             {
-                new UserPermissionDTOResponse
+                new UserPermissionDTO
                 {
                     CodeUser = "USR0000001",
                     UserName = "testuser",
@@ -60,7 +60,7 @@ namespace Integration.Infrastructure.Test.Repositories.Security
         {
             // Arrange
             _mock.Setup(repo => repo.GetAllActiveByUserIdAsync("USR_NO_PERMS", 1))
-                 .ReturnsAsync(new List<UserPermissionDTOResponse>());
+                 .ReturnsAsync(new List<UserPermissionDTO>());
 
             // Act
             var result = await _mock.Object.GetAllActiveByUserIdAsync("USR_NO_PERMS", 1);
