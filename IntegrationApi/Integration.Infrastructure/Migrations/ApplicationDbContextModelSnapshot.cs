@@ -166,7 +166,7 @@ namespace Integration.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Integration.Core.Entities.Security.Menus", b =>
+            modelBuilder.Entity("Integration.Core.Entities.Security.Menu", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,9 +193,6 @@ namespace Integration.Infrastructure.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("MenusId")
-                        .HasColumnType("int");
 
                     b.Property<int>("ModuleId")
                         .HasColumnType("int");
@@ -224,11 +221,11 @@ namespace Integration.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MenusId");
-
                     b.HasIndex("ModuleId");
 
-                    b.ToTable("Menus", "Security");
+                    b.HasIndex("ParentMenuId");
+
+                    b.ToTable("Menu", "Security");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Module", b =>
@@ -925,19 +922,21 @@ namespace Integration.Infrastructure.Migrations
                     b.ToTable("UserTokens", "Security");
                 });
 
-            modelBuilder.Entity("Integration.Core.Entities.Security.Menus", b =>
+            modelBuilder.Entity("Integration.Core.Entities.Security.Menu", b =>
                 {
-                    b.HasOne("Integration.Core.Entities.Security.Menus", null)
-                        .WithMany("SubMenus")
-                        .HasForeignKey("MenusId");
-
                     b.HasOne("Integration.Core.Entities.Security.Module", "Module")
                         .WithMany()
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Integration.Core.Entities.Security.Menu", "ParentMenu")
+                        .WithMany("SubMenus")
+                        .HasForeignKey("ParentMenuId");
+
                     b.Navigation("Module");
+
+                    b.Navigation("ParentMenu");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Module", b =>
@@ -973,8 +972,8 @@ namespace Integration.Infrastructure.Migrations
 
             modelBuilder.Entity("Integration.Core.Entities.Security.RoleMenuPermission", b =>
                 {
-                    b.HasOne("Integration.Core.Entities.Security.Menus", "Menu")
-                        .WithMany("RoleModuleMenuPermissions")
+                    b.HasOne("Integration.Core.Entities.Security.Menu", "Menu")
+                        .WithMany()
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1078,10 +1077,8 @@ namespace Integration.Infrastructure.Migrations
                     b.Navigation("Roles");
                 });
 
-            modelBuilder.Entity("Integration.Core.Entities.Security.Menus", b =>
+            modelBuilder.Entity("Integration.Core.Entities.Security.Menu", b =>
                 {
-                    b.Navigation("RoleModuleMenuPermissions");
-
                     b.Navigation("SubMenus");
                 });
 

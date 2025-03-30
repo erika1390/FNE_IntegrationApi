@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Integration.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250320215910_InitialInsertPermission")]
-    partial class InitialInsertPermission
+    [Migration("20250330160738_InitialMigrations")]
+    partial class InitialMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,6 +167,68 @@ namespace Integration.Infrastructure.Migrations
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "epulido"
                         });
+                });
+
+            modelBuilder.Entity("Integration.Core.Entities.Security.Menu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Icon")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentMenuId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Route")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleId");
+
+                    b.HasIndex("ParentMenuId");
+
+                    b.ToTable("Menu", "Security");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Module", b =>
@@ -508,6 +570,52 @@ namespace Integration.Infrastructure.Migrations
                     b.ToTable("RoleClaims", "Security");
                 });
 
+            modelBuilder.Entity("Integration.Core.Entities.Security.RoleMenuPermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MenuId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleMenuPermission", "Security");
+                });
+
             modelBuilder.Entity("Integration.Core.Entities.Security.RoleModulePermissions", b =>
                 {
                     b.Property<int>("Id")
@@ -817,6 +925,23 @@ namespace Integration.Infrastructure.Migrations
                     b.ToTable("UserTokens", "Security");
                 });
 
+            modelBuilder.Entity("Integration.Core.Entities.Security.Menu", b =>
+                {
+                    b.HasOne("Integration.Core.Entities.Security.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Integration.Core.Entities.Security.Menu", "ParentMenu")
+                        .WithMany("SubMenus")
+                        .HasForeignKey("ParentMenuId");
+
+                    b.Navigation("Module");
+
+                    b.Navigation("ParentMenu");
+                });
+
             modelBuilder.Entity("Integration.Core.Entities.Security.Module", b =>
                 {
                     b.HasOne("Integration.Core.Entities.Security.Application", "Application")
@@ -846,6 +971,33 @@ namespace Integration.Infrastructure.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Integration.Core.Entities.Security.RoleMenuPermission", b =>
+                {
+                    b.HasOne("Integration.Core.Entities.Security.Menu", "Menu")
+                        .WithMany()
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Integration.Core.Entities.Security.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Integration.Core.Entities.Security.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Menu");
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.RoleModulePermissions", b =>
@@ -926,6 +1078,11 @@ namespace Integration.Infrastructure.Migrations
                     b.Navigation("Modules");
 
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("Integration.Core.Entities.Security.Menu", b =>
+                {
+                    b.Navigation("SubMenus");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Module", b =>

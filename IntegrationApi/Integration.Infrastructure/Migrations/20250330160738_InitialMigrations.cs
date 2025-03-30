@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Integration.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -243,6 +245,44 @@ namespace Integration.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Menu",
+                schema: "Security",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ParentMenuId = table.Column<int>(type: "int", nullable: true),
+                    ModuleId = table.Column<int>(type: "int", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Route = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Icon = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Menu", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Menu_Menu_ParentMenuId",
+                        column: x => x.ParentMenuId,
+                        principalSchema: "Security",
+                        principalTable: "Menu",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Menu_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalSchema: "Security",
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 schema: "Security",
                 columns: table => new
@@ -341,6 +381,94 @@ namespace Integration.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RoleMenuPermission",
+                schema: "Security",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    MenuId = table.Column<int>(type: "int", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleMenuPermission", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleMenuPermission_Menu_MenuId",
+                        column: x => x.MenuId,
+                        principalSchema: "Security",
+                        principalTable: "Menu",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoleMenuPermission_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalSchema: "Security",
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoleMenuPermission_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "Security",
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                schema: "Security",
+                table: "Applications",
+                columns: new[] { "Id", "Code", "CreatedAt", "CreatedBy", "IsActive", "Name", "UpdatedAt", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, "APP0000001", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Integrador", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 2, "APP0000002", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Saga 2.0", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 3, "APP0000003", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Sicof Lite", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "Security",
+                table: "Permissions",
+                columns: new[] { "Id", "Code", "CreatedAt", "CreatedBy", "IsActive", "Name", "UpdatedAt", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, "PER0000001", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Consultar", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 2, "PER0000002", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Crear", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 3, "PER0000003", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Modificar", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 4, "PER0000004", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Desactivar", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 5, "PER0000005", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Cargar", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 6, "PER0000006", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Descargar", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "Security",
+                table: "Users",
+                columns: new[] { "Id", "AccessFailedCount", "Code", "ConcurrencyStamp", "CreatedAt", "CreatedBy", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UpdatedAt", "UpdatedBy", "UserName" },
+                values: new object[] { 1, 0, "USR0000001", "b69f36df-8915-4287-949e-80c1f0d99cf8", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido@minsalud.gov.co", false, "Erika", true, "Pulido", true, null, "EPULIDO", "EPULIDO@MINSALUD.GOV.CO", "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==", "3157234493", false, "2756991d-795c-4132-8848-34d79e60b300", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", "epulido" });
+
+            migrationBuilder.InsertData(
+                schema: "Security",
+                table: "Modules",
+                columns: new[] { "Id", "ApplicationId", "Code", "CreatedAt", "CreatedBy", "IsActive", "Name", "UpdatedAt", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, 1, "MOD0000001", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Gestión de Aplicaciones", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 2, 1, "MOD0000002", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Gestión de Módulos", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 3, 1, "MOD0000003", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Gestión de Permisos", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 4, 1, "MOD0000004", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Gestión de Roles", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 5, 1, "MOD0000005", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Gestión de Usuarios", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 6, 1, "MOD0000006", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Asignación de Permisos por Rol", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" },
+                    { 7, 1, "MOD0000007", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido", true, "Asignación de Roles por Usuario", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "epulido" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_Code",
                 schema: "Security",
@@ -354,6 +482,18 @@ namespace Integration.Infrastructure.Migrations
                 table: "Applications",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menu_ModuleId",
+                schema: "Security",
+                table: "Menu",
+                column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menu_ParentMenuId",
+                schema: "Security",
+                table: "Menu",
+                column: "ParentMenuId");
 
             migrationBuilder.CreateIndex(
                 name: "IDX_Modules_Code",
@@ -379,6 +519,24 @@ namespace Integration.Infrastructure.Migrations
                 name: "IX_RoleClaims_RoleId",
                 schema: "Security",
                 table: "RoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleMenuPermission_MenuId",
+                schema: "Security",
+                table: "RoleMenuPermission",
+                column: "MenuId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleMenuPermission_PermissionId",
+                schema: "Security",
+                table: "RoleMenuPermission",
+                column: "PermissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleMenuPermission_RoleId",
+                schema: "Security",
+                table: "RoleMenuPermission",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
@@ -495,6 +653,10 @@ namespace Integration.Infrastructure.Migrations
                 schema: "Security");
 
             migrationBuilder.DropTable(
+                name: "RoleMenuPermission",
+                schema: "Security");
+
+            migrationBuilder.DropTable(
                 name: "RoleModulePermissions",
                 schema: "Security");
 
@@ -515,7 +677,7 @@ namespace Integration.Infrastructure.Migrations
                 schema: "Security");
 
             migrationBuilder.DropTable(
-                name: "Modules",
+                name: "Menu",
                 schema: "Security");
 
             migrationBuilder.DropTable(
@@ -528,6 +690,10 @@ namespace Integration.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users",
+                schema: "Security");
+
+            migrationBuilder.DropTable(
+                name: "Modules",
                 schema: "Security");
 
             migrationBuilder.DropTable(

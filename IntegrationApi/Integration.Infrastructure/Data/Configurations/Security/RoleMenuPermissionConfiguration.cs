@@ -17,7 +17,7 @@ namespace Integration.Infrastructure.Data.Configurations.Security
                    .HasForeignKey(rmp => rmp.RoleId);
 
             builder.HasOne(rmp => rmp.Menu)
-                   .WithMany(m => m.RoleModuleMenuPermissions)
+                   .WithMany()
                    .HasForeignKey(rmp => rmp.MenuId);
 
             builder.HasOne(rmp => rmp.Permission)
