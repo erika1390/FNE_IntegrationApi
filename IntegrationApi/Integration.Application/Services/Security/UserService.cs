@@ -5,6 +5,7 @@ using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using System.Linq.Expressions;
@@ -190,6 +191,11 @@ namespace Integration.Application.Services.Security
                 _logger.LogError(ex, "Error al actualizar el usuario con UserName {UserName}.", userDTO.UserName);
                 throw;
             }
+        }
+        public async Task<string> GetUserNameByCodeAsync(string userCode)
+        {
+            string userName = await _repository.GetUserNameByCodeAsync(userCode);
+            return userName;
         }
     }
 }

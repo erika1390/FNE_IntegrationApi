@@ -41,7 +41,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
         public async Task<bool> DeactivateAsync(string code, string userName)
         {
             try
@@ -74,7 +73,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 return false;
             }
         }
-
         public async Task<IEnumerable<User>> GetAllActiveAsync()
         {
             try
@@ -90,7 +88,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 return Enumerable.Empty<User>();
             }
         }
-
         public async Task<List<User>> GetAllAsync(Expression<Func<User, bool>> predicate)
         {
             try
@@ -108,7 +105,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
         public async Task<List<User>> GetByMultipleFiltersAsync(List<Expression<Func<User, bool>>> predicates)
         {
             try
@@ -129,7 +125,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-
         public async Task<User> GetByCodeAsync(string code)
         {
             try
@@ -154,7 +149,6 @@ namespace Integration.Infrastructure.Repositories.Security
                 return null;
             }
         }
-
         public async Task<User> UpdateAsync(User user)
         {
             if (user == null)
@@ -200,6 +194,16 @@ namespace Integration.Infrastructure.Repositories.Security
                 _logger.LogError(ex, "Error inesperado al actualizar el usuario con ID {UserId}.", user.Id);
                 return null;
             }
+        }
+
+        public async Task<string> GetUserNameByCodeAsync(string userCode)
+        {
+            var user = await _context.Users
+            .Where(u => u.Code == userCode)
+            .Select(u => u.UserName)
+            .FirstOrDefaultAsync();
+
+            return user ?? "unknown";
         }
     }
 }

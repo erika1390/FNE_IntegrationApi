@@ -5,6 +5,7 @@ using Integration.Core.Interfaces.Identity;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Integration.Infrastructure.Data.Contexts
 {
@@ -15,6 +16,10 @@ namespace Integration.Infrastructure.Data.Contexts
         UserToken>
     {
         private readonly ICurrentUserService _currentUserService;
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService currentUserService) : base(options)
+        {
+            _currentUserService = currentUserService;
+        }
         private static readonly DateTime StaticCreatedAt = StaticCreatedAt;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Integration.Core.Entities.Security.Application> Applications { get; set; }
@@ -30,10 +35,7 @@ namespace Integration.Infrastructure.Data.Contexts
         public override DbSet<UserToken> UserTokens { get; set; }
         public override DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<Log> Logs { get; set; }
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService currentUserService) : base(options)
-        {
-            _currentUserService = currentUserService;
-        }
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -79,79 +81,7 @@ namespace Integration.Infrastructure.Data.Contexts
                 {
                     Id = 1,
                     Code = "MOD0000001",
-                    Name = "Gestión de Aplicaciones",
-                    ApplicationId = 1,
-                    CreatedAt = StaticCreatedAt,
-                    UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
-                    IsActive = true
-                },
-                new Module
-                {
-                    Id = 2,
-                    Code = "MOD0000002",
-                    Name = "Gestión de Módulos",
-                    ApplicationId = 1,
-                    CreatedAt = StaticCreatedAt,
-                    UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
-                    IsActive = true
-                },
-                new Module
-                {
-                    Id = 3,
-                    Code = "MOD0000003",
-                    Name = "Gestión de Permisos",
-                    ApplicationId = 1,
-                    CreatedAt = StaticCreatedAt,
-                    UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
-                    IsActive = true
-                },
-                new Module
-                {
-                    Id = 4,
-                    Code = "MOD0000004",
-                    Name = "Gestión de Roles",
-                    ApplicationId = 1,
-                    CreatedAt = StaticCreatedAt,
-                    UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
-                    IsActive = true
-                },
-                new Module
-                {
-                    Id = 5,
-                    Code = "MOD0000005",
-                    Name = "Gestión de Usuarios",
-                    ApplicationId = 1,
-                    CreatedAt = StaticCreatedAt,
-                    UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
-                    IsActive = true
-                },
-                new Module
-                {
-                    Id = 6,
-                    Code = "MOD0000006",
-                    Name = "Asignación de Permisos por Rol",
-                    ApplicationId = 1,
-                    CreatedAt = StaticCreatedAt,
-                    UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
-                    IsActive = true
-                },
-                new Module
-                {
-                    Id = 7,
-                    Code = "MOD0000007",
-                    Name = "Asignación de Roles por Usuario",
+                    Name = "Configuración",
                     ApplicationId = 1,
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
@@ -272,16 +202,104 @@ namespace Integration.Infrastructure.Data.Contexts
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedAt = DateTime.UtcNow;
-                    entity.CreatedBy = "epulido"; // Reemplázalo con el usuario autenticado
+                    entity.CreatedBy = _currentUserService.UserName;
+                    GenerateEntityCode(entry);
                 }
                 else
                 {
                     entity.UpdatedAt = DateTime.UtcNow;
-                    entity.UpdatedBy = "epulido"; // Reemplázalo con el usuario autenticado
+                    entity.UpdatedBy = _currentUserService.UserName;
                 }
             }
-
             return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void GenerateEntityCode(EntityEntry entry)
+        {
+            // Verificar si la entidad tiene una propiedad Code
+            if (entry.Entity.GetType().GetProperty("Code") == null)
+                return;
+
+            // Obtener el valor actual del Code
+            var currentCode = entry.Property("Code").CurrentValue as string;
+
+            // Si ya tiene un código, no generar uno nuevo
+            if (!string.IsNullOrEmpty(currentCode))
+                return;
+
+            string prefix;
+            string nextCode;
+
+            // Determinar el prefijo basado en el tipo de entidad
+            if (entry.Entity is Integration.Core.Entities.Security.Application)
+            {
+                prefix = "APP";
+                nextCode = GetNextCode<Integration.Core.Entities.Security.Application>(prefix);
+            }
+            else if (entry.Entity is Module)
+            {
+                prefix = "MOD";
+                nextCode = GetNextCode<Module>(prefix);
+            }
+            else if (entry.Entity is User)
+            {
+                prefix = "USR";
+                nextCode = GetNextCode<User>(prefix);
+            }
+            else if (entry.Entity is Permission)
+            {
+                prefix = "PER";
+                nextCode = GetNextCode<Permission>(prefix);
+            }
+            else if (entry.Entity is Role)
+            {
+                prefix = "ROL";
+                nextCode = GetNextCode<Role>(prefix);
+            }
+            else if (entry.Entity is Menu)
+            {
+                prefix = "MNU";
+                nextCode = GetNextCode<Menu>(prefix);
+            }
+            else
+            {
+                // Para otros tipos de entidades, puedes definir prefijos adicionales o un valor por defecto
+                return;
+            }
+
+            // Asignar el nuevo código
+            entry.Property("Code").CurrentValue = nextCode;
+        }
+
+        private string GetNextCode<T>(string prefix) where T : class
+        {
+            int lastNumber = 0;
+
+            // Buscar el último número utilizado para este prefijo
+            var propertyInfo = typeof(T).GetProperty("Code");
+            if (propertyInfo != null)
+            {
+                var dbSet = this.Set<T>();
+                var lastCode = dbSet.AsEnumerable()
+                    .Where(e => propertyInfo.GetValue(e) != null && propertyInfo.GetValue(e).ToString().StartsWith(prefix))
+                    .Select(e => propertyInfo.GetValue(e).ToString().Substring(prefix.Length))
+                    .Select(c =>
+                    {
+                        if (int.TryParse(c, out int num))
+                            return num;
+                        return 0;
+                    })
+                    .DefaultIfEmpty(0)
+                    .Max();
+
+                lastNumber = lastCode;
+            }
+
+            // Incrementar para obtener el siguiente número
+            int nextNumber = lastNumber + 1;
+
+            // Formatear con 7 dígitos y el prefijo
+            return $"{prefix}{nextNumber:D7}";
         }
     }
 }

@@ -12,5 +12,6 @@ namespace Integration.Application.Interfaces.Security
         Task<List<UserDTO>> GetByMultipleFiltersAsync(List<Expression<Func<UserDTO, bool>>> predicates);
         Task<UserDTO> GetByCodeAsync(string code);
         Task<UserDTO> UpdateAsync(HeaderDTO header, UserDTO userDTO);
+        Task<string> GetUserNameByCodeAsync(string userCode);
     }
 }
