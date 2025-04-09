@@ -58,7 +58,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<ApplicationDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ModuleDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<PermissionDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<RoleDTOValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<RoleModulePermissionDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<RoleMenuPermissionDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UserDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UserRoleDTOValidator>();
 

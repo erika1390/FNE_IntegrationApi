@@ -12,12 +12,12 @@ namespace Integration.Application.Test.Validations.Security
     [TestFixture]
     public class RoleModulePermissionDTOValidatorTest
     {
-        private RoleModulePermissionDTOValidator _validator;
+        private RoleMenuPermissionDTOValidator _validator;
 
         [SetUp]
         public void SetUp()
         {
-            _validator = new RoleModulePermissionDTOValidator();
+            _validator = new RoleMenuPermissionDTOValidator();
         }
 
         [Test]

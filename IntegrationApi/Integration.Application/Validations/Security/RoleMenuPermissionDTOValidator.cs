@@ -3,9 +3,9 @@ using Integration.Shared.DTO.Security;
 
 namespace Integration.Application.Validations.Security
 {
-    public class RoleModulePermissionDTOValidator : AbstractValidator<RoleMenuPermissionDTO>
+    public class RoleMenuPermissionDTOValidator : AbstractValidator<RoleMenuPermissionDTO>
     {
-        public RoleModulePermissionDTOValidator()
+        public RoleMenuPermissionDTOValidator()
         {
             RuleFor(x => x.RoleCode)
                 .NotEmpty().WithMessage("El código del rol es obligatorio.")
