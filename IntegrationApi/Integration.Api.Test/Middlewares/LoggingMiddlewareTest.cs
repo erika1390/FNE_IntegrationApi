@@ -5,13 +5,7 @@ using Microsoft.Extensions.Logging;
 
 using Moq;
 
-using Newtonsoft.Json;
-
-using NUnit.Framework;
-
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Integration.Api.Test.Middlewares
 {
