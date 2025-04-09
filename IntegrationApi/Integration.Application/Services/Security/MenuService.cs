@@ -8,6 +8,7 @@ using Integration.Shared.DTO.Security;
 using Microsoft.Extensions.Logging;
 
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Integration.Application.Services.Security
 {
@@ -45,8 +46,8 @@ namespace Integration.Application.Services.Security
                 var parentModule = await _moduleRepository.GetByCodeAsync(menuDTO.ParentMenuCode);
                 var module = await _moduleRepository.GetByCodeAsync(menuDTO.ModuleCode);
                 var menu = _mapper.Map<Integration.Core.Entities.Security.Menu>(menuDTO);
-                menu.ParentMenu.ParentMenuId = parentModule.Id;
-                menu.Module.Id = module.Id;
+                menu.ModuleId = module.Id;
+                menu.ParentMenuId = parentModule?.Id;
                 menu.CreatedBy = user.UserName;
                 menu.UpdatedBy = user.UserName;
                 var result = await _menuRepository.CreateAsync(menu);
@@ -233,7 +234,7 @@ namespace Integration.Application.Services.Security
 
         public async Task<MenuDTO> UpdateAsync(HeaderDTO header, MenuDTO menuDTO)
         {
-            _logger.LogInformation("Menu creado exitosamente: MenuCode={MenuCode}, Name={Name}", menuDTO.MenuCode, menuDTO.Name);
+            _logger.LogInformation("Menu creado exitosamente: MenuCode={MenuCode}, Name={Name}", menuDTO.Code, menuDTO.Name);
             try
             {
                 var user = await _userRepository.GetByCodeAsync(header.UserCode);
@@ -242,7 +243,7 @@ namespace Integration.Application.Services.Security
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
                 var module = await _moduleRepository.GetByCodeAsync(menuDTO.ModuleCode);
-                var menuExist = await _menuRepository.GetByCodeAsync(menuDTO.MenuCode);
+                var menuExist = await _menuRepository.GetByCodeAsync(menuDTO.Code);
                 var menu = _mapper.Map<Integration.Core.Entities.Security.Menu>(menuDTO);
                 menu.ModuleId = module.Id;
                 menu.Id = menuExist.Id;
@@ -250,7 +251,7 @@ namespace Integration.Application.Services.Security
                 var updatedMenu = await _menuRepository.UpdateAsync(menu);
                 if (updatedMenu == null)
                 {
-                    _logger.LogWarning("Menu con MenuCode {MenuCode} no encontrado.", menuDTO.MenuCode);
+                    _logger.LogWarning("Menu con MenuCode {MenuCode} no encontrado.", menuDTO.Code);
                     return null;
                 }
                 _logger.LogInformation("Menu actualizado con éxito: MenuCode: {MenuCode}, Nombre: {Name}", updatedMenu.Code, updatedMenu.Name);
@@ -258,7 +259,7 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar menu con MenuCode {MenuCode}.", menuDTO.MenuCode);
+                _logger.LogError(ex, "Error al actualizar menu con MenuCode {MenuCode}.", menuDTO.Code);
                 throw;
             }
         }

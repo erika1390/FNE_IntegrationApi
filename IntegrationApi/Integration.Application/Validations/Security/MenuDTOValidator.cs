@@ -8,9 +8,16 @@ namespace Integration.Application.Validations.Security
     {
         public MenuDTOValidator()
         {
+            RuleFor(x => x.ModuleCode)
+                .NotEmpty().WithMessage("El codigo del nodulo es obligatorio.")
+                .MaximumLength(10).WithMessage("El codigo del menu no puede exceder los 10 caracteres.");
+
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("El nombre del menu es obligatorio.")
                 .MaximumLength(100).WithMessage("El nombre no puede exceder los 100 caracteres.");
+
+            RuleFor(x => x.Order)
+                .NotNull().WithMessage("El orden del menu es obligatorio.");
 
             RuleFor(x => x.CreatedAt)
                 .NotEmpty().WithMessage("La fecha de creación es obligatoria.")

@@ -71,7 +71,7 @@ namespace Integration.Api.Controllers.Security
                     _logger.LogWarning("No se encontró el Menu con MenuCode {MenuCode}.", code);
                     return NotFound(ResponseApi<MenuDTO>.Error("Menu no encontrada."));
                 }
-                _logger.LogInformation("Menu encontrada: MenuCode={MenuCode}, Nombre={Name}", result.MenuCode, result.Name);
+                _logger.LogInformation("Menu encontrada: MenuCode={MenuCode}, Nombre={Name}", result.Code, result.Name);
                 return Ok(ResponseApi<MenuDTO>.Success(result));
             }
             catch (Exception ex)

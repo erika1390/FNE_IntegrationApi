@@ -127,7 +127,7 @@ namespace Integration.Application.Services.Security
                 // Inicializar filtro base
                 Expression<Func<RoleMenuPermission, bool>> roleMenuFilter = a => true;
 
-                // Obtener filtros de RoleCode, MenuCode y PermissionCode
+                // Obtener filtros de RoleCode, Code y PermissionCode
                 string roleCode = null, menuCode = null, permissionCode = null;
 
                 if (predicado != null)
@@ -145,7 +145,7 @@ namespace Integration.Application.Services.Security
                     roleMenuFilter = a => a.RoleId == role.Id;
                 }
 
-                // Aplicar filtro de MenuCode
+                // Aplicar filtro de Code
                 if (!string.IsNullOrEmpty(menuCode))
                 {
                     var manu = await _menuRepository.GetByCodeAsync(menuCode);

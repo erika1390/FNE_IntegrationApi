@@ -10,7 +10,7 @@ namespace Integration.Application.Mappings.Security
         public MenuProfile()
         {
             CreateMap<MenuDTO, Menu>()
-                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.MenuCode))                
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))                
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Route, opt => opt.MapFrom(src => src.Route))
                 .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Icon))

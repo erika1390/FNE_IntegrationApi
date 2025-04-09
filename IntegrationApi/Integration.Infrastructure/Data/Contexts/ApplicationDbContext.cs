@@ -49,8 +49,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Integrador",                    
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",                    
+                    CreatedBy = "system",
+                    UpdatedBy = "system",                    
                     IsActive = true
                 },
                 new Integration.Core.Entities.Security.Application
@@ -60,8 +60,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Saga 2.0",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 },
                 new Integration.Core.Entities.Security.Application
@@ -71,8 +71,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Sicof Lite",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 }
             );
@@ -85,8 +85,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     ApplicationId = 1,
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 }
             );
@@ -98,8 +98,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Consultar",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 },
                 new Permission
@@ -109,8 +109,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Crear",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 },
                 new Permission
@@ -120,8 +120,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Modificar",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 },
                 new Permission
@@ -131,8 +131,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Desactivar",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 },
                 new Permission
@@ -142,8 +142,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Cargar",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 },
                 new Permission
@@ -153,8 +153,8 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Descargar",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
-                    CreatedBy = "epulido",
-                    UpdatedBy = "epulido",
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
                     IsActive = true
                 }
             );
@@ -165,9 +165,9 @@ namespace Integration.Infrastructure.Data.Contexts
                     FirstName = "Erika", 
                     LastName = "Pulido", 
                     DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0),
-                    CreatedBy = "epulido",
+                    CreatedBy = "system",
                     CreatedAt = StaticCreatedAt,
-                    UpdatedBy = "epulido",
+                    UpdatedBy = "system",
                     UpdatedAt = StaticCreatedAt,
                     IsActive = true,
                     UserName = "epulido",
@@ -194,7 +194,7 @@ namespace Integration.Infrastructure.Data.Contexts
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries()
-                .Where(e => e.Entity is IAuditableEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
+                        .Where(e => e.Entity is IAuditableEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
 
             foreach (var entry in entries)
             {
@@ -216,21 +216,13 @@ namespace Integration.Infrastructure.Data.Contexts
 
         private void GenerateEntityCode(EntityEntry entry)
         {
-            // Verificar si la entidad tiene una propiedad Code
             if (entry.Entity.GetType().GetProperty("Code") == null)
                 return;
-
-            // Obtener el valor actual del Code
             var currentCode = entry.Property("Code").CurrentValue as string;
-
-            // Si ya tiene un código, no generar uno nuevo
             if (!string.IsNullOrEmpty(currentCode))
                 return;
-
             string prefix;
             string nextCode;
-
-            // Determinar el prefijo basado en el tipo de entidad
             if (entry.Entity is Integration.Core.Entities.Security.Application)
             {
                 prefix = "APP";
@@ -263,11 +255,9 @@ namespace Integration.Infrastructure.Data.Contexts
             }
             else
             {
-                // Para otros tipos de entidades, puedes definir prefijos adicionales o un valor por defecto
                 return;
             }
 
-            // Asignar el nuevo código
             entry.Property("Code").CurrentValue = nextCode;
         }
 
