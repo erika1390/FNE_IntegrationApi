@@ -6,7 +6,7 @@ namespace Integration.Shared.DTO.Security
     {
         public string? ParentMenuCode { get; set; }
         public string ModuleCode { get; set; }
-        public required string MenuCode { get; set; }
+        public string MenuCode { get; set; }
         public required string Name { get; set; }
         public string? Route { get; set; }
         public string? Icon { get; set; }

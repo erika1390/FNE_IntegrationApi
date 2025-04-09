@@ -3,8 +3,8 @@
     public class RoleMenuPermissionDTO
     {
         public required string RoleCode { get; set; }
-        public string MenuCode { get; set; }
-        public string PermissionCode { get; set; }
+        public required string MenuCode { get; set; }
+        public required string PermissionCode { get; set; }
         public RoleDTO? Role { get; set; }
         public MenuDTO? Menu { get; set; }
         public PermissionDTO? Permission { get; set; }

@@ -2,7 +2,7 @@
 {
     public class UserDTO
     {
-        public required string Code { get; set; }        
+        public string Code { get; set; }        
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public string? UserName { get; set; }

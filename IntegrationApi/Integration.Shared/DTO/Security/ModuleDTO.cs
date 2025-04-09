@@ -2,7 +2,7 @@ namespace Integration.Shared.DTO.Security
 {
     public class ModuleDTO
     {
-        public required string Code { get; set; }
+        public string Code { get; set; }
         public required string Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
