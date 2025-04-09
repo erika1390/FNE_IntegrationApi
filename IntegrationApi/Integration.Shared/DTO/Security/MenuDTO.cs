@@ -4,10 +4,9 @@ namespace Integration.Shared.DTO.Security
 {
     public class MenuDTO
     {
-        public int? ParentMenuId { get; set; }
-        public int ModuleId { get; set; }
-        public required string CodeMenu { get; set; }
-        [Required, MaxLength(50)]
+        public string? ParentMenuCode { get; set; }
+        public string ModuleCode { get; set; }
+        public required string MenuCode { get; set; }
         public required string Name { get; set; }
         public string? Route { get; set; }
         public string? Icon { get; set; }
@@ -18,5 +17,7 @@ namespace Integration.Shared.DTO.Security
         public string? UpdatedBy { get; set; }
         public bool IsActive { get; set; }
         public MenuDTO? ParentMenu { get; set; }
+        public ICollection<MenuDTO> SubMenus { get; set; }
+        public ModuleDTO Module { get; set; } = null!;
     }
 }
