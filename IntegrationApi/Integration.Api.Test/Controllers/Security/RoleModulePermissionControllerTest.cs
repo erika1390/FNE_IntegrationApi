@@ -80,7 +80,9 @@ namespace Integration.Api.Test.Controllers.Security
             // Arrange
             var dto = new RoleMenuPermissionDTO() {
                 CreatedBy = "USR0000001",
-                RoleCode = "ROL0000001"
+                RoleCode = "ROL0000001",
+                MenuCode = "MEN0000001",
+                PermissionCode = "PER0000001",
             };
             _validatorMock.Setup(v => v.ValidateAsync(dto, default)).ReturnsAsync(new FluentValidation.Results.ValidationResult
             {
