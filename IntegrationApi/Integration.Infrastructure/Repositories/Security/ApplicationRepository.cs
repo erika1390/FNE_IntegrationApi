@@ -17,7 +17,7 @@ namespace Integration.Infrastructure.Repositories.Security
             _logger = logger;
         }
 
-        public async Task<Application> CreateAsync(Application application)
+        public async Task<Integration.Core.Entities.Security.Application> CreateAsync(Integration.Core.Entities.Security.Application application)
         {
             if (application == null)
             {
@@ -64,7 +64,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<IEnumerable<Application>> GetAllActiveAsync()
+        public async Task<IEnumerable<Integration.Core.Entities.Security.Application>> GetAllActiveAsync()
         {
             try
             {
@@ -75,11 +75,11 @@ namespace Integration.Infrastructure.Repositories.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener todas las aplicaciones.");
-                return Enumerable.Empty<Application>();
+                return Enumerable.Empty<Integration.Core.Entities.Security.Application>();
             }
         }
 
-        public async Task<List<Application>> GetByFilterAsync(Expression<Func<Application, bool>> predicate)
+        public async Task<List<Integration.Core.Entities.Security.Application>> GetByFilterAsync(Expression<Func<Integration.Core.Entities.Security.Application, bool>> predicate)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<List<Application>> GetByMultipleFiltersAsync(List<Expression<Func<Application, bool>>> predicates)
+        public async Task<List<Integration.Core.Entities.Security.Application>> GetByMultipleFiltersAsync(List<Expression<Func<Integration.Core.Entities.Security.Application, bool>>> predicates)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace Integration.Infrastructure.Repositories.Security
                 throw;
             }
         }
-        public async Task<Application> GetByCodeAsync(string code)
+        public async Task<Integration.Core.Entities.Security.Application> GetByCodeAsync(string code)
         {
             try
             {
@@ -141,7 +141,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
         }
 
-        public async Task<Application> UpdateAsync(Application application)
+        public async Task<Integration.Core.Entities.Security.Application> UpdateAsync(Integration.Core.Entities.Security.Application application)
         {
             try
             {

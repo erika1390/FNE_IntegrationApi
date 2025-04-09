@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Integration.Infrastructure.Data.Configurations.Security
 {
-    public class ApplicationConfiguration : IEntityTypeConfiguration<Application>
+    public class ApplicationConfiguration : IEntityTypeConfiguration<Integration.Core.Entities.Security.Application>
     {
-        public void Configure(EntityTypeBuilder<Application> builder)
+        public void Configure(EntityTypeBuilder<Integration.Core.Entities.Security.Application> builder)
         {
             builder.ToTable("Applications", "Security");
             builder.HasKey(e => e.Id);

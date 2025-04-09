@@ -1,4 +1,5 @@
-﻿using Integration.Core.Entities.Audit;
+﻿using Integration.Application.Interfaces.Security;
+using Integration.Core.Entities.Audit;
 using Integration.Core.Entities.Security;
 using Integration.Core.Interfaces.Identity;
 
@@ -13,9 +14,10 @@ namespace Integration.Infrastructure.Data.Contexts
         UserLogin, RoleClaim,
         UserToken>
     {
+        private readonly ICurrentUserService _currentUserService;
         private static readonly DateTime StaticCreatedAt = StaticCreatedAt;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-        public DbSet<Application> Applications { get; set; }
+        public DbSet<Integration.Core.Entities.Security.Application> Applications { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public override DbSet<Role> Roles { get; set; }
@@ -28,14 +30,17 @@ namespace Integration.Infrastructure.Data.Contexts
         public override DbSet<UserToken> UserTokens { get; set; }
         public override DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<Log> Logs { get; set; }
-
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService currentUserService) : base(options)
+        {
+            _currentUserService = currentUserService;
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-            builder.Entity<Application>().HasData(
-                new Application
+            builder.Entity<Integration.Core.Entities.Security.Application>().HasData(
+                new Integration.Core.Entities.Security.Application
                 {
                     Id = 1,
                     Code = "APP0000001",
@@ -46,7 +51,7 @@ namespace Integration.Infrastructure.Data.Contexts
                     UpdatedBy = "epulido",                    
                     IsActive = true
                 },
-                new Application
+                new Integration.Core.Entities.Security.Application
                 {
                     Id = 2,
                     Code = "APP0000002",
@@ -57,7 +62,7 @@ namespace Integration.Infrastructure.Data.Contexts
                     UpdatedBy = "epulido",
                     IsActive = true
                 },
-                new Application
+                new Integration.Core.Entities.Security.Application
                 {
                     Id = 3,
                     Code = "APP0000003",
