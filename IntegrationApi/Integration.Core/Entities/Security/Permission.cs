@@ -10,6 +10,5 @@ namespace Integration.Core.Entities.Security
         public required string Code { get; set; }
         [Required, MaxLength(50)]
         public string? Name { get; set; }
-        public virtual ICollection<RoleModulePermissions> RoleModulePermissions { get; set; } = new HashSet<RoleModulePermissions>();
     }
 }

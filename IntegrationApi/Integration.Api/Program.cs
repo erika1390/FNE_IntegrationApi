@@ -45,7 +45,7 @@ builder.Services.AddAutoMapper(typeof(LogProfile));
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddAutoMapper(typeof(ModuleProfile));
 builder.Services.AddAutoMapper(typeof(PermissionProfile));
-builder.Services.AddAutoMapper(typeof(RoleModulePermissionProfile));
+builder.Services.AddAutoMapper(typeof(RoleMenuPermissionProfile));
 builder.Services.AddAutoMapper(typeof(RoleProfile));
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddAutoMapper(typeof(UserRoleProfile));
@@ -71,7 +71,7 @@ builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IRoleModulePermissionService, RoleModulePermissionService>();
+builder.Services.AddScoped<IRoleMenuPermissionService, RoleMenuPermissionService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IUserPermissionService, UserPermissionService>();
 
@@ -81,7 +81,7 @@ builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRoleModulePermissionRepository, RoleModulePermissionRepository>();
+builder.Services.AddScoped<IRoleMenuPermissionRepository, RoleMenuPermissionRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IUserPermissionRepository, UserPermissionRepository>();
 

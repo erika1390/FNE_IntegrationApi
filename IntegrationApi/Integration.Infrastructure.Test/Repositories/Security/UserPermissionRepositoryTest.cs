@@ -30,6 +30,8 @@ namespace Integration.Infrastructure.Test.Repositories.Security
                     Role = "Admin",
                     CodeModule = "MOD0000001",
                     Module = "Module1",
+                    CodeMenu = "MEN0000001",
+                    Menu = "Menu1",
                     CodePermission = "PERM0000001",
                     Permission = "Permission1"
                 }
@@ -51,6 +53,8 @@ namespace Integration.Infrastructure.Test.Repositories.Security
             Assert.AreEqual("Admin", permission.Role);
             Assert.AreEqual("MOD0000001", permission.CodeModule);
             Assert.AreEqual("Module1", permission.Module);
+            Assert.AreEqual("MEN0000001", permission.CodeMenu);
+            Assert.AreEqual("Menu1", permission.Menu);
             Assert.AreEqual("PERM0000001", permission.CodePermission);
             Assert.AreEqual("Permission1", permission.Permission);
         }

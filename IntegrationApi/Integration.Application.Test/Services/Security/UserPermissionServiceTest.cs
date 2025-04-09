@@ -56,7 +56,9 @@ namespace Integration.Application.Test.Services.Security
                     Module = "Módulo 1",
                     CodePermission = "PER0000001",
                     Permission = "Ver",
-                    UserName = "TestUser"
+                    UserName = "TestUser",
+                    CodeMenu = "MEN0000001",
+                    Menu = "Menu 1"
                 }
             };
 

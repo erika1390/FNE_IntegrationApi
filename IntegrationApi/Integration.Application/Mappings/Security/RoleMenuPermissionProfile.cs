@@ -3,16 +3,16 @@ using Integration.Core.Entities.Security;
 using Integration.Shared.DTO.Security;
 namespace Integration.Application.Mappings.Security
 {
-    public class RoleModulePermissionProfile : Profile
+    public class RoleMenuPermissionProfile : Profile
     {
-        public RoleModulePermissionProfile()
+        public RoleMenuPermissionProfile()
         {
             CreateMap<Role, RoleDTO>();
             CreateMap<Module, ModuleDTO>();
             CreateMap<Permission, PermissionDTO>();
-            CreateMap<RoleModulePermissions, RoleModulePermissionDTO>()
+            CreateMap<RoleMenuPermission, RoleMenuPermissionDTO>()
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
-                .ForMember(dest => dest.Module, opt => opt.MapFrom(src => src.Module))
+                .ForMember(dest => dest.Menu, opt => opt.MapFrom(src => src.Menu))
                 .ForMember(dest => dest.Permission, opt => opt.MapFrom(src => src.Permission))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt))

@@ -8,6 +8,8 @@
         public required string Role { get; set; }
         public required string CodeModule { get; set; }
         public required string Module { get; set; }
+        public required string CodeMenu { get; set; }
+        public required string Menu { get; set; }
         public required string CodePermission { get; set; }
         public required string Permission { get; set; }
     }

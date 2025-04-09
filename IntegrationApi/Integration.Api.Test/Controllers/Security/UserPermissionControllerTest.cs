@@ -40,10 +40,12 @@ namespace Integration.Api.Test.Controllers.Security
                     CodeRole = "ROL0000001",
                     CodeModule = "MOD0000001",
                     CodePermission = "PER0000001",
+                    CodeMenu = "MEN0000001",
                     Module = "Módulo 1",
                     Permission = "Permiso 1",
                     Role = "Rol 1",
-                    UserName = "Usuario 1"
+                    UserName = "Usuario 1",
+                    Menu = "Menú 1"
                 }
             };
 

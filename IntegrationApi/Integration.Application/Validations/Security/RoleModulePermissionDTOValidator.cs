@@ -3,7 +3,7 @@ using Integration.Shared.DTO.Security;
 
 namespace Integration.Application.Validations.Security
 {
-    public class RoleModulePermissionDTOValidator : AbstractValidator<RoleModulePermissionDTO>
+    public class RoleModulePermissionDTOValidator : AbstractValidator<RoleMenuPermissionDTO>
     {
         public RoleModulePermissionDTOValidator()
         {
@@ -11,7 +11,7 @@ namespace Integration.Application.Validations.Security
                 .NotEmpty().WithMessage("El código del rol es obligatorio.")
                 .MaximumLength(10).WithMessage("El código del rol no puede exceder los 10 caracteres.");
 
-            RuleFor(x => x.ModuleCode)
+            RuleFor(x => x.MenuCode)
                 .NotEmpty().WithMessage("El código del módulo es obligatorio.")
                 .MaximumLength(10).WithMessage("El código del módulo no puede exceder los 10 caracteres.");
 

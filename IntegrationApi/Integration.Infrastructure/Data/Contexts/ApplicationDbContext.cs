@@ -1,7 +1,6 @@
 ﻿using Integration.Core.Entities.Audit;
 using Integration.Core.Entities.Security;
 using Integration.Core.Interfaces.Identity;
-using Integration.Infrastructure.Data.Configurations.Security;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +17,10 @@ namespace Integration.Infrastructure.Data.Contexts
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Application> Applications { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<Menu> Menus { get; set; }
         public override DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
-        public DbSet<RoleModulePermissions> RoleModulePermissions { get; set; }
-        public DbSet<RoleMenuPermission> RoleModuleMenuPermissions { get; set; }
+        public DbSet<RoleMenuPermission> RoleMenuPermissions { get; set; }
         public override DbSet<User> Users { get; set; }
         public override DbSet<UserRole> UserRoles { get; set; }
         public override DbSet<UserClaim> UserClaims { get; set; }

@@ -18,27 +18,27 @@ namespace Integration.Api.Test.Controllers.Security
     [TestFixture]
     public class RoleModulePermissionControllerTest
     {
-        private Mock<IRoleModulePermissionService> _serviceMock;
-        private Mock<ILogger<RoleModulePermissionController>> _loggerMock;
-        private Mock<IValidator<RoleModulePermissionDTO>> _validatorMock;
-        private RoleModulePermissionController _controller;
+        private Mock<IRoleMenuPermissionService> _serviceMock;
+        private Mock<ILogger<RoleMenuPermissionController>> _loggerMock;
+        private Mock<IValidator<RoleMenuPermissionDTO>> _validatorMock;
+        private RoleMenuPermissionController _controller;
 
         [SetUp]
         public void SetUp()
         {
-            _serviceMock = new Mock<IRoleModulePermissionService>();
-            _loggerMock = new Mock<ILogger<RoleModulePermissionController>>();
-            _validatorMock = new Mock<IValidator<RoleModulePermissionDTO>>();
-            _controller = new RoleModulePermissionController(_serviceMock.Object, _loggerMock.Object, _validatorMock.Object);
+            _serviceMock = new Mock<IRoleMenuPermissionService>();
+            _loggerMock = new Mock<ILogger<RoleMenuPermissionController>>();
+            _validatorMock = new Mock<IValidator<RoleMenuPermissionDTO>>();
+            _controller = new RoleMenuPermissionController(_serviceMock.Object, _loggerMock.Object, _validatorMock.Object);
         }
         [Test]
         public async Task GetAllActive_ShouldReturnOk_WhenPermissionsExist()
         {
             // Arrange
-            var data = new List<RoleModulePermissionDTO> { 
+            var data = new List<RoleMenuPermissionDTO> { 
                 new() { 
                     RoleCode = "ROL0000001", 
-                    ModuleCode = "MOD0000001", 
+                    MenuCode = "MOD0000001", 
                     PermissionCode = "PER0000001",
                     CreatedBy = "USR0000001"
                 }
@@ -51,7 +51,7 @@ namespace Integration.Api.Test.Controllers.Security
             // Assert
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            var response = okResult.Value as ResponseApi<IEnumerable<RoleModulePermissionDTO>>;
+            var response = okResult.Value as ResponseApi<IEnumerable<RoleMenuPermissionDTO>>;
             Assert.AreEqual(1, response.Data.Count());
         }
 
@@ -59,13 +59,13 @@ namespace Integration.Api.Test.Controllers.Security
         public async Task GetByCodes_ShouldReturnNotFound_WhenResultIsNull()
         {
             // Arrange
-            var dto = new RoleModulePermissionDTO {
+            var dto = new RoleMenuPermissionDTO {
                 RoleCode = "ROL0000001",
-                ModuleCode = "MOD0000001",
+                MenuCode = "MOD0000001",
                 PermissionCode = "PER0000001",
                 CreatedBy = "USR0000001"
             };
-            _serviceMock.Setup(s => s.GetByCodesAsync(dto)).ReturnsAsync((RoleModulePermissionDTO)null);
+            _serviceMock.Setup(s => s.GetByCodesAsync(dto)).ReturnsAsync((RoleMenuPermissionDTO)null);
 
             // Act
             var result = await _controller.GetByCodes(new HeaderDTO(), dto);
@@ -78,7 +78,7 @@ namespace Integration.Api.Test.Controllers.Security
         public async Task Create_ShouldReturnBadRequest_WhenValidationFails()
         {
             // Arrange
-            var dto = new RoleModulePermissionDTO() {
+            var dto = new RoleMenuPermissionDTO() {
                 CreatedBy = "USR0000001",
                 RoleCode = "ROL0000001"
             };
@@ -93,7 +93,7 @@ namespace Integration.Api.Test.Controllers.Security
             // Assert
             var badRequest = result as BadRequestObjectResult;
             Assert.IsNotNull(badRequest);
-            var response = badRequest.Value as ResponseApi<RoleModulePermissionDTO>;
+            var response = badRequest.Value as ResponseApi<RoleMenuPermissionDTO>;
             Assert.IsNotEmpty(response.Errors);
         }
 
@@ -101,9 +101,9 @@ namespace Integration.Api.Test.Controllers.Security
         public async Task Deactivate_ShouldReturnOk_WhenDeactivationIsSuccessful()
         {
             // Arrange
-            var dto = new RoleModulePermissionDTO {
+            var dto = new RoleMenuPermissionDTO {
                 RoleCode = "ROL0000001",
-                ModuleCode = "MOD0000001",
+                MenuCode = "MOD0000001",
                 PermissionCode = "PER0000001",
                 CreatedBy = "USR0000001"
             };
@@ -126,17 +126,17 @@ namespace Integration.Api.Test.Controllers.Security
             var filterField = "RoleCode";
             var filterValue = "ROL0001";
 
-            var expectedData = new List<RoleModulePermissionDTO>
+            var expectedData = new List<RoleMenuPermissionDTO>
             {
-                new RoleModulePermissionDTO { 
+                new RoleMenuPermissionDTO { 
                     RoleCode = "ROL0000001", 
-                    ModuleCode = "MOD0000001", 
+                    MenuCode = "MOD0000001", 
                     PermissionCode = "PER0000001",
                     CreatedBy = "USR0000001"
                 }
             };
 
-            _serviceMock.Setup(s => s.GetByFilterAsync(It.IsAny<Expression<Func<RoleModulePermissionDTO, bool>>>()))
+            _serviceMock.Setup(s => s.GetByFilterAsync(It.IsAny<Expression<Func<RoleMenuPermissionDTO, bool>>>()))
                         .ReturnsAsync(expectedData);
 
             // Act
@@ -146,7 +146,7 @@ namespace Integration.Api.Test.Controllers.Security
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
 
-            var response = okResult.Value as ResponseApi<IEnumerable<RoleModulePermissionDTO>>;
+            var response = okResult.Value as ResponseApi<IEnumerable<RoleMenuPermissionDTO>>;
             Assert.AreEqual(1, response.Data.Count());
             Assert.AreEqual("ROL0000001", response.Data.First().RoleCode);
         }
@@ -161,18 +161,18 @@ namespace Integration.Api.Test.Controllers.Security
                 { "ModuleCode", "MOD0000001" }
             };
 
-            var expectedResult = new List<RoleModulePermissionDTO>
+            var expectedResult = new List<RoleMenuPermissionDTO>
             {
-                new RoleModulePermissionDTO
+                new RoleMenuPermissionDTO
                 {
                     RoleCode = "ROL0000001",
-                    ModuleCode = "MOD0000001",
+                    MenuCode = "MOD0000001",
                     PermissionCode = "PER0000001",
                     CreatedBy = "admin"
                 }
             };
 
-            _serviceMock.Setup(s => s.GetByMultipleFiltersAsync(It.IsAny<List<Expression<Func<RoleModulePermissionDTO, bool>>>>()))
+            _serviceMock.Setup(s => s.GetByMultipleFiltersAsync(It.IsAny<List<Expression<Func<RoleMenuPermissionDTO, bool>>>>()))
                         .ReturnsAsync(expectedResult);
 
             // Act
@@ -181,11 +181,11 @@ namespace Integration.Api.Test.Controllers.Security
             // Assert
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            var response = okResult.Value as ResponseApi<IEnumerable<RoleModulePermissionDTO>>;
+            var response = okResult.Value as ResponseApi<IEnumerable<RoleMenuPermissionDTO>>;
             Assert.IsNotNull(response);
             Assert.AreEqual(1, response.Data.Count());
             Assert.AreEqual("ROL0000001", response.Data.First().RoleCode);
-            Assert.AreEqual("MOD0000001", response.Data.First().ModuleCode);
+            Assert.AreEqual("MOD0000001", response.Data.First().MenuCode);
         }
 
         [Test]
@@ -193,10 +193,10 @@ namespace Integration.Api.Test.Controllers.Security
         {
             // Arrange
             var header = new HeaderDTO { UserCode = "USR0000001", ApplicationCode = "APP0000001" };
-            var dto = new RoleModulePermissionDTO
+            var dto = new RoleMenuPermissionDTO
             {
                 RoleCode = "ROL0000001",
-                ModuleCode = "MOD0000001",
+                MenuCode = "MOD0000001",
                 PermissionCode = "PER0000001",
                 CreatedBy = "admin",
                 UpdatedBy = "admin",
@@ -218,7 +218,7 @@ namespace Integration.Api.Test.Controllers.Security
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
 
-            var response = okResult.Value as ResponseApi<RoleModulePermissionDTO>;
+            var response = okResult.Value as ResponseApi<RoleMenuPermissionDTO>;
             Assert.IsNotNull(response);
             Assert.AreEqual("RoleModulePermission actualizada correctamente.", response.Message);
             Assert.AreEqual(dto.RoleCode, response.Data.RoleCode);
