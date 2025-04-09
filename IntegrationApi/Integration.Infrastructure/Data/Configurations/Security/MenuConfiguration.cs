@@ -13,11 +13,26 @@ namespace Integration.Infrastructure.Data.Configurations.Security
 
             builder.HasKey(m => m.Id);
 
-            builder.Property(m => m.Code).IsRequired().HasMaxLength(50);
-            builder.Property(m => m.Name).IsRequired().HasMaxLength(100);
-            builder.Property(m => m.Route).HasMaxLength(255);
-            builder.Property(m => m.Icon).HasMaxLength(100);
-            builder.Property(m => m.Order).IsRequired();
+            builder.HasIndex(m => m.Code)
+               .HasDatabaseName("IDX_Menus_Code")
+               .IsUnique();
+
+            builder.Property(e => e.Code)
+                .IsRequired()
+                .HasMaxLength(10);
+
+            builder.Property(m => m.Name)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(m => m.Route)
+                .HasMaxLength(100);
+
+            builder.Property(m => m.Icon)
+                .HasMaxLength(50);
+
+            builder.Property(m => m.Order)
+                .IsRequired();
         }
     }
 }

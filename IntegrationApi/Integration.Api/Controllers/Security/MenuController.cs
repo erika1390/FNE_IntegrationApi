@@ -210,8 +210,8 @@ namespace Integration.Api.Controllers.Security
                     return BadRequest(ResponseApi<MenuDTO>.Error("No se pudo crear el Menu."));
                 }
 
-                _logger.LogInformation("Menu creado con éxito: Código={Code}, Nombre={Name}", result.ModuleCode, result.Name);
-                return CreatedAtAction(nameof(GetByCode), new { code = result.ModuleCode },
+                _logger.LogInformation("Menu creado con éxito: MenuCode={MenuCode}, Nombre={Name}", result.Code, result.Name);
+                return CreatedAtAction(nameof(GetByCode), new { code = result.Code },
                     ResponseApi<MenuDTO>.Success(result, "Menu creado con éxito."));
             }
             catch (Exception ex)
