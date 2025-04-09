@@ -1,10 +1,11 @@
 ﻿using Integration.Core.Entities.Base;
+using Integration.Core.Interfaces.Identity;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Integration.Core.Entities.Security
 {
-    public class RoleMenuPermission : BaseEntity
+    public class RoleMenuPermission : BaseEntity, IAuditableEntity
     {
         public int RoleId { get; set; }
         public int  MenuId { get; set; }

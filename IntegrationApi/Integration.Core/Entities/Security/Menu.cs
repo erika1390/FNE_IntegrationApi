@@ -1,4 +1,5 @@
 ﻿using Integration.Core.Entities.Base;
+using Integration.Core.Interfaces.Identity;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Integration.Core.Entities.Security
 {
     [Table("Menu", Schema = "Security")]
-    public class Menu : BaseEntity
+    public class Menu : BaseEntity, IAuditableEntity
     {
         public int? ParentMenuId { get; set; }
         public int ModuleId { get; set; }

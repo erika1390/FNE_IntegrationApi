@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Integration.Core.Interfaces.Identity;
+
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Integration.Core.Entities.Security
 {
-    public class UserRole : IdentityUserRole<int>
+    public class UserRole : IdentityUserRole<int>, IAuditableEntity
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
