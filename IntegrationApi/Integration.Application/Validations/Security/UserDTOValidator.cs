@@ -8,10 +8,6 @@ namespace Integration.Application.Validations.Security
     {
         public UserDTOValidator()
         {
-            RuleFor(x => x.Code)
-                .NotEmpty().WithMessage("El código del usuario es obligatorio.")
-                .MaximumLength(10).WithMessage("El código no puede exceder los 10 caracteres.");
-
             RuleFor(x => x.FirstName)
                 .NotEmpty().WithMessage("El nombre del usuario es obligatorio.")
                 .MaximumLength(100).WithMessage("El nombre no puede exceder los 100 caracteres.");

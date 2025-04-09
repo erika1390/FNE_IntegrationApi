@@ -6,10 +6,6 @@ namespace Integration.Application.Validations.Security
     {
         public PermissionDTOValidator()
         {
-            RuleFor(x => x.Code)
-                .NotEmpty().WithMessage("El código del permiso es obligatorio.")
-                .MaximumLength(10).WithMessage("El código no puede exceder los 10 caracteres.");
-
             RuleFor(x => x.Name)
                 .MaximumLength(50).WithMessage("El nombre del permiso no puede exceder los 50 caracteres.");
 

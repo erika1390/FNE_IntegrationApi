@@ -7,10 +7,6 @@ namespace Integration.Application.Validations.Security
     {
         public ModuleDTOValidator()
         {
-            RuleFor(x => x.Code)
-                .NotEmpty().WithMessage("El código del módulo es obligatorio.")
-                .MaximumLength(10).WithMessage("El código no puede exceder los 10 caracteres.");
-
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("El nombre del módulo es obligatorio.")
                 .MaximumLength(50).WithMessage("El nombre no puede exceder los 50 caracteres.");
