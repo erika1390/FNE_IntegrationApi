@@ -43,7 +43,7 @@ namespace Integration.Application.Services.Security
                 {
                     throw new Exception($"No se encontró el usuario con código {header.UserCode}.");
                 }
-                var parentModule = await _moduleRepository.GetByCodeAsync(menuDTO.ParentMenuCode);
+                var parentModule = await _menuRepository.GetByCodeAsync(menuDTO.ParentMenuCode);
                 var module = await _moduleRepository.GetByCodeAsync(menuDTO.ModuleCode);
                 var menu = _mapper.Map<Integration.Core.Entities.Security.Menu>(menuDTO);
                 menu.ModuleId = module.Id;

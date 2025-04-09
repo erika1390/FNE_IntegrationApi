@@ -14,8 +14,6 @@
         public required string CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
         public bool IsActive { get; set; }
-        public MenuDTO? ParentMenu { get; set; }
-        public ICollection<MenuDTO> SubMenus { get; set; }
         public ModuleDTO Module { get; set; } = null!;
     }
 }

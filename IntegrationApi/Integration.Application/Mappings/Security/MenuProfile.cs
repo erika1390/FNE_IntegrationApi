@@ -15,8 +15,6 @@ namespace Integration.Application.Mappings.Security
                 .ForMember(dest => dest.Route, opt => opt.MapFrom(src => src.Route))
                 .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Icon))
                 .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order))
-                .ForMember(dest => dest.ParentMenu, opt => opt.MapFrom(src => src.ParentMenu))
-                .ForMember(dest => dest.SubMenus, opt => opt.MapFrom(src => src.SubMenus))
                 .ForMember(dest => dest.Module, opt => opt.MapFrom(src => src.Module))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt))
