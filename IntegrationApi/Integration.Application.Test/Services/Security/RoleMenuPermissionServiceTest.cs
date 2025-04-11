@@ -290,7 +290,7 @@ namespace Integration.Application.Test.Services.Security
             var dtoInput = new RoleMenuPermissionDTO
             {
                 RoleCode = "ROL0000001",
-                MenuCode = "MOD0000001",
+                MenuCode = "MNU0000002",
                 PermissionCode = "PER0000001",
                 CreatedBy = "epulido"
             };
@@ -303,7 +303,7 @@ namespace Integration.Application.Test.Services.Security
             };
             var menu = new Menu { 
                 Id = 2, 
-                Code = "MEN0000001",
+                Code = "MNU0000002",
                 Name = "Gestión de aplicaciones"
             };
             var permission = new Permission { 
@@ -316,7 +316,7 @@ namespace Integration.Application.Test.Services.Security
             var expectedDTO = new RoleMenuPermissionDTO
             {
                 RoleCode = "ROL0000001",
-                MenuCode = "MEN0000001",
+                MenuCode = "MNU0000002",
                 PermissionCode = "PER0000001",
                 CreatedBy = "epulido"
             };
@@ -349,7 +349,7 @@ namespace Integration.Application.Test.Services.Security
             var dto = new RoleMenuPermissionDTO
             {
                 RoleCode = "ROL0000001",
-                MenuCode = "MEN0000001",
+                MenuCode = "MNU0000002",
                 PermissionCode = "PER0000001",
                 CreatedBy = "epulido"
             };
@@ -371,7 +371,7 @@ namespace Integration.Application.Test.Services.Security
             };
             var menu = new Menu { 
                 Id = 2, 
-                Code = "MEN0000001",
+                Code = "MNU0000002",
                 Name = "Gestión de aplicaciones"
             };
             var permission = new Permission { 
@@ -384,7 +384,7 @@ namespace Integration.Application.Test.Services.Security
             var expectedDTO = new RoleMenuPermissionDTO
             {
                 RoleCode = "ROL0000001",
-                MenuCode = "MEN0000001",
+                MenuCode = "MNU0000002",
                 PermissionCode = "PER0000001",
                 CreatedBy = "epulido"
             };
@@ -404,7 +404,7 @@ namespace Integration.Application.Test.Services.Security
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual("ROL0000001", result.RoleCode);
-            Assert.AreEqual("MOD0000001", result.MenuCode);
+            Assert.AreEqual("MNU0000002", result.MenuCode);
             Assert.AreEqual("PER0000001", result.PermissionCode);
         }
 
@@ -470,7 +470,7 @@ namespace Integration.Application.Test.Services.Security
             var dto = new RoleMenuPermissionDTO
             {
                 RoleCode = "ROL0000001",
-                MenuCode = "MEN0000001",
+                MenuCode = "MNU0000002",
                 PermissionCode = "PER0000001",
                 CreatedBy = "epulido"
             };
@@ -480,12 +480,8 @@ namespace Integration.Application.Test.Services.Security
             // Act & Assert
             var ex = Assert.ThrowsAsync<Exception>(() => _service.UpdateAsync(header, dto));
 
-            // Verifica el mensaje de la excepción externa
-            Assert.That(ex.Message, Is.EqualTo("Error al actualizar el permiso"));
-
-            // Verifica que la excepción interna contenga el mensaje real
+            Assert.That(ex.Message, Is.EqualTo("Error al actualizar el RoleMenuPermission"));
             Assert.That(ex.InnerException?.Message, Does.Contain("No se encontró el usuario"));
         }
-
     }
 }
