@@ -10,7 +10,7 @@ using System;
 namespace Integration.Application.Test.Validations.Security
 {
     [TestFixture]
-    public class RoleModulePermissionDTOValidatorTest
+    public class RoleMenuPermissionDTOValidatorTest
     {
         private RoleMenuPermissionDTOValidator _validator;
 
