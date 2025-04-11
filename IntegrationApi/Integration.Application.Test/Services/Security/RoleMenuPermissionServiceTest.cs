@@ -50,7 +50,7 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task CreateAsync_ShouldReturnCreatedRoleModulePermissionsDTO()
+        public async Task CreateAsync_ShouldReturnCreatedRoleMenuPermissionsDTO()
         {
             var header = new HeaderDTO { UserCode = "USR0000001" };
             var roleMenuPermissionsDTO = new RoleMenuPermissionDTO
@@ -101,7 +101,7 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task DeactivateAsync_ShouldReturnTrue_WhenRoleModulePermissionIsSuccessfullyDeactivated()
+        public async Task DeactivateAsync_ShouldReturnTrue_WhenRoleMenuPermissionIsSuccessfullyDeactivated()
         {
             // Arrange
             var header = new HeaderDTO { UserCode = "USR0000001" };
@@ -157,17 +157,17 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task GetAllActiveAsync_ShouldReturnListOfRoleModulePermissionsDTO()
+        public async Task GetAllActiveAsync_ShouldReturnListOfRoleMenuPermissionsDTO()
         {
-            var roleModulePermissionsList = new List<RoleMenuPermission>
+            var roleMenuPermissionsList = new List<RoleMenuPermission>
             {
                 new RoleMenuPermission { RoleId = 1, MenuId = 1, PermissionId = 1, IsActive = true },
                 new RoleMenuPermission { RoleId = 2, MenuId = 2, PermissionId = 2, IsActive = true }
             };
 
-            _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(roleModulePermissionsList);
-            _mapperMock.Setup(m => m.Map<IEnumerable<RoleMenuPermissionDTO>>(roleModulePermissionsList))
-                .Returns(roleModulePermissionsList.Select(r => new RoleMenuPermissionDTO {
+            _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(roleMenuPermissionsList);
+            _mapperMock.Setup(m => m.Map<IEnumerable<RoleMenuPermissionDTO>>(roleMenuPermissionsList))
+                .Returns(roleMenuPermissionsList.Select(r => new RoleMenuPermissionDTO {
                     RoleCode = "ROL0000001",
                     MenuCode = "MEN0000001",
                     PermissionCode = "PER0000001",
@@ -194,11 +194,11 @@ namespace Integration.Application.Test.Services.Security
                 CreatedBy = "epulido",
                 Name = "Administrador"
             };
-            var roleModuleEntities = new List<RoleMenuPermission>
+            var roleMenuEntities = new List<RoleMenuPermission>
             {
                 new RoleMenuPermission { RoleId = 1, MenuId = 1, PermissionId = 1 }
             };
-            var roleModuleDTOs = new List<RoleMenuPermissionDTO>
+            var roleMenuDTOs = new List<RoleMenuPermissionDTO>
             {
                 new RoleMenuPermissionDTO { 
                     RoleCode = roleCode, 
@@ -210,8 +210,8 @@ namespace Integration.Application.Test.Services.Security
 
             _roleRepositoryMock.Setup(r => r.GetByCodeAsync(roleCode)).ReturnsAsync(role);
             _repositoryMock.Setup(r => r.GetByFilterAsync(It.IsAny<Expression<Func<RoleMenuPermission, bool>>>()))
-                .ReturnsAsync(roleModuleEntities);
-            _mapperMock.Setup(m => m.Map<List<RoleMenuPermissionDTO>>(roleModuleEntities)).Returns(roleModuleDTOs);
+                .ReturnsAsync(roleMenuEntities);
+            _mapperMock.Setup(m => m.Map<List<RoleMenuPermissionDTO>>(roleMenuEntities)).Returns(roleMenuDTOs);
 
             // Act
             var result = await _service.GetByFilterAsync(predicate);
@@ -223,7 +223,7 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task GetByMultipleFiltersAsync_ShouldReturnFilteredDTOs_WhenRoleModuleAndPermissionExist()
+        public async Task GetByMultipleFiltersAsync_ShouldReturnFilteredDTOs_WhenRoleMenuAndPermissionExist()
         {
             // Arrange
             var roleCode = "ROL0000001";
@@ -284,7 +284,7 @@ namespace Integration.Application.Test.Services.Security
         }
 
         [Test]
-        public async Task GetByCodesAsync_ShouldReturnMappedDTO_WhenRoleModulePermissionExists()
+        public async Task GetByCodesAsync_ShouldReturnMappedDTO_WhenRoleMenuPermissionExists()
         {
             // Arrange
             var dtoInput = new RoleMenuPermissionDTO
