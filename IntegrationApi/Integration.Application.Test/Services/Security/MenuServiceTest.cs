@@ -154,10 +154,10 @@ namespace Integration.Application.Test.Services.Security
             var moduleCode = "MNU0000001";
             var module = new Module { Id = 1, Code = moduleCode, Name = "Configuración" };
             var menus = new List<Menu>
-    {
-        new Menu { Code = "MNU0000001", Name = "Administrador", CreatedBy = "USR0000001", IsActive = true },
-        new Menu { Code = "MNU0000002", Name = "Gestionar Aplicación", CreatedBy = "USR0000001", IsActive = true }
-    };
+            {
+                new Menu { Code = "MNU0000001", Name = "Administrador", CreatedBy = "USR0000001", IsActive = true },
+                new Menu { Code = "MNU0000002", Name = "Gestionar Aplicación", CreatedBy = "USR0000001", IsActive = true }
+            };
             var menuDTOs = menus.Select(m => new MenuDTO { Code = m.Code, Name = m.Name, ModuleCode = moduleCode, CreatedBy = "USR0000001" });
 
             _moduleRepositoryMock.Setup(x => x.GetByCodeAsync(moduleCode)).ReturnsAsync(module);
@@ -206,10 +206,10 @@ namespace Integration.Application.Test.Services.Security
         {
             // Arrange
             var menus = new List<Menu>
-    {
-        new Menu { Code = "MNU0000001", Name = "Menu Administrador" },
-        new Menu { Code = "MNU0000002", Name = "Menu Gestión" }
-    };
+            {
+                new Menu { Code = "MNU0000001", Name = "Menu Administrador" },
+                new Menu { Code = "MNU0000002", Name = "Menu Gestión" }
+            };
 
             var menuDTOs = menus.Select(m => new MenuDTO
             {
@@ -254,6 +254,111 @@ namespace Integration.Application.Test.Services.Security
             Assert.IsNotNull(result);
             Assert.IsEmpty(result);
             _menuRepositoryMock.Verify(x => x.GetByFilterAsync(It.IsAny<Expression<Func<Menu, bool>>>()), Times.Once);
+        }
+
+        [Test]
+        public async Task GetByMultipleFiltersAsync_ShouldReturnFilteredMenus_WhenModuleCodeAndOtherFiltersAreProvided()
+        {
+            // Arrange
+            var moduleCode = "MOD0000001";
+            var module = new Module { Id = 1, Code = moduleCode, Name = "Configuración" };
+
+            var menus = new List<Menu>
+            {
+                new Menu { Id = 1, Code = "MNU0000001", Name = "Configuración", ModuleId = 1, IsActive = true },
+                new Menu { Id = 2, Code = "MNU0000002", Name = "Usuarios", ModuleId = 1, IsActive = true },
+                new Menu { Id = 3, Code = "MNU0000003", Name = "Logs", ModuleId = 2, IsActive = true } // otro módulo
+            };
+
+            var menuDTOs = menus
+                .Where(m => m.ModuleId == 1) // Solo los del módulo correcto
+                .Select(m => new MenuDTO
+                {
+                    Code = m.Code,
+                    Name = m.Name,
+                    ModuleCode = moduleCode,
+                    CreatedBy = "admin",
+                    IsActive = true
+                }).ToList();
+
+            _moduleRepositoryMock.Setup(repo => repo.GetByCodeAsync(moduleCode)).ReturnsAsync(module);
+
+            _menuRepositoryMock.Setup(repo => repo.GetByFilterAsync(It.IsAny<Expression<Func<Menu, bool>>>()))
+                               .ReturnsAsync(menus.Where(m => m.ModuleId == 1).ToList());
+
+            _mapperMock.Setup(mapper => mapper.Map<List<MenuDTO>>(It.IsAny<List<Menu>>()))
+                       .Returns(menuDTOs);
+
+            // Predicados
+            var predicates = new List<Expression<Func<MenuDTO, bool>>>
+            {
+                m => m.ModuleCode == "MOD0000001",
+                m => m.Name.Contains("Usu")
+            };
+
+            // Act
+            var result = await _menuService.GetByMultipleFiltersAsync(predicates);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count); // solo "Usuarios"
+            Assert.AreEqual("Usuarios", result.First().Name);
+            _moduleRepositoryMock.Verify(x => x.GetByCodeAsync(moduleCode), Times.Once);
+            _menuRepositoryMock.Verify(x => x.GetByFilterAsync(It.IsAny<Expression<Func<Menu, bool>>>()), Times.Once);
+        }
+        [Test]
+        public async Task UpdateAsync_ShouldReturnUpdatedMenu_WhenMenuExists()
+        {
+            // Arrange
+            var header = new HeaderDTO { UserCode = "USR0000001" };
+            var menuDTO = new MenuDTO
+            {
+                Code = "MNU0000001",
+                Name = "Dashboard",
+                ModuleCode = "MOD0000001",
+                UpdatedBy = "admin",
+                CreatedBy = "admin",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow.AddMinutes(-10),
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            var user = new User
+            {
+                Id = 1,
+                Code = "USR0000001",
+                UserName = "epulido",
+                CreatedBy = "epulido",
+                FirstName = "Erika",
+                LastName = "Pulido"
+            };
+
+            var module = new Module { Id = 1, Code = "MOD0000001", Name = "" };
+            var existingMenu = new Menu { Id = 99, Code = "MNU0000001", Name = "Old", ModuleId = 1 };
+
+            var updatedMenu = new Menu
+            {
+                Id = 99,
+                Code = "MNU0000001",
+                Name = "Dashboard",
+                ModuleId = 1,
+                UpdatedBy = "admin"
+            };
+
+            _userRepositoryMock.Setup(r => r.GetByCodeAsync(header.UserCode)).ReturnsAsync(user);
+            _moduleRepositoryMock.Setup(r => r.GetByCodeAsync(menuDTO.ModuleCode)).ReturnsAsync(module);
+            _menuRepositoryMock.Setup(r => r.GetByCodeAsync(menuDTO.Code)).ReturnsAsync(existingMenu);
+            _mapperMock.Setup(m => m.Map<Menu>(menuDTO)).Returns(new Menu { Code = "MNU0000001", Name = "Dashboard", ModuleId = 1 });
+            _menuRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Menu>())).ReturnsAsync(updatedMenu);
+            _mapperMock.Setup(m => m.Map<MenuDTO>(updatedMenu)).Returns(menuDTO);
+
+            // Act
+            var result = await _menuService.UpdateAsync(header, menuDTO);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(menuDTO.Code, result.Code);
+            Assert.AreEqual(menuDTO.Name, result.Name);
         }
     }
 }
