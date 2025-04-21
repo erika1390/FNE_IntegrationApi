@@ -1,5 +1,4 @@
-﻿using Integration.Core.Entities.Security;
-using Integration.Infrastructure.Data.Contexts;
+﻿using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 
