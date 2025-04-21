@@ -1,12 +1,7 @@
 ﻿using Integration.Core.Entities.Audit;
 using Integration.Infrastructure.Interfaces.Audit;
+
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using NUnit.Framework;
 
 namespace Integration.Infrastructure.Test.Repositories.Audit
 {
