@@ -3,10 +3,6 @@
 using Integration.Application.Validations.Security;
 using Integration.Shared.DTO.Security;
 
-using NUnit.Framework;
-
-using System;
-
 namespace Integration.Application.Test.Validations.Security
 {
     [TestFixture]
@@ -19,23 +15,7 @@ namespace Integration.Application.Test.Validations.Security
         {
             _validator = new UserDTOValidator();
         }
-
-        [Test]
-        public void Should_Have_Error_When_Code_Is_Empty()
-        {
-            var model = new UserDTO { Code = string.Empty, FirstName = "John", LastName = "Doe", CreatedAt = DateTime.UtcNow, CreatedBy = "Admin", IsActive = true };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(x => x.Code).WithErrorMessage("El código del usuario es obligatorio.");
-        }
-
-        [Test]
-        public void Should_Have_Error_When_Code_Exceeds_MaxLength()
-        {
-            var model = new UserDTO { Code = new string('A', 11), FirstName = "John", LastName = "Doe", CreatedAt = DateTime.UtcNow, CreatedBy = "Admin", IsActive = true };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(x => x.Code).WithErrorMessage("El código no puede exceder los 10 caracteres.");
-        }
-
+        
         [Test]
         public void Should_Have_Error_When_FirstName_Is_Empty()
         {

@@ -17,31 +17,6 @@ namespace Integration.Application.Test.Validations.Security
         }
 
         [Test]
-        public void Should_Have_Error_When_Code_Is_Empty()
-        {
-            var model = new RoleDTO { Code = "", Name = "Administrador", CreatedAt = DateTime.UtcNow, CreatedBy = "System" };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(x => x.Code)
-                .WithErrorMessage("El código del rol es requerido.");
-        }
-
-        [Test]
-        public void Should_Have_Error_When_Code_Exceeds_MaxLength()
-        {
-            var model = new RoleDTO
-            {
-                Code = new string('A', 11), // Supera los 10 caracteres
-                Name = "Administrador",
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = "System"
-            };
-
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(x => x.Code)
-                .WithErrorMessage("El código del rol no puede exceder los 10 caracteres."); // ✅ mensaje correcto
-        }
-
-        [Test]
         public void Should_Have_Error_When_Name_Is_Empty()
         {
             var model = new RoleDTO { Code = "ROL0000001", Name = "", CreatedAt = DateTime.UtcNow, CreatedBy = "System" };

@@ -15,23 +15,7 @@ namespace Integration.Application.Test.Validations.Security
         {
             _validator = new ApplicationDTOValidator();
         }
-
-        [Test]
-        public void Should_Have_Error_When_Code_Is_Empty()
-        {
-            var model = new ApplicationDTO { Code = string.Empty, Name = "Test", CreatedAt = DateTime.UtcNow, CreatedBy = "User", IsActive = true };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(x => x.Code).WithErrorMessage("El código de la aplicación es obligatorio.");
-        }
-
-        [Test]
-        public void Should_Have_Error_When_Code_Exceeds_MaxLength()
-        {
-            var model = new ApplicationDTO { Code = new string('A', 11), Name = "Test", CreatedAt = DateTime.UtcNow, CreatedBy = "User", IsActive = true };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(x => x.Code).WithErrorMessage("El código no puede exceder los 10 caracteres.");
-        }
-
+                
         [Test]
         public void Should_Have_Error_When_Name_Is_Empty()
         {

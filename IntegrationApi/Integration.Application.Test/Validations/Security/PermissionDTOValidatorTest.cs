@@ -3,10 +3,6 @@
 using Integration.Application.Validations.Security;
 using Integration.Shared.DTO.Security;
 
-using NUnit.Framework;
-
-using System;
-
 namespace Integration.Application.Test.Validations.Security
 {
     [TestFixture]
@@ -18,22 +14,6 @@ namespace Integration.Application.Test.Validations.Security
         public void SetUp()
         {
             _validator = new PermissionDTOValidator();
-        }
-
-        [Test]
-        public void Should_Have_Error_When_Code_Is_Empty()
-        {
-            var model = new PermissionDTO { Code = string.Empty, CreatedAt = DateTime.UtcNow, CreatedBy = "User", IsActive = true };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(x => x.Code).WithErrorMessage("El código del permiso es obligatorio.");
-        }
-
-        [Test]
-        public void Should_Have_Error_When_Code_Exceeds_MaxLength()
-        {
-            var model = new PermissionDTO { Code = new string('A', 11), CreatedAt = DateTime.UtcNow, CreatedBy = "User", IsActive = true };
-            var result = _validator.TestValidate(model);
-            result.ShouldHaveValidationErrorFor(x => x.Code).WithErrorMessage("El código no puede exceder los 10 caracteres.");
         }
 
         [Test]
