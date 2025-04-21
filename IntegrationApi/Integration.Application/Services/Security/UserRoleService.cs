@@ -3,15 +3,11 @@
 using Integration.Application.Interfaces.Security;
 using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Interfaces.Security;
-using Integration.Infrastructure.Repositories.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Integration.Application.Services.Security
