@@ -17,14 +17,14 @@ namespace Integration.Application.Services.Security
             _logger = logger;
             _applicationRepository = applicationRepository;
         }
-        public async Task<IEnumerable<UserPermissionDTO>> GetAllActiveByUserCodeAsync(string userCode, string applicationCode)
+        public async Task<UserPermissionDTO> GetAllPermissionsByUserCodeAsync(string userCode, string applicationCode)
         {
             _logger.LogInformation("Obteniendo todos los UserPermissionDTOResponse.");
             try
             {
                 var application = await _applicationRepository.GetByCodeAsync(applicationCode);
-                var permissions = await _repository.GetAllActiveByUserIdAsync(userCode,application.Id);               
-                _logger.LogInformation("{Count} UserPermissionDTOResponse obtenidas con éxito.", permissions.Count());
+                var permissions = await _repository.GetAllPermissionsByUserCodeAsync(userCode,application.Id);               
+                _logger.LogInformation("{Count} UserPermissionDTOResponse obtenidas con éxito.", permissions.Roles.Count());
                 return permissions;
             }
             catch (Exception ex)

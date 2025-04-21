@@ -4,6 +4,6 @@ namespace Integration.Application.Interfaces.Security
 {
     public interface IUserPermissionService
     {
-        Task<IEnumerable<UserPermissionDTO>> GetAllActiveByUserCodeAsync(string userCode, string applicationCode);
+        Task<UserPermissionDTO> GetAllPermissionsByUserCodeAsync(string userCode, string applicationCode);
     }
 }

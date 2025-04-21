@@ -1,5 +1,4 @@
-﻿using Integration.Application.Interfaces.Security;
-using Integration.Application.Services.Security;
+﻿using Integration.Application.Services.Security;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Security;
 
@@ -15,7 +14,7 @@ namespace Integration.Application.Test.Services.Security
         private Mock<IUserPermissionRepository> _repositoryMock;
         private Mock<IApplicationRepository> _applicationRepositoryMock;
         private Mock<ILogger<UserPermissionService>> _loggerMock;
-        private IUserPermissionService _service;
+        private UserPermissionService _service;
 
         [SetUp]
         public void SetUp()
@@ -23,102 +22,97 @@ namespace Integration.Application.Test.Services.Security
             _repositoryMock = new Mock<IUserPermissionRepository>();
             _applicationRepositoryMock = new Mock<IApplicationRepository>();
             _loggerMock = new Mock<ILogger<UserPermissionService>>();
-
-            _service = new UserPermissionService(
-                _repositoryMock.Object,
-                _loggerMock.Object,
-                _applicationRepositoryMock.Object
-            );
+            _service = new UserPermissionService(_repositoryMock.Object, _loggerMock.Object, _applicationRepositoryMock.Object);
         }
 
         [Test]
-        public async Task GetAllActiveByUserCodeAsync_ShouldReturnPermissions_WhenApplicationExists()
+        public async Task GetAllPermissionsByUserCodeAsync_ShouldReturnPermissions_WhenUserAndApplicationExist()
         {
             // Arrange
-            string userCode = "USR0000001";
-            string applicationCode = "APP0000001";
-
-            var application = new Integration.Core.Entities.Security.Application { 
-                Id = 1, 
-                Code = applicationCode, 
-                Name = "TestApp",
-                CreatedAt = DateTime.Now,
-                IsActive = true 
-            };
-            var expectedPermissions = new List<UserPermissionDTO>
+            var userCode = "USR0000001";
+            var applicationCode = "APP0000001";
+            var application = new Integration.Core.Entities.Security.Application { Id = 1, Code = applicationCode, Name = "Integrador" };
+            var permissions = new UserPermissionDTO
             {
-                new UserPermissionDTO
+                CodeUser = userCode,
+                UserName = "epulido",
+                Roles = new List<RoleDto>
                 {
-                    CodeUser = userCode,
-                    CodeRole = "ROL0000001",
-                    Role = "Administrador",
-                    CodeModule = "MOD0000001",
-                    Module = "Módulo 1",
-                    CodePermission = "PER0000001",
-                    Permission = "Ver",
-                    UserName = "TestUser",
-                    CodeMenu = "MEN0000001",
-                    Menu = "Menu 1"
+                    new RoleDto
+                    {
+                        Code = "ROL0000001",
+                        Name = "Administrador Integrador",
+                        Modules = new List<ModuleDto>
+                        {
+                            new ModuleDto
+                            {
+                                Code = "MOD0000001",
+                                Name = "Configuración",
+                                Menus = new List<MenuDto>
+                                {
+                                    new MenuDto
+                                    {
+                                        Code = "MNU0000001",
+                                        Name = "Configuración",
+                                        Permissions = new List<PermissionDto>
+                                        {
+                                            new PermissionDto { Code = "PER0000001", Name = "Consultar" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             };
 
-            _applicationRepositoryMock
-                .Setup(repo => repo.GetByCodeAsync(applicationCode))
-                .ReturnsAsync(application);
-
-            _repositoryMock
-                .Setup(repo => repo.GetAllActiveByUserIdAsync(userCode, application.Id))
-                .ReturnsAsync(expectedPermissions);
+            _applicationRepositoryMock.Setup(x => x.GetByCodeAsync(applicationCode)).ReturnsAsync(application);
+            _repositoryMock.Setup(x => x.GetAllPermissionsByUserCodeAsync(userCode, application.Id)).ReturnsAsync(permissions);
 
             // Act
-            var result = await _service.GetAllActiveByUserCodeAsync(userCode, applicationCode);
+            var result = await _service.GetAllPermissionsByUserCodeAsync(userCode, applicationCode);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(expectedPermissions.Count, result.Count());
-            Assert.AreEqual(expectedPermissions.First().CodePermission, result.First().CodePermission);
+            Assert.AreEqual(userCode, result.CodeUser);
+            Assert.AreEqual("epulido", result.UserName);
+            Assert.IsNotEmpty(result.Roles);
+            Assert.AreEqual("ROL0000001", result.Roles[0].Code);
+            _applicationRepositoryMock.Verify(x => x.GetByCodeAsync(applicationCode), Times.Once);
+            _repositoryMock.Verify(x => x.GetAllPermissionsByUserCodeAsync(userCode, application.Id), Times.Once);
         }
 
         [Test]
-        public void GetAllActiveByUserCodeAsync_ShouldThrowException_WhenApplicationNotFound()
+        public void GetAllPermissionsByUserCodeAsync_ShouldThrowException_WhenApplicationDoesNotExist()
         {
             // Arrange
-            string userCode = "USR0000001";
-            string applicationCode = "APP_INVALID";
+            var userCode = "USR0000001";
+            var applicationCode = "APP0000001";
 
-            _applicationRepositoryMock
-                .Setup(repo => repo.GetByCodeAsync(applicationCode))
-                .ReturnsAsync((Integration.Core.Entities.Security.Application)null);
+            _applicationRepositoryMock.Setup(x => x.GetByCodeAsync(applicationCode)).ReturnsAsync((Integration.Core.Entities.Security.Application)null);
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<NullReferenceException>(() =>
-                _service.GetAllActiveByUserCodeAsync(userCode, applicationCode));
+            Assert.ThrowsAsync<NullReferenceException>(async () => await _service.GetAllPermissionsByUserCodeAsync(userCode, applicationCode));
 
-            Assert.That(ex.Message, Is.Null.Or.Contain("Object reference"));
+            _applicationRepositoryMock.Verify(x => x.GetByCodeAsync(applicationCode), Times.Once);
+            _repositoryMock.Verify(x => x.GetAllPermissionsByUserCodeAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
-        public void GetAllActiveByUserCodeAsync_ShouldLogError_WhenExceptionIsThrown()
+        public void GetAllPermissionsByUserCodeAsync_ShouldThrowException_WhenRepositoryThrowsException()
         {
             // Arrange
-            string userCode = "USR0000001";
-            string applicationCode = "APP0000001";
+            var userCode = "USR0000001";
+            var applicationCode = "APP0000001";
+            var application = new Integration.Core.Entities.Security.Application { Id = 1, Code = applicationCode, Name = "Integrador" };
 
-            _applicationRepositoryMock
-                .Setup(repo => repo.GetByCodeAsync(applicationCode))
-                .ThrowsAsync(new Exception("Simulated failure"));
+            _applicationRepositoryMock.Setup(x => x.GetByCodeAsync(applicationCode)).ReturnsAsync(application);
+            _repositoryMock.Setup(x => x.GetAllPermissionsByUserCodeAsync(userCode, application.Id)).ThrowsAsync(new Exception("Repository error"));
 
             // Act & Assert
-            Assert.ThrowsAsync<Exception>(() => _service.GetAllActiveByUserCodeAsync(userCode, applicationCode));
-
-            _loggerMock.Verify(
-                x => x.Log(
-                    LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Error al obtener todos los UserPermissionDTOResponse")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-                Times.Once);
+            Assert.ThrowsAsync<Exception>(async () => await _service.GetAllPermissionsByUserCodeAsync(userCode, applicationCode));
+            _applicationRepositoryMock.Verify(x => x.GetByCodeAsync(applicationCode), Times.Once);
+            _repositoryMock.Verify(x => x.GetAllPermissionsByUserCodeAsync(userCode, application.Id), Times.Once);
         }
     }
 }

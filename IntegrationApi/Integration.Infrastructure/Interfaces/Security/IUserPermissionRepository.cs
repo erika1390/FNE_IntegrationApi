@@ -1,10 +1,9 @@
-﻿using Integration.Core.Entities.Security;
-using Integration.Shared.DTO.Security;
+﻿using Integration.Shared.DTO.Security;
 
 namespace Integration.Infrastructure.Interfaces.Security
 {
     public interface IUserPermissionRepository
     {
-        Task<IEnumerable<UserPermissionDTO>> GetAllActiveByUserIdAsync(string userCode, int applicationId);
+        Task<UserPermissionDTO> GetAllPermissionsByUserCodeAsync(string userCode, int applicationId);
     }
 }

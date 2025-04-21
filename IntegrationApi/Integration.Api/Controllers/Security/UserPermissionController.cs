@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-using Integration.Api.Filters;
+﻿using Integration.Api.Filters;
 using Integration.Application.Interfaces.Security;
 using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
@@ -26,14 +24,14 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllActiveByUserCodeAsync([FromHeader] HeaderDTO header)
+        public async Task<IActionResult> GetAllPermissionsByUserCodeAsync([FromHeader] HeaderDTO header)
         {
-            var result = await _service.GetAllActiveByUserCodeAsync(header.UserCode,header.ApplicationCode);
-            if (!result.Any())
+            var result = await _service.GetAllPermissionsByUserCodeAsync(header.UserCode,header.ApplicationCode);
+            if (result == null || result.Roles == null || !result.Roles.Any())
             {
-                return NotFound(ResponseApi<IEnumerable<UserPermissionDTO>>.Error("No se encontraron usuarios."));
+                return NotFound(ResponseApi<UserPermissionDTO>.Error("No se encontraron usuarios."));
             }
-            return Ok(ResponseApi<IEnumerable<UserPermissionDTO>>.Success(result));
+            return Ok(ResponseApi<UserPermissionDTO>.Success(result));
         }
     }
 }

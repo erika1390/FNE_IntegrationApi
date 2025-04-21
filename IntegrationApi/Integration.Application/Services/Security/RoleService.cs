@@ -44,7 +44,7 @@ namespace Integration.Application.Services.Security
                 role.ApplicationId = application.Id;
                 role.CreatedBy = user.UserName;
                 role.UpdatedBy = user.UserName;
-                role.NormalizedName = role.Code +"_"+ roleDTO.Name.ToUpper();
+                role.NormalizedName = roleDTO.Name.ToUpper();
                 var result = await _roleRepository.CreateAsync(role);
                 _logger.LogInformation("Rol creado con éxito: RoleCode {RoleCode}, Nombre: {Name}", result.Code, result.Name);
                 return _mapper.Map<RoleDTO>(result);

@@ -1,5 +1,9 @@
-﻿using Integration.Infrastructure.Interfaces.Security;
-using Integration.Shared.DTO.Security;
+﻿using Integration.Core.Entities.Security;
+using Integration.Infrastructure.Data.Contexts;
+using Integration.Infrastructure.Repositories.Security;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 using Moq;
 
@@ -8,82 +12,77 @@ namespace Integration.Infrastructure.Test.Repositories.Security
     [TestFixture]
     public class UserPermissionRepositoryTest
     {
-        private Mock<IUserPermissionRepository> _mock;
+        private ApplicationDbContext _context;
+        private UserPermissionRepository _repository;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
-            _mock = new Mock<IUserPermissionRepository>();
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase("MyTestDb") // <- Esta línea ahora sí será reconocida
+            .Options;
+
+            _context = new ApplicationDbContext(options);
+
+            var loggerMock = new Mock<ILogger<UserPermissionRepository>>();
+            _repository = new UserPermissionRepository(_context, loggerMock.Object);
         }
 
         [Test]
-        public async Task GetAllActiveByUserIdAsync_ShouldReturnPermissions_WhenUserHasPermissions()
+        public async Task GetAllPermissionsByUserCodeAsync_ShouldReturnPermissions_WhenUserHasPermissions()
         {
             // Arrange
-            var expectedPermissions = new List<UserPermissionDTO>
-            {
-                new UserPermissionDTO
-                {
-                    CodeUser = "USR0000001",
-                    UserName = "testuser",
-                    CodeRole = "ROL0000001",
-                    Role = "Admin",
-                    CodeModule = "MOD0000001",
-                    Module = "Module1",
-                    CodeMenu = "MEN0000001",
-                    Menu = "Menu1",
-                    CodePermission = "PERM0000001",
-                    Permission = "Permission1"
-                }
-            };
+            var user = new User { Id = 1, Code = "USR0000001", UserName = "epulido", IsActive = true, CreatedBy="epulido", FirstName="Erika", LastName="Pulido" };
+            var role = new Role { Id = 1, Code = "ROL0000001", Name = "Administrador", ApplicationId = 1, IsActive = true, CreatedBy = "epulido" };
+            var module = new Module { Id = 1, Code = "MOD0000001", Name = "Configuración", ApplicationId = 1, IsActive = true };
+            var menu = new Menu { Id = 1, Code = "MNU0000001", Name = "Configuración", ModuleId = 1, IsActive = true };
+            var permission = new Permission { Id = 1, Code = "PER0000001", Name = "Consultar", IsActive = true };
 
-            _mock.Setup(repo => repo.GetAllActiveByUserIdAsync("USR0000001", 1))
-                 .ReturnsAsync(expectedPermissions);
+            _context.Users.Add(user);
+            _context.Roles.Add(role);
+            _context.Modules.Add(module);
+            _context.Menus.Add(menu);
+            _context.Permissions.Add(permission);
+            _context.UserRoles.Add(new UserRole { UserId = 1, RoleId = 1, IsActive = true, CreatedBy = "epulido" });
+            _context.RoleMenuPermissions.Add(new RoleMenuPermission { RoleId = 1, MenuId = 1, PermissionId = 1, IsActive = true });
+
+            await _context.SaveChangesAsync();
 
             // Act
-            var result = await _mock.Object.GetAllActiveByUserIdAsync("USR0000001", 1);
+            var result = await _repository.GetAllPermissionsByUserCodeAsync("USR0000001", 1);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count());
-            var permission = result.First();
-            Assert.AreEqual("USR0000001", permission.CodeUser);
-            Assert.AreEqual("testuser", permission.UserName);
-            Assert.AreEqual("ROL0000001", permission.CodeRole);
-            Assert.AreEqual("Admin", permission.Role);
-            Assert.AreEqual("MOD0000001", permission.CodeModule);
-            Assert.AreEqual("Module1", permission.Module);
-            Assert.AreEqual("MEN0000001", permission.CodeMenu);
-            Assert.AreEqual("Menu1", permission.Menu);
-            Assert.AreEqual("PERM0000001", permission.CodePermission);
-            Assert.AreEqual("Permission1", permission.Permission);
+            Assert.AreEqual("USR0000001", result.CodeUser);
+            Assert.AreEqual("epulido", result.UserName);
+            Assert.AreEqual(1, result.Roles.Count);
+            Assert.AreEqual("ROL0000001", result.Roles[0].Code);
+            Assert.AreEqual("Administrador", result.Roles[0].Name);
+            Assert.AreEqual(1, result.Roles[0].Modules.Count);
+            Assert.AreEqual("MOD0000001", result.Roles[0].Modules[0].Code);
+            Assert.AreEqual(1, result.Roles[0].Modules[0].Menus.Count);
+            Assert.AreEqual("MNU0000001", result.Roles[0].Modules[0].Menus[0].Code);
+            Assert.AreEqual(1, result.Roles[0].Modules[0].Menus[0].Permissions.Count);
+            Assert.AreEqual("PER0000001", result.Roles[0].Modules[0].Menus[0].Permissions[0].Code);
         }
 
         [Test]
-        public async Task GetAllActiveByUserIdAsync_ShouldReturnEmpty_WhenUserHasNoPermissions()
+        public async Task GetAllPermissionsByUserCodeAsync_ShouldReturnNull_WhenUserHasNoPermissions()
         {
             // Arrange
-            _mock.Setup(repo => repo.GetAllActiveByUserIdAsync("USR_NO_PERMS", 1))
-                 .ReturnsAsync(new List<UserPermissionDTO>());
+            // (sin datos)
 
             // Act
-            var result = await _mock.Object.GetAllActiveByUserIdAsync("USR_NO_PERMS", 1);
+            var result = await _repository.GetAllPermissionsByUserCodeAsync("USR0000001", 1);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsEmpty(result);
+            Assert.IsNull(result);
         }
 
-        [Test]
-        public async Task GetAllActiveByUserIdAsync_ShouldThrowException_WhenCalledWithNull()
+        [TearDown]
+        public void TearDown()
         {
-            // Arrange
-            _mock.Setup(repo => repo.GetAllActiveByUserIdAsync(null, 1))
-                 .ThrowsAsync(new ArgumentNullException("userCode"));
-
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(() => _mock.Object.GetAllActiveByUserIdAsync(null, 1));
-            Assert.That(ex.ParamName, Is.EqualTo("userCode"));
+            _context.Dispose();
         }
     }
 }

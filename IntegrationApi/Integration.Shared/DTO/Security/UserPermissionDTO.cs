@@ -1,16 +1,38 @@
-﻿namespace Integration.Shared.DTO.Security
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace Integration.Shared.DTO.Security
 {
     public class UserPermissionDTO
     {
-        public required string CodeUser { get; set; }
-        public required string UserName { get; set; }
-        public required string CodeRole { get; set; }
-        public required string Role { get; set; }
-        public required string CodeModule { get; set; }
-        public required string Module { get; set; }
-        public required string CodeMenu { get; set; }
-        public required string Menu { get; set; }
-        public required string CodePermission { get; set; }
-        public required string Permission { get; set; }
+        public string CodeUser { get; set; }
+        public string UserName { get; set; }
+        public List<RoleDto> Roles { get; set; }
+    }
+
+    public class RoleDto
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public List<ModuleDto> Modules { get; set; }
+    }
+
+    public class ModuleDto
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public List<MenuDto> Menus { get; set; }
+    }
+
+    public class MenuDto
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public List<PermissionDto> Permissions { get; set; }
+    }
+
+    public class PermissionDto
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
     }
 }

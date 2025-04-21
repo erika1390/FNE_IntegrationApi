@@ -17,18 +17,18 @@ namespace Integration.Infrastructure.Repositories.Security
             _context = context;
             _logger = logger;
         }
-        public async Task<IEnumerable<UserPermissionDTO>> GetAllActiveByUserIdAsync(string userCode, int applicationId)
+        public async Task<UserPermissionDTO> GetAllPermissionsByUserCodeAsync(string userCode, int applicationId)
         {
             try
             {
-                var permissionsByModule = await (
+                var flatPermissions = await (
                     from rmp in _context.RoleMenuPermissions
                     join ur in _context.UserRoles on rmp.RoleId equals ur.RoleId
                     join r in _context.Roles on rmp.RoleId equals r.Id
-                    join m in _context.Modules on rmp.MenuId equals m.Id
                     join me in _context.Menus on rmp.MenuId equals me.Id
                     join p in _context.Permissions on rmp.PermissionId equals p.Id
                     join u in _context.Users on ur.UserId equals u.Id
+                    join m in _context.Modules on me.ModuleId equals m.Id
                     where r.ApplicationId == applicationId
                           && m.ApplicationId == applicationId
                           && r.IsActive
@@ -37,7 +37,7 @@ namespace Integration.Infrastructure.Repositories.Security
                           && rmp.IsActive
                           && ur.IsActive
                           && u.Code == userCode
-                    select new UserPermissionDTO
+                    select new 
                     {
                         CodeUser = u.Code,
                         UserName = u.UserName,
@@ -52,13 +52,52 @@ namespace Integration.Infrastructure.Repositories.Security
                     }
                 ).ToListAsync();
 
+                var userPermissionDto = new UserPermissionDTO
+                {
+                    CodeUser = flatPermissions.FirstOrDefault()?.CodeUser,
+                    UserName = flatPermissions.FirstOrDefault()?.UserName,
+                    Roles = flatPermissions
+                    .GroupBy(x => new { x.CodeRole, x.Role })
+                    .Select(roleGroup => new RoleDto
+                    {
+                        Code = roleGroup.Key.CodeRole,
+                        Name = roleGroup.Key.Role,
+                        Modules = roleGroup
+                            .GroupBy(x => new { x.CodeModule, x.Module })
+                            .Select(moduleGroup => new ModuleDto
+                            {
+                                Code = moduleGroup.Key.CodeModule,
+                                Name = moduleGroup.Key.Module,
+                                Menus = moduleGroup
+                                    .GroupBy(x => new { x.CodeMenu, x.Menu })
+                                    .Select(menuGroup => new MenuDto
+                                    {
+                                        Code = menuGroup.Key.CodeMenu,
+                                        Name = menuGroup.Key.Menu,
+                                        Permissions = menuGroup
+                                            .Select(p => new PermissionDto
+                                            {
+                                                Code = p.CodePermission,
+                                                Name = p.Permission
+                                            })
+                                            .Distinct()
+                                            .ToList()
+                                    })
+                                    .ToList()
+                            })
+                            .ToList()
+                    })
+                    .ToList()
+                };
+
+
                 _logger.LogInformation("Se obtuvieron permisos agrupados por módulo para el usuario {UserCode}.", userCode);
-                return permissionsByModule;
+                return userPermissionDto;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener permisos por módulo para el usuario {UserCode}.", userCode);
-                return Enumerable.Empty<UserPermissionDTO>();
+                return null;
             }
         }
     }
