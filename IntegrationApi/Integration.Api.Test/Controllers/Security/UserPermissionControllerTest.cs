@@ -67,7 +67,7 @@ namespace Integration.Api.Test.Controllers.Security
         public async Task GetAllActiveByUserCodeAsync_ShouldReturnNotFound_WhenNoPermissionsFound()
         {
             // Arrange
-            var header = new HeaderDTO { UserCode = "USR0002", ApplicationCode = "APP0002" };
+            var header = new HeaderDTO { UserCode = "USR0000001", ApplicationCode = "APP0000001" };
 
             _serviceMock.Setup(s => s.GetAllActiveByUserCodeAsync(header.UserCode, header.ApplicationCode))
                         .ReturnsAsync(new List<UserPermissionDTO>());
@@ -86,7 +86,7 @@ namespace Integration.Api.Test.Controllers.Security
         public void GetAllActiveByUserCodeAsync_ShouldThrowException_WhenServiceFails()
         {
             // Arrange
-            var header = new HeaderDTO { UserCode = "USR9999", ApplicationCode = "APP9999" };
+            var header = new HeaderDTO { UserCode = "USR0000001", ApplicationCode = "APP0000001" };
 
             _serviceMock.Setup(s => s.GetAllActiveByUserCodeAsync(header.UserCode, header.ApplicationCode))
                         .ThrowsAsync(new Exception("Error inesperado"));
