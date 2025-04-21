@@ -3,8 +3,6 @@
     public class LogDTO
     {
         public Guid LogId { get; set; }
-        public required string CodeApplication { get; set; }
-        public required string CodeUser { get; set; }
         public required string UserIp { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         public string Level { get; set; } = "Information";

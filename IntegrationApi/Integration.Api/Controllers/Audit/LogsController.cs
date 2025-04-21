@@ -1,5 +1,7 @@
-﻿using Integration.Application.Interfaces.Audit;
+﻿using Integration.Api.Filters;
+using Integration.Application.Interfaces.Audit;
 using Integration.Shared.DTO.Audit;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.Response;
 
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,7 @@ namespace Integration.Api.Controllers.Audit
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ServiceFilter(typeof(ValidateHeadersFilter))]
     public class LogController : ControllerBase
     {
         private readonly ILogService _service;
@@ -20,9 +23,7 @@ namespace Integration.Api.Controllers.Audit
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search(
-             [FromQuery] string? codeApplication,
-             [FromQuery] string? codeUser,
+        public async Task<IActionResult> Search([FromHeader] HeaderDTO header,
              [FromQuery] DateTime? timestamp,
              [FromQuery] string? level,
              [FromQuery] string? source,
@@ -30,7 +31,7 @@ namespace Integration.Api.Controllers.Audit
         {
             try
             {
-                var logs = await _service.SearchAsync(codeApplication, codeUser, timestamp, level, source, method);
+                var logs = await _service.SearchAsync(header, timestamp, level, source, method);
 
                 if (logs == null || !logs.Any())
                 {
@@ -46,7 +47,7 @@ namespace Integration.Api.Controllers.Audit
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] LogDTO logDTO)
+        public async Task<IActionResult> Create([FromHeader] HeaderDTO header,[FromBody] LogDTO logDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -56,7 +57,7 @@ namespace Integration.Api.Controllers.Audit
 
             try
             {
-                var result = await _service.CreateAsync(logDTO);
+                var result = await _service.CreateAsync(header, logDTO);
 
                 if (result == null)
                 {

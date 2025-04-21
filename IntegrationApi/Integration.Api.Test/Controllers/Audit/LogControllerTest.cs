@@ -1,12 +1,15 @@
 ﻿using Integration.Api.Controllers.Audit;
 using Integration.Application.Interfaces.Audit;
 using Integration.Shared.DTO.Audit;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.Response;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using Moq;
+
+using System.Reflection.PortableExecutable;
 
 namespace Integration.Api.Test.Controllers.Audit
 {
@@ -27,11 +30,12 @@ namespace Integration.Api.Test.Controllers.Audit
         [Test]
         public async Task Search_ShouldReturnLogs_WhenLogsExist()
         {
-            var logs = new List<LogDTO> { new LogDTO { CodeUser = "USR0000001", Level = "Info", CodeApplication= "APP0000001", UserIp = "186.30.6.144" } };
-            _serviceMock.Setup(s => s.SearchAsync(null, null, null, null, null, null))
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var logs = new List<LogDTO> { new LogDTO { Level = "Info", UserIp = "186.30.6.144" } };
+            _serviceMock.Setup(s => s.SearchAsync(header, null, null, null, null))
                         .ReturnsAsync(logs);
 
-            var result = await _controller.Search(null, null, null, null, null, null);
+            var result = await _controller.Search(header, null, null, null, null);
 
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
@@ -43,10 +47,11 @@ namespace Integration.Api.Test.Controllers.Audit
         [Test]
         public async Task Search_ShouldReturnOkWithEmptyList_WhenNoLogsFound()
         {
-            _serviceMock.Setup(s => s.SearchAsync(null, null, null, null, null, null))
-                        .ReturnsAsync(new List<LogDTO>());
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.SearchAsync(header, null, null, null, null))
+            .ReturnsAsync(new List<LogDTO>());
 
-            var result = await _controller.Search(null, null, null, null, null, null);
+            var result = await _controller.Search(header, null, null, null, null);
 
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
@@ -58,10 +63,11 @@ namespace Integration.Api.Test.Controllers.Audit
         [Test]
         public async Task Search_ShouldReturn500_WhenExceptionThrown()
         {
-            _serviceMock.Setup(s => s.SearchAsync(null, null, null, null, null, null))
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            _serviceMock.Setup(s => s.SearchAsync(header, null, null, null, null))
                         .ThrowsAsync(new Exception("Test Exception"));
 
-            var result = await _controller.Search(null, null, null, null, null, null);
+            var result = await _controller.Search(header, null, null, null, null);
 
             var objectResult = result as ObjectResult;
             Assert.IsNotNull(objectResult);
@@ -71,25 +77,26 @@ namespace Integration.Api.Test.Controllers.Audit
         [Test]
         public async Task Create_ShouldReturnOk_WhenLogCreated()
         {
-            var dto = new LogDTO { CodeUser = "USR0000001", Level = "Error", CodeApplication = "APP0000001", UserIp = "186.30.6.144" };
-            _serviceMock.Setup(s => s.CreateAsync(dto)).ReturnsAsync(dto);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var dto = new LogDTO { Level = "Error", UserIp = "186.30.6.144" };
+            _serviceMock.Setup(s => s.CreateAsync(header, dto)).ReturnsAsync(dto);
 
-            var result = await _controller.Create(dto);
+            var result = await _controller.Create(header, dto);
 
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
             var response = okResult.Value as ResponseApi<LogDTO>;
             Assert.IsNotNull(response);
-            Assert.AreEqual("USR0000001", response.Data.CodeUser);
         }
 
         [Test]
         public async Task Create_ShouldReturnBadRequest_WhenLogNotCreated()
         {
-            var dto = new LogDTO { CodeUser = "USR0000001", Level = "Error", CodeApplication = "APP0000001", UserIp = "186.30.6.144" };
-            _serviceMock.Setup(s => s.CreateAsync(dto)).ReturnsAsync((LogDTO)null);
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var dto = new LogDTO { Level = "Error", UserIp = "186.30.6.144" };
+            _serviceMock.Setup(s => s.CreateAsync(header, dto)).ReturnsAsync((LogDTO)null);
 
-            var result = await _controller.Create(dto);
+            var result = await _controller.Create(header, dto);
 
             var badRequest = result as BadRequestObjectResult;
             Assert.IsNotNull(badRequest);
@@ -100,10 +107,11 @@ namespace Integration.Api.Test.Controllers.Audit
         [Test]
         public async Task Create_ShouldReturn500_WhenExceptionThrown()
         {
-            var dto = new LogDTO { CodeUser = "USR0000001", Level = "Error", CodeApplication = "APP0000001", UserIp = "186.30.6.144" };
-            _serviceMock.Setup(s => s.CreateAsync(dto)).ThrowsAsync(new Exception("Database error"));
+            var header = new HeaderDTO { ApplicationCode = "APP0000001", UserCode = "USR0000001" };
+            var dto = new LogDTO { Level = "Error", UserIp = "186.30.6.144" };
+            _serviceMock.Setup(s => s.CreateAsync(header, dto)).ThrowsAsync(new Exception("Database error"));
 
-            var result = await _controller.Create(dto);
+            var result = await _controller.Create(header, dto);
 
             var status = result as ObjectResult;
             Assert.IsNotNull(status);
