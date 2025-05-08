@@ -75,17 +75,17 @@ namespace Integration.Application.Services.Security
                 bool success = await _userRoleRepository.DeactivateAsync(userBody.Id, roleBody.Id, userHeader.UserName);
                 if (success)
                 {
-                    _logger.LogInformation("UserRole con UserCode {UserCode}, RoleCode {RoleCode} desactivada correctamente.", userCode, roleCode);
+                    _logger.LogInformation("UserRole por UserName {UserCode}, RoleCode {RoleCode} desactivada correctamente.", userCode, roleCode);
                 }
                 else
                 {
-                    _logger.LogWarning("No se encontró el UserRole con UserCode {UserCode}, RoleCode {RoleCode} para desactivar.", userCode, roleCode);
+                    _logger.LogWarning("No se encontró el UserRole por UserName {UserCode}, RoleCode {RoleCode} para desactivar.", userCode, roleCode);
                 }
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el UserRole con UserCode {UserCode}, RoleCode {RoleCode}.", userCode, roleCode);
+                _logger.LogError(ex, "Error al eliminar el UserRole por UserName {UserCode}, RoleCode {RoleCode}.", userCode, roleCode);
                 throw;
             }
         }
@@ -242,7 +242,7 @@ namespace Integration.Application.Services.Security
 
         public async Task<UserRoleDTO> GetByUserCodeRoleCodeAsync(string userCode, string roleCode)
         {
-            _logger.LogInformation("Buscando aplicación con UserCode: {UserCode}, RoleCode: {RoleCode}", userCode,roleCode);
+            _logger.LogInformation("Buscando aplicación por UserName: {UserCode}, RoleCode: {RoleCode}", userCode,roleCode);
             try
             {
                 var user = await _userRepository.GetByCodeAsync(userCode);
@@ -250,7 +250,7 @@ namespace Integration.Application.Services.Security
                 var userRole = await _userRoleRepository.GetByUserIdRoleIdAsync(user.Id, role.Id);
                 if (userRole == null)
                 {
-                    _logger.LogWarning("No se encontró la UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}.", userCode, roleCode);
+                    _logger.LogWarning("No se encontró la UserRole por UserName: {UserCode}, RoleCode: {RoleCode}.", userCode, roleCode);
                     return null;
                 }
                 _logger.LogInformation("UserRole encontrada: UserCode: {UserCode}, RoleCode: {RoleCode}.", userCode, roleCode);
@@ -258,7 +258,7 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}.", userCode, roleCode);
+                _logger.LogError(ex, "Error al obtener el UserRole por UserName: {UserCode}, RoleCode: {RoleCode}.", userCode, roleCode);
                 throw;
             }
         }
@@ -284,7 +284,7 @@ namespace Integration.Application.Services.Security
                 var updatedUserRole = await _userRoleRepository.UpdateAsync(userRole);
                 if (updatedUserRole == null)
                 {
-                    _logger.LogWarning("UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                    _logger.LogWarning("UserRole por UserName: {UserCode}, RoleCode: {RoleCode}.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                     return null;
                 }
                 _logger.LogInformation("UserRole actualizado con éxito: UserCode {UserCode}, RoleCode: {RoleCode}.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
@@ -292,7 +292,7 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar UserRole con UserCode {UserCode}, RoleCode: {RoleCode}.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                _logger.LogError(ex, "Error al actualizar UserRole por UserName {UserCode}, RoleCode: {RoleCode}.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 throw;
             }
         }

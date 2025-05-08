@@ -62,7 +62,7 @@ namespace Integration.Application.Services.Security
 
         public async Task<bool> DeactivateAsync(HeaderDTO header, string code)
         {
-            _logger.LogInformation("Desactivar usuario con UserCode: {UserCode}", code);
+            _logger.LogInformation("Desactivar usuario por UserName: {UserCode}", code);
             try
             {
                 var user = await _repository.GetByCodeAsync(header.UserCode);
@@ -145,13 +145,13 @@ namespace Integration.Application.Services.Security
 
         public async Task<UserDTO> GetByCodeAsync(string code)
         {
-            _logger.LogInformation("Buscando usuario con UserCode: {UserCode}", code);
+            _logger.LogInformation("Buscando usuario por UserName: {UserCode}", code);
             try
             {
                 var permission = await _repository.GetByCodeAsync(code);
                 if (permission == null)
                 {
-                    _logger.LogWarning("No se encontró el usuario con UserCode {UserCode}.", code);
+                    _logger.LogWarning("No se encontró el usuario por UserName {UserCode}.", code);
                     return null;
                 }
                 _logger.LogInformation("Usuario encontrada: UserCode:{UserCode}, Nombre: {Name}", permission.Code, permission.UserName);
@@ -159,7 +159,7 @@ namespace Integration.Application.Services.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el usuarios con UserCode {UserCode}.", code);
+                _logger.LogError(ex, "Error al obtener el usuarios por UserName {UserCode}.", code);
                 throw;
             }
         }
@@ -195,6 +195,27 @@ namespace Integration.Application.Services.Security
         {
             string userName = await _repository.GetUserNameByCodeAsync(userCode);
             return userName;
+        }
+
+        public async Task<UserDTO> GetByUserNameAsync(string userName)
+        {
+            _logger.LogInformation("Buscando usuario por UserName: {userName}", userName);
+            try
+            {
+                var permission = await _repository.GetByUserNameAsync(userName);
+                if (permission == null)
+                {
+                    _logger.LogWarning("No se encontró el usuario por UserName {userName}.", userName);
+                    return null;
+                }
+                _logger.LogInformation("Usuario encontrada: UserName:{userName}, Nombre: {Name}", permission.Code, permission.UserName);
+                return _mapper.Map<UserDTO>(permission);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el usuarios por UserName {userName}.", userName);
+                throw;
+            }
         }
     }
 }

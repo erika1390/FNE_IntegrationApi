@@ -162,13 +162,13 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Se recibió un UserRole no válido (UserCode: {UserCode}, RoleCode: {RoleCode}) en la solicitud de búsqueda.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 return BadRequest(ResponseApi<UserRoleDTO>.Error("El UserCode o RoleCode no debe ser nulo o vacio"));
             }
-            _logger.LogInformation("Buscando UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+            _logger.LogInformation("Buscando UserRole por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
             try
             {
                 var result = await _service.GetByUserCodeRoleCodeAsync(userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se encontró el UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                    _logger.LogWarning("No se encontró el UserRole por UserName: {UserCode}, RoleCode: {RoleCode}.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                     return NotFound(ResponseApi<UserRoleDTO>.Error("UserRole no encontrada."));
                 }
                 _logger.LogInformation("UserRole encontrada: UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
@@ -176,7 +176,7 @@ namespace Integration.Api.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                _logger.LogError(ex, "Error al obtener el UserRole por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 return StatusCode(500, ResponseApi<UserRoleDTO>.Error("Error interno del servidor."));
             }
         }
@@ -202,17 +202,17 @@ namespace Integration.Api.Controllers.Security
                 return BadRequest(ResponseApi<UserRoleDTO>.Error(errors));
             }
 
-            _logger.LogInformation("Creando nuevo UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+            _logger.LogInformation("Creando nuevo UserRole por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
             try
             {
                 var result = await _service.CreateAsync(header, userRoleDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("No se pudo crear el UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                    _logger.LogWarning("No se pudo crear el UserRole por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                     return BadRequest(ResponseApi<UserRoleDTO>.Error("No se pudo crear el UserRole."));
                 }
 
-                _logger.LogInformation("UserRole creado con éxito con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                _logger.LogInformation("UserRole creado con éxito por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 return CreatedAtAction(nameof(GetByCodes), new { userRoleDTO = result },
                     ResponseApi<UserRoleDTO>.Success(result, "UserRole creado con éxito."));
             }
@@ -241,21 +241,21 @@ namespace Integration.Api.Controllers.Security
                 var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ResponseApi<UserRoleDTO>.Error(errors));
             }
-            _logger.LogInformation("Actualizando UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+            _logger.LogInformation("Actualizando UserRole por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
             try
             {
                 var result = await _service.UpdateAsync(header, userRoleDTO);
                 if (result == null)
                 {
-                    _logger.LogWarning("UserRole con UserCode: {UserCode}, RoleCode: {RoleCode} no encontrado.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                    _logger.LogWarning("UserRole por UserName: {UserCode}, RoleCode: {RoleCode} no encontrado.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                     return NotFound(ResponseApi<UserRoleDTO>.Error("Módulo no encontrado."));
                 }
-                _logger.LogInformation("UserRole creado exitosamente con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                _logger.LogInformation("UserRole creado exitosamente por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 return Ok(ResponseApi<UserRoleDTO>.Success(result, "UserRole actualizado exitosamente."));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                _logger.LogError(ex, "Error al actualizar UserRole por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 return StatusCode(500, ResponseApi<UserRoleDTO>.Error("Error interno del servidor."));
             }
         }
@@ -271,13 +271,13 @@ namespace Integration.Api.Controllers.Security
                 _logger.LogWarning("Code no válido recibido (UserCode: {UserCode}, RoleCode: {RoleCode}) en la solicitud de eliminación.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 return BadRequest(ResponseApi<bool>.Error("El ModuleCode debe ser nulo o vacio."));
             }
-            _logger.LogInformation("Desactivado UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+            _logger.LogInformation("Desactivado UserRole por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
             try
             {
                 var result = await _service.DeactivateAsync(header, userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 if (!result)
                 {
-                    _logger.LogWarning("UserRole con UserCode: {UserCode}, RoleCode: {RoleCode} no encontrado.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                    _logger.LogWarning("UserRole por UserName: {UserCode}, RoleCode: {RoleCode} no encontrado.", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                     return NotFound(ResponseApi<bool>.Error("UserRole no encontrado."));
                 }
                 _logger.LogInformation("UserRole desactivado exitosamente: UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
@@ -285,7 +285,7 @@ namespace Integration.Api.Controllers.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al desactivado UserRole con UserCode: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
+                _logger.LogError(ex, "Error al desactivado UserRole por UserName: {UserCode}, RoleCode: {RoleCode}", userRoleDTO.UserCode, userRoleDTO.RoleCode);
                 return StatusCode(500, ResponseApi<bool>.Error("Error interno del servidor."));
             }
         }

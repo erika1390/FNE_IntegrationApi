@@ -13,5 +13,6 @@ namespace Integration.Application.Interfaces.Security
         Task<UserDTO> GetByCodeAsync(string code);
         Task<UserDTO> UpdateAsync(HeaderDTO header, UserDTO userDTO);
         Task<string> GetUserNameByCodeAsync(string userCode);
+        Task<UserDTO> GetByUserNameAsync(string userName);
     }
 }

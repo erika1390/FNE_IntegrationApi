@@ -84,7 +84,6 @@ namespace Integration.Api.Test.Filters
             var header = new HeaderDTO
             {
                 ApplicationCode = "APP0000001",
-                RoleCode = "ROLE0000001",
                 UserCode = "USER0000001",
                 Authorization = "Bearer invalid_token"
             };
@@ -114,7 +113,6 @@ namespace Integration.Api.Test.Filters
             var header = new HeaderDTO
             {
                 ApplicationCode = "APP0000001",
-                RoleCode = "ROLE0000001",
                 UserCode = "USER0000001",
                 Authorization = "Bearer valid_token"
             };

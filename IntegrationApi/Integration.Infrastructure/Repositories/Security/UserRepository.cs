@@ -135,7 +135,7 @@ namespace Integration.Infrastructure.Repositories.Security
                     .FirstOrDefaultAsync();
                 if (user == null)
                 {
-                    _logger.LogWarning("No se encontró el usuario con UserCode {UserCode}.", code);
+                    _logger.LogWarning("No se encontró el usuario por UserCode {UserCode}.", code);
                     return null;
                 }
 
@@ -145,7 +145,7 @@ namespace Integration.Infrastructure.Repositories.Security
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el usuario con UserCode {UserCode}.", code);
+                _logger.LogError(ex, "Error al obtener el usuario por UserCode {UserCode}.", code);
                 return null;
             }
         }
@@ -204,6 +204,31 @@ namespace Integration.Infrastructure.Repositories.Security
             .FirstOrDefaultAsync();
 
             return user ?? "unknown";
+        }
+
+        public async Task<User> GetByUserNameAsync(string userName)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .Where(a => a.UserName == userName)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    _logger.LogWarning("No se encontró el usuario por UserName {UserName}.", userName);
+                    return null;
+                }
+
+                _logger.LogInformation("Rol encontrado: UserCode: {UserCode}, Nombre: {Name}", user.Code, user.UserName);
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el usuario por UserName {UserName}.", userName);
+                return null;
+            }
         }
     }
 }

@@ -32,51 +32,58 @@ namespace Integration.Api.Controllers.Security
                 if (request == null)
                 {
                     _logger.LogWarning("Se recibió una solicitud de login con datos nulos.");
-                    return BadRequest(ResponseApi<string>.Error("Los datos de login no pueden ser nulos."));
+                    return BadRequest(ResponseApi<AuthDTO>.Error("Los datos de login no pueden ser nulos."));
                 }
 
                 // Validación del modelo de entrada
                 if (!ModelState.IsValid)
                 {
                     _logger.LogWarning("Se recibió una solicitud de login con datos inválidos.");
-                    return BadRequest(ResponseApi<string>.Error("Datos de entrada inválidos."));
+                    return BadRequest(ResponseApi<AuthDTO>.Error("Datos de entrada inválidos."));
                 }
 
                 // Validar que usuario y contraseña no estén vacíos
                 if (string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrWhiteSpace(request.Password))
                 {
                     _logger.LogWarning("Intento de inicio de sesión con datos vacíos.");
-                    return BadRequest(ResponseApi<string>.Error("El usuario y la contraseña son obligatorios."));
+                    return BadRequest(ResponseApi<AuthDTO>.Error("El usuario y la contraseña son obligatorios."));
                 }
 
                 _logger.LogInformation("Intento de inicio de sesión para el usuario: {UserName}", request.UserName);
 
                 // Generar token JWT
                 var token = await _jwtService.GenerateTokenAsync(request);
+                var user = await _userService.GetByUserNameAsync(request.UserName);
+
+                AuthDTO authDTO = new AuthDTO
+                {
+                    Token = token,
+                    UserCode = user.Code,
+                };
 
                 if (string.IsNullOrEmpty(token))
                 {
                     _logger.LogWarning("Autenticación fallida para el usuario: {UserName}", request.UserName);
-                    return Unauthorized(ResponseApi<string>.Error("Credenciales inválidas."));
+                    return Unauthorized(ResponseApi<AuthDTO>.Error("Credenciales inválidas."));
                 }
 
                 _logger.LogInformation("Autenticación exitosa para el usuario: {UserName}", request.UserName);
-                return Ok(ResponseApi<string>.Success(token, "Autenticación exitosa."));
+                return Ok(ResponseApi<AuthDTO>.Success(authDTO, "Autenticación exitosa."));
             }
             catch (ValidationException ve)
             {
                 _logger.LogWarning("Error de validación en el proceso de login: {Message}", ve.Message);
-                return BadRequest(ResponseApi<string>.Error(ve.Message));
+                return BadRequest(ResponseApi<AuthDTO>.Error(ve.Message));
             }
             catch (UnauthorizedException ue)
             {
                 _logger.LogWarning("Error de autenticación en el proceso de login: {Message}", ue.Message);
-                return Unauthorized(ResponseApi<string>.Error(ue.Message));
+                return Unauthorized(ResponseApi<AuthDTO>.Error(ue.Message));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado en el proceso de login.");
-                return StatusCode(500, ResponseApi<string>.Error("Error interno del servidor."));
+                return StatusCode(500, ResponseApi<AuthDTO>.Error("Error interno del servidor."));
             }
         }
     }

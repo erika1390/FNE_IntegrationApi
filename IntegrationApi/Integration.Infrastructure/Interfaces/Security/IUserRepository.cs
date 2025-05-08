@@ -12,5 +12,6 @@ namespace Integration.Infrastructure.Interfaces.Security
         Task<User> GetByCodeAsync(string code);
         Task<User> UpdateAsync(User user);
         Task<string> GetUserNameByCodeAsync(string userCode);
+        Task<User> GetByUserNameAsync(string userName);
     }
 }

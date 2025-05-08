@@ -44,7 +44,7 @@ namespace Integration.Api.Controllers.Security
         {
             if (code == null)
             {
-                return BadRequest(ResponseApi<UserDTO>.Error("El code debe ser nulo o vacio."));
+                return BadRequest(ResponseApi<UserDTO>.Error("El code no debe ser nulo o vacio."));
             }
             var result = await _service.GetByCodeAsync(code);
             if (result == null)
@@ -52,7 +52,7 @@ namespace Integration.Api.Controllers.Security
                 return NotFound(ResponseApi<UserDTO>.Error("Usuario no encontrado."));
             }
             return Ok(ResponseApi<UserDTO>.Success(result));
-        }
+        }        
 
         [HttpGet("filter")]
         public async Task<IActionResult> GetByFilter([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)

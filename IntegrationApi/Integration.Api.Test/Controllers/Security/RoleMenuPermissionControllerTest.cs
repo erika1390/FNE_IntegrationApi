@@ -194,7 +194,7 @@ namespace Integration.Api.Test.Controllers.Security
         public async Task Update_ShouldReturnOk_WhenValidDataIsProvided()
         {
             // Arrange
-            var header = new HeaderDTO { UserCode = "USR0000001", RoleCode = "ROL0000001", ApplicationCode = "APP0000001" };
+            var header = new HeaderDTO { UserCode = "USR0000001", ApplicationCode = "APP0000001" };
             var dto = new RoleMenuPermissionDTO
             {
                 RoleCode = "ROL0000001",
