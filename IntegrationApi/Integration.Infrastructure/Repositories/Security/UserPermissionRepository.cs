@@ -11,11 +11,13 @@ namespace Integration.Infrastructure.Repositories.Security
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<UserPermissionRepository> _logger;
+
         public UserPermissionRepository(ApplicationDbContext context, ILogger<UserPermissionRepository> logger)
         {
             _context = context;
             _logger = logger;
         }
+
         public async Task<UserPermissionDTO> GetAllPermissionsByUserCodeAsync(string userCode, int applicationId)
         {
             try
@@ -36,7 +38,7 @@ namespace Integration.Infrastructure.Repositories.Security
                           && rmp.IsActive
                           && ur.IsActive
                           && u.Code == userCode
-                    select new 
+                    select new
                     {
                         CodeUser = u.Code,
                         UserName = u.UserName,
@@ -46,6 +48,9 @@ namespace Integration.Infrastructure.Repositories.Security
                         Module = m.Name,
                         CodeMenu = me.Code,
                         Menu = me.Name,
+                        Route = me.Route,
+                        Icon = me.Icon,
+                        Order = me.Order,
                         CodePermission = p.Code,
                         Permission = p.Name
                     }
@@ -56,39 +61,46 @@ namespace Integration.Infrastructure.Repositories.Security
                     CodeUser = flatPermissions.FirstOrDefault()?.CodeUser,
                     UserName = flatPermissions.FirstOrDefault()?.UserName,
                     Roles = flatPermissions
-                    .GroupBy(x => new { x.CodeRole, x.Role })
-                    .Select(roleGroup => new RoleDto
-                    {
-                        Code = roleGroup.Key.CodeRole,
-                        Name = roleGroup.Key.Role,
-                        Modules = roleGroup
-                            .GroupBy(x => new { x.CodeModule, x.Module })
-                            .Select(moduleGroup => new ModuleDto
-                            {
-                                Code = moduleGroup.Key.CodeModule,
-                                Name = moduleGroup.Key.Module,
-                                Menus = moduleGroup
-                                    .GroupBy(x => new { x.CodeMenu, x.Menu })
-                                    .Select(menuGroup => new MenuDto
-                                    {
-                                        Code = menuGroup.Key.CodeMenu,
-                                        Name = menuGroup.Key.Menu,
-                                        Permissions = menuGroup
-                                            .Select(p => new PermissionDto
-                                            {
-                                                Code = p.CodePermission,
-                                                Name = p.Permission
-                                            })
-                                            .Distinct()
-                                            .ToList()
-                                    })
-                                    .ToList()
-                            })
-                            .ToList()
-                    })
-                    .ToList()
-                };
+                        .GroupBy(x => new { x.CodeRole, x.Role })
+                        .Select(roleGroup => new RoleDto
+                        {
+                            Code = roleGroup.Key.CodeRole,
+                            Name = roleGroup.Key.Role,
+                            Modules = roleGroup
+                                .GroupBy(x => new { x.CodeModule, x.Module })
+                                .Select(moduleGroup => new ModuleDto
+                                {
+                                    Code = moduleGroup.Key.CodeModule,
+                                    Name = moduleGroup.Key.Module,
+                                    Menus = moduleGroup
+                                        .GroupBy(x => new { x.CodeMenu, x.Menu })
+                                        .Select(menuGroup =>
+                                        {
+                                            var firstMenu = menuGroup.First();
 
+                                            return new MenuDto
+                                            {
+                                                Code = menuGroup.Key.CodeMenu,
+                                                Name = menuGroup.Key.Menu,
+                                                Route = firstMenu.Route,     // ✅ tomado desde el primer elemento
+                                                Icon = firstMenu.Icon,       // ✅ tomado desde el primer elemento
+                                                Order = firstMenu.Order,     // ✅ tomado desde el primer elemento
+                                                Permissions = menuGroup
+                                                    .Select(p => new PermissionDto
+                                                    {
+                                                        Code = p.CodePermission,
+                                                        Name = p.Permission
+                                                    })
+                                                    .Distinct()
+                                                    .ToList()
+                                            };
+                                        })
+                                        .ToList()
+                                })
+                                .ToList()
+                        })
+                        .ToList()
+                };
 
                 _logger.LogInformation("Se obtuvieron permisos agrupados por módulo para el usuario {UserCode}.", userCode);
                 return userPermissionDto;
