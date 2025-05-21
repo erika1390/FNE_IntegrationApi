@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 
-using Integration.Core.Entities.Security;
 using Integration.Shared.DTO.Security;
 namespace Integration.Application.Mappings.Security
 {
