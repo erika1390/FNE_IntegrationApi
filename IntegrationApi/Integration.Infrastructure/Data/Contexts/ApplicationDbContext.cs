@@ -1,5 +1,6 @@
 ﻿using Integration.Application.Interfaces.Security;
 using Integration.Core.Entities.Audit;
+using Integration.Core.Entities.Parametric;
 using Integration.Core.Entities.Security;
 using Integration.Core.Interfaces.Identity;
 
@@ -35,7 +36,9 @@ namespace Integration.Infrastructure.Data.Contexts
         public override DbSet<UserToken> UserTokens { get; set; }
         public override DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<Log> Logs { get; set; }
-        
+
+        public DbSet<IdentificationDocumentType> TypesIdentificationDocuments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -184,6 +187,74 @@ namespace Integration.Infrastructure.Data.Contexts
                     LockoutEnd = null,
                     LockoutEnabled = true,
                     AccessFailedCount = 0
+                }
+            );
+            builder.Entity<IdentificationDocumentType>().HasData(
+                new IdentificationDocumentType
+                {
+                    Id = 1,
+                    Abbreviation = "CC",
+                    Description = "Cedula Ciudadania",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new IdentificationDocumentType
+                {
+                    Id = 2,
+                    Abbreviation = "CE",
+                    Description = "Cedula Extrangeria",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new IdentificationDocumentType
+                {
+                    Id = 3,
+                    Abbreviation = "PA",
+                    Description = "Pasaporte",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new IdentificationDocumentType
+                {
+                    Id = 4,
+                    Abbreviation = "PE",
+                    Description = "Permiso Especial de permanencia",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new IdentificationDocumentType
+                {
+                    Id = 5,
+                    Abbreviation = "PT",
+                    Description = "Permiso por protección temporal",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new IdentificationDocumentType
+                {
+                    Id = 6,
+                    Abbreviation = "NI",
+                    Description = "Nit",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 }
             );
         }
