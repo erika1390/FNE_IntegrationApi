@@ -3,7 +3,7 @@ using Integration.Infrastructure.Interfaces.Base;
 
 namespace Integration.Infrastructure.Interfaces.Parametric
 {
-    public interface IIdentificationDocumentTypeRepository : IRepositoryBaseSelect<IdentificationDocumentType>
+    public interface IDepartmentRepository : IRepositoryBaseSelect<Department>
     {
     }
 }

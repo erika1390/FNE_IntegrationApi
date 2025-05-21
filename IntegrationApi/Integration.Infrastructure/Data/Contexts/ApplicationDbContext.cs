@@ -262,199 +262,364 @@ namespace Integration.Infrastructure.Data.Contexts
                 {
                     Id = 1,
                     CodeDane = "91",
-                    Name = "Amazonas"
+                    Name = "Amazonas",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 2,
                     CodeDane = "05",
-                    Name = "Antioquia"
+                    Name = "Antioquia",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 3,
                     CodeDane = "81",
-                    Name = "Arauca"
+                    Name = "Arauca",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 4,
                     CodeDane = "08",
-                    Name = "Atlántico"
+                    Name = "Atlántico",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 5,
                     CodeDane = "11",
-                    Name = "Bogotá, D.C."
+                    Name = "Bogotá, D.C.",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 6,
                     CodeDane = "13",
-                    Name = "Bolívar"
+                    Name = "Bolívar",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 7,
                     CodeDane = "15",
-                    Name = "Boyacá"
+                    Name = "Boyacá",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 8,
                     CodeDane = "17",
-                    Name = "Caldas"
+                    Name = "Caldas",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 9,
                     CodeDane = "18",
-                    Name = "Caquetá"
+                    Name = "Caquetá",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 10,
                     CodeDane = "85",
-                    Name = "Casanare"
+                    Name = "Casanare",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 11,
                     CodeDane = "19",
-                    Name = "Cauca"
+                    Name = "Cauca",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 12,
                     CodeDane = "20",
-                    Name = "Cesar"
+                    Name = "Cesar",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 13,
                     CodeDane = "27",
-                    Name = "Chocó"
+                    Name = "Chocó",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 14,
                     CodeDane = "23",
-                    Name = "Córdoba"
+                    Name = "Córdoba",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 15,
                     CodeDane = "25",
-                    Name = "Cundinamarca"
+                    Name = "Cundinamarca",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 16,
                     CodeDane = "94",
-                    Name = "Guainía"
+                    Name = "Guainía",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 17,
                     CodeDane = "95",
-                    Name = "Guaviare"
+                    Name = "Guaviare",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 18,
                     CodeDane = "41",
-                    Name = "Huila"
+                    Name = "Huila",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 19,
                     CodeDane = "44",
-                    Name = "La Guajira"
+                    Name = "La Guajira",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 20,
                     CodeDane = "47",
-                    Name = "Magdalena"
+                    Name = "Magdalena",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 21,
                     CodeDane = "50",
-                    Name = "Meta"
+                    Name = "Meta",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 22,
                     CodeDane = "52",
-                    Name = "Nariño"
+                    Name = "Nariño",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 23,
                     CodeDane = "54",
-                    Name = "Norte de Santander"
+                    Name = "Norte de Santander",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 24,
                     CodeDane = "86",
-                    Name = "Putumayo"
+                    Name = "Putumayo",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 25,
                     CodeDane = "63",
-                    Name = "Quindío"
+                    Name = "Quindío",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 26,
                     CodeDane = "66",
-                    Name = "Risaralda"
+                    Name = "Risaralda",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 27,
                     CodeDane = "88",
-                    Name = "San Andrés, Providencia y Santa Catalina"
+                    Name = "San Andrés, Providencia y Santa Catalina",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 28,
                     CodeDane = "68",
-                    Name = "Santander"
+                    Name = "Santander",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 29,
                     CodeDane = "70",
-                    Name = "Sucre"
+                    Name = "Sucre",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 30,
                     CodeDane = "73",
-                    Name = "Tolima"
+                    Name = "Tolima",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 31,
                     CodeDane = "76",
-                    Name = "Valle del Cauca"
+                    Name = "Valle del Cauca",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 32,
                     CodeDane = "97",
-                    Name = "Vaupés"
+                    Name = "Vaupés",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 },
                 new Department
                 {
                     Id = 33,
                     CodeDane = "99",
-                    Name = "Vichada"
+                    Name = "Vichada",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 }
             );
         }
