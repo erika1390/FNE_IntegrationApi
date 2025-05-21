@@ -15,7 +15,7 @@ namespace Integration.Application.Services.Parametric
         private readonly IMapper _mapper;
         private readonly ILogger<IdentificationDocumentTypeService> _logger;
 
-        public IdentificationDocumentTypeService(IIdentificationDocumentTypeRepository repository, IMapper mapper, ILogger<IdentificationDocumentTypeService> logger, IUserRepository userRepository)
+        public IdentificationDocumentTypeService(IIdentificationDocumentTypeRepository repository, IMapper mapper, ILogger<IdentificationDocumentTypeService> logger)
         {
             _repository = repository;
             _mapper = mapper;
@@ -23,7 +23,7 @@ namespace Integration.Application.Services.Parametric
         }
         public async Task<IEnumerable<IdentificationDocumentTypeDTO>> GetAllActiveAsync()
         {
-            _logger.LogInformation("Obteniendo todas las aplicaciones activas.");
+            _logger.LogInformation("Obteniendo todas los tipos de documentos activos.");
             try
             {
                 var identificationDocumentTypes = await _repository.GetAllActiveAsync();

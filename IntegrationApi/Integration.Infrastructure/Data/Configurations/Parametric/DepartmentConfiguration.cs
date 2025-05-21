@@ -17,7 +17,20 @@ namespace Integration.Infrastructure.Data.Configurations.Parametric
             builder.Property(m => m.Name)
                 .IsRequired()
                 .HasMaxLength(50);
+            builder.Property(e => e.CreatedAt)
+                .IsRequired();
 
+            builder.Property(e => e.UpdatedAt);
+
+            builder.Property(e => e.CreatedBy)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(e => e.UpdatedBy)
+                .HasMaxLength(50);
+
+            builder.Property(e => e.IsActive)
+                .IsRequired();
         }
     }
 }
