@@ -37,6 +37,7 @@ namespace Integration.Infrastructure.Data.Contexts
         public override DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<IdentificationDocumentType> IdentificationDocumentType { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -254,6 +255,206 @@ namespace Integration.Infrastructure.Data.Contexts
                     CreatedBy = "system",
                     UpdatedBy = "system",
                     IsActive = true
+                }
+            );
+            builder.Entity<Department>().HasData(
+                new Department
+                {
+                    Id = 1,
+                    CodeDane = "91",
+                    Name = "Amazonas"
+                },
+                new Department
+                {
+                    Id = 2,
+                    CodeDane = "05",
+                    Name = "Antioquia"
+                },
+                new Department
+                {
+                    Id = 3,
+                    CodeDane = "81",
+                    Name = "Arauca"
+                },
+                new Department
+                {
+                    Id = 4,
+                    CodeDane = "08",
+                    Name = "Atlántico"
+                },
+                new Department
+                {
+                    Id = 5,
+                    CodeDane = "11",
+                    Name = "Bogotá, D.C."
+                },
+                new Department
+                {
+                    Id = 6,
+                    CodeDane = "13",
+                    Name = "Bolívar"
+                },
+                new Department
+                {
+                    Id = 7,
+                    CodeDane = "15",
+                    Name = "Boyacá"
+                },
+                new Department
+                {
+                    Id = 8,
+                    CodeDane = "17",
+                    Name = "Caldas"
+                },
+                new Department
+                {
+                    Id = 9,
+                    CodeDane = "18",
+                    Name = "Caquetá"
+                },
+                new Department
+                {
+                    Id = 10,
+                    CodeDane = "85",
+                    Name = "Casanare"
+                },
+                new Department
+                {
+                    Id = 11,
+                    CodeDane = "19",
+                    Name = "Cauca"
+                },
+                new Department
+                {
+                    Id = 12,
+                    CodeDane = "20",
+                    Name = "Cesar"
+                },
+                new Department
+                {
+                    Id = 13,
+                    CodeDane = "27",
+                    Name = "Chocó"
+                },
+                new Department
+                {
+                    Id = 14,
+                    CodeDane = "23",
+                    Name = "Córdoba"
+                },
+                new Department
+                {
+                    Id = 15,
+                    CodeDane = "25",
+                    Name = "Cundinamarca"
+                },
+                new Department
+                {
+                    Id = 16,
+                    CodeDane = "94",
+                    Name = "Guainía"
+                },
+                new Department
+                {
+                    Id = 17,
+                    CodeDane = "95",
+                    Name = "Guaviare"
+                },
+                new Department
+                {
+                    Id = 18,
+                    CodeDane = "41",
+                    Name = "Huila"
+                },
+                new Department
+                {
+                    Id = 19,
+                    CodeDane = "44",
+                    Name = "La Guajira"
+                },
+                new Department
+                {
+                    Id = 20,
+                    CodeDane = "47",
+                    Name = "Magdalena"
+                },
+                new Department
+                {
+                    Id = 21,
+                    CodeDane = "50",
+                    Name = "Meta"
+                },
+                new Department
+                {
+                    Id = 22,
+                    CodeDane = "52",
+                    Name = "Nariño"
+                },
+                new Department
+                {
+                    Id = 23,
+                    CodeDane = "54",
+                    Name = "Norte de Santander"
+                },
+                new Department
+                {
+                    Id = 24,
+                    CodeDane = "86",
+                    Name = "Putumayo"
+                },
+                new Department
+                {
+                    Id = 25,
+                    CodeDane = "63",
+                    Name = "Quindío"
+                },
+                new Department
+                {
+                    Id = 26,
+                    CodeDane = "66",
+                    Name = "Risaralda"
+                },
+                new Department
+                {
+                    Id = 27,
+                    CodeDane = "88",
+                    Name = "San Andrés, Providencia y Santa Catalina"
+                },
+                new Department
+                {
+                    Id = 28,
+                    CodeDane = "68",
+                    Name = "Santander"
+                },
+                new Department
+                {
+                    Id = 29,
+                    CodeDane = "70",
+                    Name = "Sucre"
+                },
+                new Department
+                {
+                    Id = 30,
+                    CodeDane = "73",
+                    Name = "Tolima"
+                },
+                new Department
+                {
+                    Id = 31,
+                    CodeDane = "76",
+                    Name = "Valle del Cauca"
+                },
+                new Department
+                {
+                    Id = 32,
+                    CodeDane = "97",
+                    Name = "Vaupés"
+                },
+                new Department
+                {
+                    Id = 33,
+                    CodeDane = "99",
+                    Name = "Vichada"
                 }
             );
         }
