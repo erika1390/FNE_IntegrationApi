@@ -15,6 +15,11 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
         public IModuleRepository ModuleRepository { get; }
         public IPermissionRepository PermissionRepository { get; }
         public IRoleRepository RoleRepository { get; }
+        public IMenuRepository MenuRepository { get; }
+        public IRoleMenuPermissionRepository RoleMenuPermissionRepository { get; }
+        public IUserPermissionRepository UserPermissionRepository { get; set; } // Assuming you have this repository as well
+        public IUserRepository UserRepository { get; set; } // Assuming you have this repository as well
+        public IUserRoleRepository RoleUserRepository { get; set; } // Assuming you have this repository as well
 
         public ApplicationDbUOW(
             ApplicationDbContext context,
@@ -23,7 +28,12 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
             IApplicationRepository applicationRepository,
             IModuleRepository moduleRepository,
             IPermissionRepository permissionRepository,
-            IRoleRepository roleRepository)
+            IRoleRepository roleRepository,
+            IMenuRepository menuRepository,
+            IRoleMenuPermissionRepository roleMenuPermissionRepository,
+            IUserPermissionRepository userPermissionRepository,
+            IUserRepository userRepository,
+            IUserRoleRepository roleUserRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -33,6 +43,11 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
             ModuleRepository = moduleRepository ?? throw new ArgumentNullException(nameof(moduleRepository));
             PermissionRepository = permissionRepository ?? throw new ArgumentNullException(nameof(permissionRepository));
             RoleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
+            MenuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
+            RoleMenuPermissionRepository = roleMenuPermissionRepository ?? throw new ArgumentNullException(nameof(roleMenuPermissionRepository));
+            UserPermissionRepository = userPermissionRepository ?? throw new ArgumentNullException(nameof(userPermissionRepository));
+            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            RoleUserRepository = roleUserRepository ?? throw new ArgumentNullException(nameof(roleUserRepository));
         }
 
         public async Task<int> SaveChangesAsync()
