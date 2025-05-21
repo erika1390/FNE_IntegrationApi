@@ -23,6 +23,7 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
         public IUserRoleRepository RoleUserRepository { get; set; } // Assuming you have this repository as well
         public IIdentificationDocumentTypeRepository IdentificationDocumentTypeRepository { get; set; }
         public IDepartmentRepository DepartmentRepository { get; set; }
+        public ICityRepository CityRepository { get; set; }
 
         public ApplicationDbUOW(
             ApplicationDbContext context,
@@ -38,7 +39,8 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
             IUserRepository userRepository,
             IUserRoleRepository roleUserRepository,
             IIdentificationDocumentTypeRepository identificationDocumentTypeRepository,
-            IDepartmentRepository departmentRepository)
+            IDepartmentRepository departmentRepository,
+            ICityRepository cityRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -55,6 +57,7 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
             RoleUserRepository = roleUserRepository ?? throw new ArgumentNullException(nameof(roleUserRepository));
             IdentificationDocumentTypeRepository = identificationDocumentTypeRepository ?? throw new ArgumentNullException(nameof(identificationDocumentTypeRepository));
             DepartmentRepository = departmentRepository ?? throw new ArgumentNullException(nameof(departmentRepository));
+            CityRepository = cityRepository ?? throw new ArgumentNullException(nameof(cityRepository));
         }
 
         public async Task<int> SaveChangesAsync()

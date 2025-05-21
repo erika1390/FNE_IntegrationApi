@@ -49,7 +49,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Registro de AutoMapper
 builder.Services.AddAutoMapper(typeof(LogProfile));
 builder.Services.AddAutoMapper(typeof(IdentificationDocumentTypeProfile));
-builder.Services.AddAutoMapper(typeof(DepartmentProfile)); 
+builder.Services.AddAutoMapper(typeof(DepartmentProfile));
+builder.Services.AddAutoMapper(typeof(CityProfile));
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 builder.Services.AddAutoMapper(typeof(MenuProfile));
 builder.Services.AddAutoMapper(typeof(ModuleProfile));
@@ -64,6 +65,7 @@ builder.Services.AddScoped<ValidateHeadersFilter>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<IdentificationDocumentTypeDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<DepartmentDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CityDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ApplicationDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<MenuDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ModuleDTOValidator>();
@@ -77,6 +79,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<UserRoleDTOValidator>();
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IIdentificationDocumentTypeService, IdentificationDocumentTypeService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
@@ -93,6 +96,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IIdentificationDocumentTypeRepository, IdentificationDocumentTypeRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
