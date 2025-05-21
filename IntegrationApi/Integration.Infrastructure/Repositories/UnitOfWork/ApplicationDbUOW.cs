@@ -1,5 +1,6 @@
 ﻿using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Audit;
+using Integration.Infrastructure.Interfaces.Parametric;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.UnitOfWork;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,7 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
         public IUserPermissionRepository UserPermissionRepository { get; set; } // Assuming you have this repository as well
         public IUserRepository UserRepository { get; set; } // Assuming you have this repository as well
         public IUserRoleRepository RoleUserRepository { get; set; } // Assuming you have this repository as well
+        public IIdentificationDocumentTypeRepository IdentificationDocumentTypeRepository { get; set; }
 
         public ApplicationDbUOW(
             ApplicationDbContext context,
@@ -33,7 +35,8 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
             IRoleMenuPermissionRepository roleMenuPermissionRepository,
             IUserPermissionRepository userPermissionRepository,
             IUserRepository userRepository,
-            IUserRoleRepository roleUserRepository)
+            IUserRoleRepository roleUserRepository,
+            IIdentificationDocumentTypeRepository identificationDocumentTypeRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -48,6 +51,7 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
             UserPermissionRepository = userPermissionRepository ?? throw new ArgumentNullException(nameof(userPermissionRepository));
             UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             RoleUserRepository = roleUserRepository ?? throw new ArgumentNullException(nameof(roleUserRepository));
+            IdentificationDocumentTypeRepository = identificationDocumentTypeRepository ?? throw new ArgumentNullException(nameof(identificationDocumentTypeRepository));
         }
 
         public async Task<int> SaveChangesAsync()

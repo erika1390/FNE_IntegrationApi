@@ -36,8 +36,7 @@ namespace Integration.Infrastructure.Data.Contexts
         public override DbSet<UserToken> UserTokens { get; set; }
         public override DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<Log> Logs { get; set; }
-
-        public DbSet<IdentificationDocumentType> TypesIdentificationDocuments { get; set; }
+        public DbSet<IdentificationDocumentType> IdentificationDocumentType { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
