@@ -3,19 +3,25 @@
 using Integration.Api.Filters;
 using Integration.Api.Middlewares;
 using Integration.Application.Interfaces.Audit;
+using Integration.Application.Interfaces.Parametric;
 using Integration.Application.Interfaces.Security;
 using Integration.Application.Mappings.Audit;
+using Integration.Application.Mappings.Parametric;
 using Integration.Application.Mappings.Security;
 using Integration.Application.Services.Audit;
+using Integration.Application.Services.Parametric;
 using Integration.Application.Services.Security;
+using Integration.Application.Validations.Parametric;
 using Integration.Application.Validations.Security;
 using Integration.Core.Entities.Security;
 using Integration.Core.MappingProfiles;
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Audit;
+using Integration.Infrastructure.Interfaces.Parametric;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.UnitOfWork;
 using Integration.Infrastructure.Repositories.Audit;
+using Integration.Infrastructure.Repositories.Parametric;
 using Integration.Infrastructure.Repositories.Security;
 using Integration.Infrastructure.Repositories.UnitOfWork;
 
@@ -41,8 +47,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("IntegrationConnection")));
 
 // Registro de AutoMapper
-builder.Services.AddAutoMapper(typeof(LogProfile)); 
+builder.Services.AddAutoMapper(typeof(LogProfile));
+builder.Services.AddAutoMapper(typeof(IdentificationDocumentTypeProfile));
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
+builder.Services.AddAutoMapper(typeof(MenuProfile));
 builder.Services.AddAutoMapper(typeof(ModuleProfile));
 builder.Services.AddAutoMapper(typeof(PermissionProfile));
 builder.Services.AddAutoMapper(typeof(RoleMenuPermissionProfile));
@@ -51,10 +59,11 @@ builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddAutoMapper(typeof(UserRoleProfile));
 
 builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
-
 builder.Services.AddScoped<ValidateHeadersFilter>();
 
+builder.Services.AddValidatorsFromAssemblyContaining<IdentificationDocumentTypeDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ApplicationDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<MenuDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ModuleDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<PermissionDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<RoleDTOValidator>();
@@ -63,30 +72,32 @@ builder.Services.AddValidatorsFromAssemblyContaining<UserDTOValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UserRoleDTOValidator>();
 
 // Si el servicio no es genérico, registra la implementación específica
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<ILogService, LogService>(); 
+builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<IIdentificationDocumentTypeService, IdentificationDocumentTypeService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
-builder.Services.AddScoped<IModuleService, ModuleService>();
-builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddScoped<IPermissionService, PermissionService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IRoleMenuPermissionService, RoleMenuPermissionService>();
-builder.Services.AddScoped<IUserRoleService, UserRoleService>();
-builder.Services.AddScoped<IUserPermissionService, UserPermissionService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IMenuService, MenuService>(); 
+builder.Services.AddScoped<IModuleService, ModuleService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IRoleMenuPermissionService, RoleMenuPermissionService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IUserPermissionService, UserPermissionService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<ILogRepository, LogRepository>();
+builder.Services.AddScoped<IIdentificationDocumentTypeRepository, IdentificationDocumentTypeRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
-builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleMenuPermissionRepository, RoleMenuPermissionRepository>();
-builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserPermissionRepository, UserPermissionRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
