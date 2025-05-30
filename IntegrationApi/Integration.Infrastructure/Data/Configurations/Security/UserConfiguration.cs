@@ -1,4 +1,5 @@
 ﻿using Integration.Core.Entities.Security;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Integration.Infrastructure.Data.Configurations.Security
