@@ -4,6 +4,8 @@ using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 
 using Microsoft.AspNetCore.Mvc;
+
+using System.Threading.Tasks;
 namespace Integration.Api.Controllers.Security
 {
     [Route("api/[controller]")]
@@ -84,6 +86,38 @@ namespace Integration.Api.Controllers.Security
             {
                 _logger.LogError(ex, "Error inesperado en el proceso de login.");
                 return StatusCode(500, ResponseApi<AuthDTO>.Error("Error interno del servidor."));
+            }
+        }
+
+        [HttpGet("validate-token")]
+        public async Task<IActionResult> ValidateToken()
+        {
+            try
+            {
+                var authHeader = Request.Headers["Authorization"].ToString();
+
+                if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer "))
+                {
+                    _logger.LogWarning("Encabezado Authorization inválido o ausente.");
+                    return BadRequest(ResponseApi<bool>.Error("Encabezado Authorization inválido o ausente."));
+                }
+
+                var token = authHeader.Substring("Bearer ".Length).Trim();
+
+                var isValid = await _jwtService.ValidateTokenAsync(token);
+                if (!isValid)
+                {
+                    _logger.LogWarning("Token JWT inválido.");
+                    return Unauthorized(ResponseApi<bool>.Error("Token inválido o expirado."));
+                }
+
+                _logger.LogInformation("Token JWT validado exitosamente.");
+                return Ok(ResponseApi<bool>.Success(true, "Token válido."));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al validar el token.");
+                return StatusCode(500, ResponseApi<bool>.Error("Error interno del servidor."));
             }
         }
     }
