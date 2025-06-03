@@ -1,46 +1,39 @@
 ﻿using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Audit;
-using Integration.Infrastructure.Interfaces.Parametric;
 using Integration.Infrastructure.Interfaces.Security;
 using Integration.Infrastructure.Interfaces.UnitOfWork;
+
 using Microsoft.Extensions.Logging;
 namespace Integration.Infrastructure.Repositories.UnitOfWork
 {
-    public class ApplicationDbUOW : IApplicationDbUOW, IDisposable
+    public class SecurityDbUOW : ISecurityDbUOW, IDisposable
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<ApplicationDbUOW> _logger;
+        private readonly ILogger<SecurityDbUOW> _logger;
+        public ILogRepository LogRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IApplicationRepository ApplicationRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IMenuRepository MenuRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IModuleRepository ModuleRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IPermissionRepository PermissionRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IRoleRepository RoleRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IRoleMenuPermissionRepository RoleMenuPermissionRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IUserPermissionRepository UserPermissionRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IUserRepository UserRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IUserRoleRepository RoleUserRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public ILogRepository LogRepository { get; }
-        public IApplicationRepository ApplicationRepository { get; }
-        public IModuleRepository ModuleRepository { get; }
-        public IPermissionRepository PermissionRepository { get; }
-        public IRoleRepository RoleRepository { get; }
-        public IMenuRepository MenuRepository { get; }
-        public IRoleMenuPermissionRepository RoleMenuPermissionRepository { get; }
-        public IUserPermissionRepository UserPermissionRepository { get; set; } // Assuming you have this repository as well
-        public IUserRepository UserRepository { get; set; } // Assuming you have this repository as well
-        public IUserRoleRepository RoleUserRepository { get; set; } // Assuming you have this repository as well
-        public IIdentificationDocumentTypeRepository IdentificationDocumentTypeRepository { get; set; }
-        public IDepartmentRepository DepartmentRepository { get; set; }
-        public ICityRepository CityRepository { get; set; }
-
-        public ApplicationDbUOW(
+        public SecurityDbUOW(
             ApplicationDbContext context,
-            ILogger<ApplicationDbUOW> logger,
+            ILogger<SecurityDbUOW> logger,
             ILogRepository logRepository,
             IApplicationRepository applicationRepository,
+            IMenuRepository menuRepository,
             IModuleRepository moduleRepository,
             IPermissionRepository permissionRepository,
-            IRoleRepository roleRepository,
-            IMenuRepository menuRepository,
             IRoleMenuPermissionRepository roleMenuPermissionRepository,
+            IRoleRepository roleRepository,            
             IUserPermissionRepository userPermissionRepository,
             IUserRepository userRepository,
-            IUserRoleRepository roleUserRepository,
-            IIdentificationDocumentTypeRepository identificationDocumentTypeRepository,
-            IDepartmentRepository departmentRepository,
-            ICityRepository cityRepository)
+            IUserRoleRepository roleUserRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -55,9 +48,6 @@ namespace Integration.Infrastructure.Repositories.UnitOfWork
             UserPermissionRepository = userPermissionRepository ?? throw new ArgumentNullException(nameof(userPermissionRepository));
             UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             RoleUserRepository = roleUserRepository ?? throw new ArgumentNullException(nameof(roleUserRepository));
-            IdentificationDocumentTypeRepository = identificationDocumentTypeRepository ?? throw new ArgumentNullException(nameof(identificationDocumentTypeRepository));
-            DepartmentRepository = departmentRepository ?? throw new ArgumentNullException(nameof(departmentRepository));
-            CityRepository = cityRepository ?? throw new ArgumentNullException(nameof(cityRepository));
         }
 
         public async Task<int> SaveChangesAsync()

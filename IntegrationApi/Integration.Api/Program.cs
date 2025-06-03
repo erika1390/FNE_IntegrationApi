@@ -60,7 +60,8 @@ builder.Services.AddAutoMapper(typeof(RoleProfile));
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddAutoMapper(typeof(UserRoleProfile));
 
-builder.Services.AddTransient<IApplicationDbUOW, ApplicationDbUOW>();
+builder.Services.AddTransient<ISecurityDbUOW, SecurityDbUOW>();
+builder.Services.AddTransient<IParametricDbUOW, ParametricDbUOW>();
 builder.Services.AddScoped<ValidateHeadersFilter>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<IdentificationDocumentTypeDTOValidator>();
