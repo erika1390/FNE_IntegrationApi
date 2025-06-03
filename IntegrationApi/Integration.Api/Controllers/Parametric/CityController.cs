@@ -6,12 +6,14 @@ using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Parametric;
 using Integration.Shared.Response;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Integration.Api.Controllers.Parametric
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [ServiceFilter(typeof(ValidateHeadersFilter))]
     public class CityController : Controller
     {
