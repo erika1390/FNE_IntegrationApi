@@ -1,8 +1,10 @@
 ﻿using Integration.Application.Exceptions;
 using Integration.Application.Interfaces.Security;
+using Integration.Shared.DTO.Header;
 using Integration.Shared.DTO.Security;
 using Integration.Shared.Response;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Threading.Tasks;
@@ -90,19 +92,19 @@ namespace Integration.Api.Controllers.Security
         }
 
         [HttpGet("validate-token")]
-        public async Task<IActionResult> ValidateToken()
+        [Authorize]
+        public async Task<IActionResult> ValidateToken([FromHeader] HeaderDTO header)
         {
             try
             {
-                var authHeader = Request.Headers["Authorization"].ToString();
 
-                if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer "))
+                if (string.IsNullOrWhiteSpace(header.Authorization) || !header.Authorization.StartsWith("Bearer "))
                 {
                     _logger.LogWarning("Encabezado Authorization inválido o ausente.");
                     return BadRequest(ResponseApi<bool>.Error("Encabezado Authorization inválido o ausente."));
                 }
 
-                var token = authHeader.Substring("Bearer ".Length).Trim();
+                var token = header.Authorization.Substring("Bearer ".Length).Trim();
 
                 var isValid = await _jwtService.ValidateTokenAsync(token);
                 if (!isValid)
