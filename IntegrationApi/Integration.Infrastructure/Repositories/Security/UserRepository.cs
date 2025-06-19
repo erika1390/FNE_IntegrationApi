@@ -245,6 +245,8 @@ namespace Integration.Infrastructure.Repositories.Security
                                      where app.Code == applicationCode && role.Code == roleCode
                                      select new UserRoleAppDTO
                                      {
+                                         UserId = user.Id,
+                                         UserCode = user.Code,
                                          FullName = user.FirstName + " " + user.LastName,
                                          RoleCode = role.Code,
                                          RoleName = role.Name,
