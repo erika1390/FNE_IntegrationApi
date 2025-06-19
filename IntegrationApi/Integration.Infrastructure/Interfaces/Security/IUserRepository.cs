@@ -1,4 +1,6 @@
 ﻿using Integration.Core.Entities.Security;
+using Integration.Shared.DTO.Security;
+
 using System.Linq.Expressions;
 namespace Integration.Infrastructure.Interfaces.Security
 {
@@ -13,5 +15,6 @@ namespace Integration.Infrastructure.Interfaces.Security
         Task<User> UpdateAsync(User user);
         Task<string> GetUserNameByCodeAsync(string userCode);
         Task<User> GetByUserNameAsync(string userName);
+        Task<List<UserRoleAppDTO>> GetByApplicationAndRoleAsync(string applicationCode, string roleCode);
     }
 }

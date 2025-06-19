@@ -1,6 +1,8 @@
 ﻿using Integration.Core.Entities.Security;
 using Integration.Infrastructure.Data.Contexts;
 using Integration.Infrastructure.Interfaces.Security;
+using Integration.Shared.DTO.Security;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Data;
@@ -227,6 +229,41 @@ namespace Integration.Infrastructure.Repositories.Security
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener el usuario por UserName {UserName}.", userName);
+                return null;
+            }
+        }
+
+        public async Task<List<UserRoleAppDTO>> GetByApplicationAndRoleAsync(string applicationCode, string roleCode)
+        {
+            var userRoleApp = new List<UserRoleAppDTO>();
+            try
+            {
+                userRoleApp = await (from user in _context.Users
+                                     join userRole in _context.UserRoles on user.Id equals userRole.UserId
+                                     join role in _context.Roles on userRole.RoleId equals role.Id
+                                     join app in _context.Applications on role.ApplicationId equals app.Id
+                                     where app.Code == applicationCode && role.Code == roleCode
+                                     select new UserRoleAppDTO
+                                     {
+                                         FullName = user.FirstName + " " + user.LastName,
+                                         RoleCode = role.Code,
+                                         RoleName = role.Name,
+                                         AppCode = app.Code,
+                                         AppName = app.Name
+                                     }).ToListAsync();
+                if (userRoleApp == null)
+                {
+                    _logger.LogWarning("No se encontró el usuario para la ApplicationCode {applicationCode} y RoleCode {roleCode}.", applicationCode, roleCode);
+                    return null;
+                }
+
+                _logger.LogInformation("ApplicationCode {applicationCode} y RoleCode {roleCode}.", applicationCode, roleCode);
+
+                return userRoleApp;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el usuario para la ApplicationCode {applicationCode} y RoleCode {roleCode}.", applicationCode, roleCode);
                 return null;
             }
         }

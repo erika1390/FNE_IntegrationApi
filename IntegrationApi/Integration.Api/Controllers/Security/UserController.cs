@@ -52,7 +52,26 @@ namespace Integration.Api.Controllers.Security
                 return NotFound(ResponseApi<UserDTO>.Error("Usuario no encontrado."));
             }
             return Ok(ResponseApi<UserDTO>.Success(result));
-        }        
+        }
+
+        [HttpGet("ByCodeRole/{codeRole}")]
+        public async Task<IActionResult> GetByCodeRoleAsync([FromHeader] HeaderDTO header, string codeRole)
+        {
+            if (codeRole == null)
+            {
+                return BadRequest(ResponseApi<List<UserRoleAppDTO>>.Error("El code del rol no debe ser nulo o vacio."));
+            }
+            if (header.ApplicationCode == null)
+            {
+                return BadRequest(ResponseApi<List<UserRoleAppDTO>>.Error("El code de la aplicacion en los headers no debe ser nulo o vacio."));
+            }
+            var result = await _service.GetByApplicationAndRoleAsync(header.ApplicationCode, codeRole);
+            if (result == null)
+            {
+                return NotFound(ResponseApi<List<UserRoleAppDTO>>.Error("Usuario no encontrado."));
+            }
+            return Ok(ResponseApi<List<UserRoleAppDTO>>.Success(result));
+        }
 
         [HttpGet("filter")]
         public async Task<IActionResult> GetByFilter([FromHeader] HeaderDTO header, [FromQuery] string filterField, [FromQuery] string filterValue)

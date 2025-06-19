@@ -2,7 +2,6 @@
 
 using Integration.Application.Interfaces.Parametric;
 using Integration.Infrastructure.Interfaces.Parametric;
-using Integration.Infrastructure.Interfaces.Security;
 using Integration.Shared.DTO.Parametric;
 
 using Microsoft.Extensions.Logging;

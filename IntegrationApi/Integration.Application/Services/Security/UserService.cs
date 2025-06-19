@@ -217,5 +217,26 @@ namespace Integration.Application.Services.Security
                 throw;
             }
         }
+
+        public async Task<List<UserRoleAppDTO>> GetByApplicationAndRoleAsync(string applicationCode, string roleCode)
+        {
+            _logger.LogInformation("Buscando usuario por ApplicationCode {applicationCode} y CodeRole: {roleCode}", applicationCode, roleCode);
+            try
+            {
+                var user = await _repository.GetByApplicationAndRoleAsync(applicationCode, roleCode);
+                if (user == null)
+                {
+                    _logger.LogWarning("No se encontró el usuario por ApplicationCode {applicationCode} y CodeRole: {roleCode}", applicationCode, roleCode);
+                    return null;
+                }
+                _logger.LogInformation("ApplicationCode {applicationCode} y CodeRole: {roleCode}", applicationCode, roleCode);
+                return _mapper.Map<List<UserRoleAppDTO>>(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el usuarios por ApplicationCode {applicationCode} y CodeRole: {roleCode}", applicationCode, roleCode);
+                throw;
+            }
+        }
     }
 }
