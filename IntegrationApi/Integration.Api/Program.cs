@@ -164,7 +164,8 @@ builder.Services.AddCors(options =>
                 "http://sicoflite.mol.com.co",
                 "http://apisicof.mol.com.co",
                 "https://localhost:7145",
-                "https://localhost:7146"
+                "https://localhost:7146",
+                "http://localhost"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
