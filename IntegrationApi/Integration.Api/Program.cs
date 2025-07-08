@@ -158,13 +158,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+                "http://sicoflite.mol.com.co"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
+
 var app = builder.Build();
 app.UseCors();
 // Configure the HTTP request pipeline.
