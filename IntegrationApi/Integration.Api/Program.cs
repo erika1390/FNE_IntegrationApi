@@ -161,7 +161,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", policy =>
     {
         policy.WithOrigins(
-                "http://sicoflite.mol.com.co"
+                "http://sicoflite.mol.com.co",
+                "http://apisicof.mol.com.co",
+                "https://localhost:7145",
+                "https://localhost:7146"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
