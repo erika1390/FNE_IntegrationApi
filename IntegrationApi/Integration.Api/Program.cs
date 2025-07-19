@@ -161,10 +161,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", policy =>
     {
         policy.WithOrigins(
-                "http://sicoflite.mol.com.co",
-                "http://apisicof.mol.com.co",
                 "https://localhost:7145",
+                "http://localhost:7145",
                 "https://localhost:7146",
+                "http://localhost:7146",
+                "http://172.60.8.114:5000",
+                "http://172.60.8.114:5001",
                 "http://localhost"
             )
             .AllowAnyHeader()
@@ -173,7 +175,14 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-app.UseCors();
+// Crea carpeta logs si no existe
+var logPath = Path.Combine(AppContext.BaseDirectory, "logs");
+if (!Directory.Exists(logPath))
+{
+    Directory.CreateDirectory(logPath);
+}
+
+app.UseCors("CorsPolicy");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
