@@ -854,6 +854,30 @@ namespace Integration.Infrastructure.Migrations
                             Name = "Configuración",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ApplicationId = 3,
+                            Code = "MOD0000002",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Administración",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ApplicationId = 3,
+                            Code = "MOD0000003",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Principal",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         });
                 });
 
@@ -1249,6 +1273,32 @@ namespace Integration.Infrastructure.Migrations
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "system",
                             UserName = "epulido"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            Code = "USR0000002",
+                            ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "sjmedina@Minsalud.gov.co",
+                            EmailConfirmed = false,
+                            FirstName = "Sandra",
+                            IsActive = true,
+                            LastName = "Medina",
+                            LockoutEnabled = true,
+                            NormalizedEmail = "SJMEDINA",
+                            NormalizedUserName = "SJMEDINA@MINSALUD.GOV.CO",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
+                            PhoneNumber = "3157234494",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
+                            TwoFactorEnabled = false,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system",
+                            UserName = "sjmedina"
                         });
                 });
 

@@ -92,6 +92,30 @@ namespace Integration.Infrastructure.Data.Contexts
                     CreatedBy = "system",
                     UpdatedBy = "system",
                     IsActive = true
+                },
+                new Module
+                {
+                    Id = 2,
+                    Code = "MOD0000002",
+                    Name = "Administración",
+                    ApplicationId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Module
+                {
+                    Id = 3,
+                    Code = "MOD0000003",
+                    Name = "Principal",
+                    ApplicationId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 }
             );
             builder.Entity<Permission>().HasData(
@@ -183,6 +207,33 @@ namespace Integration.Infrastructure.Data.Contexts
                     SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
                     ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
                     PhoneNumber = "3157234493",
+                    PhoneNumberConfirmed = false,
+                    TwoFactorEnabled = false,
+                    LockoutEnd = null,
+                    LockoutEnabled = true,
+                    AccessFailedCount = 0
+                }, 
+                new User
+                {
+                    Id = 2,
+                    Code = "USR0000002",
+                    FirstName = "Sandra",
+                    LastName = "Medina",
+                    DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0),
+                    CreatedBy = "system",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedBy = "system",
+                    UpdatedAt = StaticCreatedAt,
+                    IsActive = true,
+                    UserName = "sjmedina",
+                    NormalizedEmail = "SJMEDINA",
+                    Email = "sjmedina@Minsalud.gov.co",
+                    NormalizedUserName = "SJMEDINA@MINSALUD.GOV.CO",
+                    EmailConfirmed = false,
+                    PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
+                    SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
+                    ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
+                    PhoneNumber = "3157234494",
                     PhoneNumberConfirmed = false,
                     TwoFactorEnabled = false,
                     LockoutEnd = null,

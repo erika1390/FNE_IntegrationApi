@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Integration.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250409044942_RoleMenuPermission")]
-    partial class RoleMenuPermission
+    [Migration("20250728210929_CargueDataUser")]
+    partial class CargueDataUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,6 +87,567 @@ namespace Integration.Infrastructure.Migrations
                     b.ToTable("Logs", "Audit");
                 });
 
+            modelBuilder.Entity("Integration.Core.Entities.Parametric.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodeDane")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("City", "Parametric");
+                });
+
+            modelBuilder.Entity("Integration.Core.Entities.Parametric.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodeDane")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Department", "Parametric");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CodeDane = "91",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Amazonas",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CodeDane = "05",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Antioquia",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CodeDane = "81",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Arauca",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CodeDane = "08",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Atlántico",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CodeDane = "11",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Bogotá, D.C.",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CodeDane = "13",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Bolívar",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CodeDane = "15",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Boyacá",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CodeDane = "17",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Caldas",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CodeDane = "18",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Caquetá",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CodeDane = "85",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Casanare",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CodeDane = "19",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Cauca",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CodeDane = "20",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Cesar",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CodeDane = "27",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Chocó",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CodeDane = "23",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Córdoba",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CodeDane = "25",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Cundinamarca",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CodeDane = "94",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Guainía",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CodeDane = "95",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Guaviare",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CodeDane = "41",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Huila",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CodeDane = "44",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "La Guajira",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CodeDane = "47",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Magdalena",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CodeDane = "50",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Meta",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CodeDane = "52",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Nariño",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CodeDane = "54",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Norte de Santander",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CodeDane = "86",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Putumayo",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CodeDane = "63",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Quindío",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CodeDane = "66",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Risaralda",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CodeDane = "88",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "San Andrés, Providencia y Santa Catalina",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CodeDane = "68",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Santander",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CodeDane = "70",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Sucre",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CodeDane = "73",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Tolima",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CodeDane = "76",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Valle del Cauca",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CodeDane = "97",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Vaupés",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CodeDane = "99",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Vichada",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        });
+                });
+
+            modelBuilder.Entity("Integration.Core.Entities.Parametric.IdentificationDocumentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Abbreviation")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentificationDocumentType", "Parametric");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Abbreviation = "CC",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Description = "Cedula Ciudadania",
+                            IsActive = true,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Abbreviation = "CE",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Description = "Cedula Extrangeria",
+                            IsActive = true,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Abbreviation = "PA",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Description = "Pasaporte",
+                            IsActive = true,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Abbreviation = "PE",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Description = "Permiso Especial de permanencia",
+                            IsActive = true,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Abbreviation = "PT",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Description = "Permiso por protección temporal",
+                            IsActive = true,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Abbreviation = "NI",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Description = "Nit",
+                            IsActive = true,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        });
+                });
+
             modelBuilder.Entity("Integration.Core.Entities.Security.Application", b =>
                 {
                     b.Property<int>("Id")
@@ -139,33 +700,33 @@ namespace Integration.Infrastructure.Migrations
                             Id = 1,
                             Code = "APP0000001",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Integrador",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 2,
                             Code = "APP0000002",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Saga 2.0",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 3,
                             Code = "APP0000003",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Sicof Lite",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         });
                 });
 
@@ -179,8 +740,8 @@ namespace Integration.Infrastructure.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -191,8 +752,8 @@ namespace Integration.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Icon")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -202,8 +763,8 @@ namespace Integration.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
@@ -212,8 +773,8 @@ namespace Integration.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Route")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -223,6 +784,10 @@ namespace Integration.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IDX_Menus_Code");
 
                     b.HasIndex("ModuleId");
 
@@ -287,83 +852,35 @@ namespace Integration.Infrastructure.Migrations
                             ApplicationId = 1,
                             Code = "MOD0000001",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
-                            Name = "Gestión de Aplicaciones",
+                            Name = "Configuración",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 2,
-                            ApplicationId = 1,
+                            ApplicationId = 3,
                             Code = "MOD0000002",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
-                            Name = "Gestión de Módulos",
+                            Name = "Administración",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 3,
-                            ApplicationId = 1,
+                            ApplicationId = 3,
                             Code = "MOD0000003",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
-                            Name = "Gestión de Permisos",
+                            Name = "Principal",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ApplicationId = 1,
-                            Code = "MOD0000004",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Gestión de Roles",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ApplicationId = 1,
-                            Code = "MOD0000005",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Gestión de Usuarios",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ApplicationId = 1,
-                            Code = "MOD0000006",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Asignación de Permisos por Rol",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ApplicationId = 1,
-                            Code = "MOD0000007",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
-                            IsActive = true,
-                            Name = "Asignación de Roles por Usuario",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         });
                 });
 
@@ -417,66 +934,66 @@ namespace Integration.Infrastructure.Migrations
                             Id = 1,
                             Code = "PER0000001",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Consultar",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 2,
                             Code = "PER0000002",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Crear",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 3,
                             Code = "PER0000003",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Modificar",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 4,
                             Code = "PER0000004",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Desactivar",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 5,
                             Code = "PER0000005",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Cargar",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 6,
                             Code = "PER0000006",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             IsActive = true,
                             Name = "Descargar",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido"
+                            UpdatedBy = "system"
                         });
                 });
 
@@ -741,7 +1258,7 @@ namespace Integration.Infrastructure.Migrations
                             Code = "USR0000001",
                             ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "epulido",
+                            CreatedBy = "system",
                             DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "epulido@minsalud.gov.co",
                             EmailConfirmed = false,
@@ -757,8 +1274,34 @@ namespace Integration.Infrastructure.Migrations
                             SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
                             TwoFactorEnabled = false,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "epulido",
+                            UpdatedBy = "system",
                             UserName = "epulido"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            Code = "USR0000002",
+                            ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "sjmedina@Minsalud.gov.co",
+                            EmailConfirmed = false,
+                            FirstName = "Sandra",
+                            IsActive = true,
+                            LastName = "Medina",
+                            LockoutEnabled = true,
+                            NormalizedEmail = "SJMEDINA",
+                            NormalizedUserName = "SJMEDINA@MINSALUD.GOV.CO",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
+                            PhoneNumber = "3157234494",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
+                            TwoFactorEnabled = false,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system",
+                            UserName = "sjmedina"
                         });
                 });
 
@@ -875,6 +1418,17 @@ namespace Integration.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", "Security");
+                });
+
+            modelBuilder.Entity("Integration.Core.Entities.Parametric.City", b =>
+                {
+                    b.HasOne("Integration.Core.Entities.Parametric.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Menu", b =>

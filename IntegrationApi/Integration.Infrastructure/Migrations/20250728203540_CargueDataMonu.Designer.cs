@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Integration.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250521081359_Department")]
-    partial class Department
+    [Migration("20250728203540_CargueDataMonu")]
+    partial class CargueDataMonu
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,6 +87,52 @@ namespace Integration.Infrastructure.Migrations
                     b.ToTable("Logs", "Audit");
                 });
 
+            modelBuilder.Entity("Integration.Core.Entities.Parametric.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodeDane")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("City", "Parametric");
+                });
+
             modelBuilder.Entity("Integration.Core.Entities.Parametric.Department", b =>
                 {
                     b.Property<int>("Id")
@@ -100,8 +146,26 @@ namespace Integration.Infrastructure.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -114,199 +178,364 @@ namespace Integration.Infrastructure.Migrations
                         {
                             Id = 1,
                             CodeDane = "91",
-                            Name = "Amazonas"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Amazonas",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 2,
                             CodeDane = "05",
-                            Name = "Antioquia"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Antioquia",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 3,
                             CodeDane = "81",
-                            Name = "Arauca"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Arauca",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 4,
                             CodeDane = "08",
-                            Name = "Atlántico"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Atlántico",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 5,
                             CodeDane = "11",
-                            Name = "Bogotá, D.C."
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Bogotá, D.C.",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 6,
                             CodeDane = "13",
-                            Name = "Bolívar"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Bolívar",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 7,
                             CodeDane = "15",
-                            Name = "Boyacá"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Boyacá",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 8,
                             CodeDane = "17",
-                            Name = "Caldas"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Caldas",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 9,
                             CodeDane = "18",
-                            Name = "Caquetá"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Caquetá",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 10,
                             CodeDane = "85",
-                            Name = "Casanare"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Casanare",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 11,
                             CodeDane = "19",
-                            Name = "Cauca"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Cauca",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 12,
                             CodeDane = "20",
-                            Name = "Cesar"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Cesar",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 13,
                             CodeDane = "27",
-                            Name = "Chocó"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Chocó",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 14,
                             CodeDane = "23",
-                            Name = "Córdoba"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Córdoba",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 15,
                             CodeDane = "25",
-                            Name = "Cundinamarca"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Cundinamarca",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 16,
                             CodeDane = "94",
-                            Name = "Guainía"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Guainía",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 17,
                             CodeDane = "95",
-                            Name = "Guaviare"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Guaviare",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 18,
                             CodeDane = "41",
-                            Name = "Huila"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Huila",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 19,
                             CodeDane = "44",
-                            Name = "La Guajira"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "La Guajira",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 20,
                             CodeDane = "47",
-                            Name = "Magdalena"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Magdalena",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 21,
                             CodeDane = "50",
-                            Name = "Meta"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Meta",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 22,
                             CodeDane = "52",
-                            Name = "Nariño"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Nariño",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 23,
                             CodeDane = "54",
-                            Name = "Norte de Santander"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Norte de Santander",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 24,
                             CodeDane = "86",
-                            Name = "Putumayo"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Putumayo",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 25,
                             CodeDane = "63",
-                            Name = "Quindío"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Quindío",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 26,
                             CodeDane = "66",
-                            Name = "Risaralda"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Risaralda",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 27,
                             CodeDane = "88",
-                            Name = "San Andrés, Providencia y Santa Catalina"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "San Andrés, Providencia y Santa Catalina",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 28,
                             CodeDane = "68",
-                            Name = "Santander"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Santander",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 29,
                             CodeDane = "70",
-                            Name = "Sucre"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Sucre",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 30,
                             CodeDane = "73",
-                            Name = "Tolima"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Tolima",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 31,
                             CodeDane = "76",
-                            Name = "Valle del Cauca"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Valle del Cauca",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 32,
                             CodeDane = "97",
-                            Name = "Vaupés"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Vaupés",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         },
                         new
                         {
                             Id = 33,
                             CodeDane = "99",
-                            Name = "Vichada"
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Vichada",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
                         });
                 });
 
@@ -565,6 +794,309 @@ namespace Integration.Infrastructure.Migrations
                     b.HasIndex("ParentMenuId");
 
                     b.ToTable("Menu", "Security");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "MNU0000001",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "cog-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Administración",
+                            Order = 0,
+                            Route = "/administracion",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "MNU0000002",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "grid-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Gestionar Aplicación",
+                            Order = 1,
+                            ParentMenuId = 1,
+                            Route = "/administracion/gestionar-aplicacion",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "MNU0000003",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "layers-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Gestionar Módulo",
+                            Order = 2,
+                            ParentMenuId = 1,
+                            Route = "/administracion/gestionar-modulo",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "MNU0000004",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "menu-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Gestionar Menú",
+                            Order = 3,
+                            ParentMenuId = 1,
+                            Route = "/administracion/gestionar-menu",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Code = "MNU0000005",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "lock-closed-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Gestionar Permisos",
+                            Order = 4,
+                            ParentMenuId = 1,
+                            Route = "/administracion/gestionar-permisos",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Code = "MNU0000006",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "people-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Gestionar Usuarios",
+                            Order = 5,
+                            ParentMenuId = 1,
+                            Route = "/administracion/gestionar-usuarios",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Code = "MNU0000007",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "extension-puzzle-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Gestionar Roles",
+                            Order = 6,
+                            ParentMenuId = 1,
+                            Route = "/administracion/gestionar-roles",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Code = "MNU0000008",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "person-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Asignar Role a Usuario",
+                            Order = 7,
+                            ParentMenuId = 1,
+                            Route = "/administracion/asignar-roles",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Code = "MNU0000009",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "key-outline",
+                            IsActive = true,
+                            ModuleId = 1,
+                            Name = "Configuración de Permisos",
+                            Order = 8,
+                            ParentMenuId = 1,
+                            Route = "/administracion/configuracion-permisos",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Code = "MNU0000010",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "cog-outline",
+                            IsActive = true,
+                            ModuleId = 2,
+                            Name = "Administración",
+                            Order = 0,
+                            Route = "/administracion",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Code = "MNU0000011",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "people-outline",
+                            IsActive = true,
+                            ModuleId = 2,
+                            Name = "Gestionar Usuarios",
+                            Order = 1,
+                            ParentMenuId = 10,
+                            Route = "/administracion/gestionar-usuarios",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Code = "MNU0000012",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "extension-puzzle-outline",
+                            IsActive = true,
+                            ModuleId = 2,
+                            Name = "Gestionar Roles",
+                            Order = 2,
+                            ParentMenuId = 10,
+                            Route = "/administracion/gestionar-roles",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Code = "MNU0000013",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "person-outline",
+                            IsActive = true,
+                            ModuleId = 2,
+                            Name = "Asignar Role a Usuario",
+                            Order = 3,
+                            ParentMenuId = 10,
+                            Route = "/administracion/asignar-roles",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Code = "MNU0000014",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "key-outline",
+                            IsActive = true,
+                            ModuleId = 2,
+                            Name = "Configuración de Permisos",
+                            Order = 4,
+                            ParentMenuId = 10,
+                            Route = "/administracion/configuracion-permisos",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Code = "MNU0000015",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "description",
+                            IsActive = true,
+                            ModuleId = 3,
+                            Name = "Principal",
+                            Order = 0,
+                            Route = "/interface",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Code = "MNU0000016",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "description",
+                            IsActive = true,
+                            ModuleId = 3,
+                            Name = "Panel de control",
+                            Order = 1,
+                            ParentMenuId = 15,
+                            Route = "/interface/inicio",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Code = "MNU0000017",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "description",
+                            IsActive = true,
+                            ModuleId = 3,
+                            Name = "Tramite",
+                            Order = 2,
+                            ParentMenuId = 15,
+                            Route = "/interface/tramites",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Code = "MNU0000018",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "description",
+                            IsActive = true,
+                            ModuleId = 3,
+                            Name = "Inscripciones",
+                            Order = 3,
+                            ParentMenuId = 15,
+                            Route = "/interface/inscripciones",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Code = "MNU0000019",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            Icon = "description",
+                            IsActive = true,
+                            ModuleId = 3,
+                            Name = "Novedades",
+                            Order = 4,
+                            ParentMenuId = 15,
+                            Route = "/interface/novedades",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        });
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Module", b =>
@@ -625,7 +1157,31 @@ namespace Integration.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "system",
                             IsActive = true,
-                            Name = "Configuración",
+                            Name = "Administración",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ApplicationId = 3,
+                            Code = "MOD0000002",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Administración",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ApplicationId = 3,
+                            Code = "MOD0000003",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            IsActive = true,
+                            Name = "Principal",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "system"
                         });
@@ -1023,6 +1579,58 @@ namespace Integration.Infrastructure.Migrations
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "system",
                             UserName = "epulido"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            Code = "USR0000002",
+                            ConcurrencyStamp = "568e8e5e-9788-4b25-972f-e09d4d75836f",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "sjmedina@Minsalud.gov.co",
+                            EmailConfirmed = false,
+                            FirstName = "Sandra Julieth",
+                            IsActive = true,
+                            LastName = "Medina Dominguez",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SJMEDINA@MINSALUD.GOV.CO",
+                            NormalizedUserName = "SJMEDINA",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDsuejQaFVcndAo8Cvo/cl4aI6bcGE4IhBVxkoqtznSfUDQznAnpHK3pvYWGaTmqfA==",
+                            PhoneNumber = "3157234495",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "0ca7f47b-1dd8-48fb-a762-0394a09384df",
+                            TwoFactorEnabled = false,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system",
+                            UserName = "sjmedina"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccessFailedCount = 0,
+                            Code = "USR0000003",
+                            ConcurrencyStamp = "f39feedf-4c86-44d5-8aac-f9df9416c0e2",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = "system",
+                            DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "egiraldo@Minsalud.gov.co",
+                            EmailConfirmed = false,
+                            FirstName = "Estefania",
+                            IsActive = true,
+                            LastName = "Giraldo Chica",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EGIRALDO@MINSALUD.GOV.CO",
+                            NormalizedUserName = "EGIRALDO",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOlghBRGxy2MX46D7wN3cnRaLZO9/lbgw6MuYNjP/xKPfmfTRkyeJ6IUfu5Zh6WUcA==",
+                            PhoneNumber = "3157234496",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a9ce9e42-45e2-4f62-a0ef-9e19507161c7",
+                            TwoFactorEnabled = false,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "system",
+                            UserName = "egiraldo"
                         });
                 });
 
@@ -1139,6 +1747,17 @@ namespace Integration.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", "Security");
+                });
+
+            modelBuilder.Entity("Integration.Core.Entities.Parametric.City", b =>
+                {
+                    b.HasOne("Integration.Core.Entities.Parametric.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Integration.Core.Entities.Security.Menu", b =>
