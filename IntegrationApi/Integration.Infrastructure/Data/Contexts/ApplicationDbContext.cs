@@ -21,7 +21,16 @@ namespace Integration.Infrastructure.Data.Contexts
         {
             _currentUserService = currentUserService;
         }
-        private static readonly DateTime StaticCreatedAt = StaticCreatedAt;
+        public static readonly DateTime StaticCreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, DateTimeKind.Utc);
+
+        // Constantes estáticas para ConcurrencyStamp
+        private static readonly string ROLE_CONCURRENCY_STAMP_1 = "9d2736e7-7fef-4779-a2cc-474789c810fe";
+        private static readonly string ROLE_CONCURRENCY_STAMP_2 = "358ddaa5-d5af-4e94-82aa-1dea712b41ff";
+        private static readonly string ROLE_CONCURRENCY_STAMP_3 = "d837f09f-22a7-44a9-9ad3-5358fc25a463";
+        private static readonly string ROLE_CONCURRENCY_STAMP_4 = "3c2fac15-ca08-4b21-9175-fee779734fa8";
+        private static readonly string ROLE_CONCURRENCY_STAMP_5 = "6f5e165e-d753-4847-84b1-913142273d00";
+        private static readonly string ROLE_CONCURRENCY_STAMP_6 = "b69f36df-8915-4287-949e-80c1f0d99cf8";
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Integration.Core.Entities.Security.Application> Applications { get; set; }
         public DbSet<Module> Modules { get; set; }
@@ -50,11 +59,11 @@ namespace Integration.Infrastructure.Data.Contexts
                 {
                     Id = 1,
                     Code = "APP0000001",
-                    Name = "Integrador",                    
+                    Name = "Integrador",
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
                     CreatedBy = "system",
-                    UpdatedBy = "system",                    
+                    UpdatedBy = "system",
                     IsActive = true
                 },
                 new Integration.Core.Entities.Security.Application
@@ -187,11 +196,12 @@ namespace Integration.Infrastructure.Data.Contexts
                 }
             );
             builder.Entity<User>().HasData(
-                new User { 
-                    Id = 1, 
-                    Code = "USR0000001", 
-                    FirstName = "Erika", 
-                    LastName = "Pulido", 
+                new User
+                {
+                    Id = 1,
+                    Code = "USR0000001",
+                    FirstName = "Erika",
+                    LastName = "Pulido",
                     DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0),
                     CreatedBy = "system",
                     CreatedAt = StaticCreatedAt,
@@ -212,7 +222,7 @@ namespace Integration.Infrastructure.Data.Contexts
                     LockoutEnd = null,
                     LockoutEnabled = true,
                     AccessFailedCount = 0
-                }, 
+                },
                 new User
                 {
                     Id = 2,
@@ -674,7 +684,6 @@ namespace Integration.Infrastructure.Data.Contexts
                     IsActive = true
                 }
             );
-
             builder.Entity<Menu>().HasData(
                 new Menu
                 {
@@ -981,8 +990,93 @@ namespace Integration.Infrastructure.Data.Contexts
                     IsActive = true
                 }
             );
+            builder.Entity<Role>().HasData(
+                new Role
+                {
+                    Id = 1,
+                    Code = "ROL0000001",
+                    Name = "Administrador Integrador",
+                    ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_1,
+                    NormalizedName = "ADMINISTRADOR INTEGRADOR",
+                    ApplicationId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Role
+                {
+                    Id = 2,
+                    Code = "ROL0000002",
+                    Name = "Administrador Saga 2.0",
+                    ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_2,
+                    NormalizedName = "ADMINISTRADOR SAGA 2.0",
+                    ApplicationId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Role
+                {
+                    Id = 3,
+                    Code = "ROL0000003",
+                    Name = "Administrador Sicof Lite",
+                    ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_3,
+                    NormalizedName = "ADMINISTRADOR SICOF LITE",
+                    ApplicationId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Role
+                {
+                    Id = 4,
+                    Code = "ROL0000004",
+                    Name = "Asignador",
+                    ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_4,
+                    NormalizedName = "ASIGNADOR",
+                    ApplicationId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Role
+                {
+                    Id = 5,
+                    Code = "ROL0000005",
+                    Name = "Gestor",
+                    ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_5,
+                    NormalizedName = "GESTOR",
+                    ApplicationId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Role
+                {
+                    Id = 6,
+                    Code = "ROL0000006",
+                    Name = "Notificador",
+                    ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_6,
+                    NormalizedName = "NOTIFICADOR",
+                    ApplicationId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                }
+            );
         }
-
         /// <summary>
         /// Sobrescribir SaveChangesAsync para aplicar auditoría automáticamente
         /// </summary>
