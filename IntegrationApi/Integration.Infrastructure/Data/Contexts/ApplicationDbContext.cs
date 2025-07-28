@@ -674,6 +674,313 @@ namespace Integration.Infrastructure.Data.Contexts
                     IsActive = true
                 }
             );
+
+            builder.Entity<Menu>().HasData(
+                new Menu
+                {
+                    Id = 1,
+                    ParentMenuId = null,
+                    ModuleId = 1,
+                    Code = "MNU0000001",
+                    Name = "Administración",
+                    Route = "/administracion",
+                    Icon = "cog-outline",
+                    Order = 0,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 2,
+                    ParentMenuId = 1,
+                    ModuleId = 1,
+                    Code = "MNU0000002",
+                    Name = "Gestionar Aplicación",
+                    Route = "/administracion/gestionar-aplicacion",
+                    Icon = "grid-outline",
+                    Order = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 3,
+                    ParentMenuId = 1,
+                    ModuleId = 1,
+                    Code = "MNU0000003",
+                    Name = "Gestionar Módulo",
+                    Route = "/administracion/gestionar-modulo",
+                    Icon = "layers-outline",
+                    Order = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 4,
+                    ParentMenuId = 1,
+                    ModuleId = 1,
+                    Code = "MNU0000004",
+                    Name = "Gestionar Menú",
+                    Route = "/administracion/gestionar-menu",
+                    Icon = "menu-outline",
+                    Order = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 5,
+                    ParentMenuId = 1,
+                    ModuleId = 1,
+                    Code = "MNU0000005",
+                    Name = "Gestionar Permisos",
+                    Route = "/administracion/gestionar-permisos",
+                    Icon = "lock-closed-outline",
+                    Order = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 6,
+                    ParentMenuId = 1,
+                    ModuleId = 1,
+                    Code = "MNU0000006",
+                    Name = "Gestionar Usuarios",
+                    Route = "/administracion/gestionar-usuarios",
+                    Icon = "people-outline",
+                    Order = 5,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 7,
+                    ParentMenuId = 1,
+                    ModuleId = 1,
+                    Code = "MNU0000007",
+                    Name = "Gestionar Roles",
+                    Route = "/administracion/gestionar-roles",
+                    Icon = "extension-puzzle-outline",
+                    Order = 6,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 8,
+                    ParentMenuId = 1,
+                    ModuleId = 1,
+                    Code = "MNU0000008",
+                    Name = "Asignar Role a Usuario",
+                    Route = "/administracion/asignar-roles",
+                    Icon = "person-outline",
+                    Order = 7,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 9,
+                    ParentMenuId = 1,
+                    ModuleId = 1,
+                    Code = "MNU0000009",
+                    Name = "Configuración de Permisos",
+                    Route = "/administracion/configuracion-permisos",
+                    Icon = "key-outline",
+                    Order = 8,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 10,
+                    ParentMenuId = null,
+                    ModuleId = 2,
+                    Code = "MNU0000010",
+                    Name = "Administración",
+                    Route = "/administracion",
+                    Icon = "cog-outline",
+                    Order = 0,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 11,
+                    ParentMenuId = 10,
+                    ModuleId = 2,
+                    Code = "MNU0000011",
+                    Name = "Gestionar Usuarios",
+                    Route = "/administracion/gestionar-usuarios",
+                    Icon = "people-outline",
+                    Order = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 12,
+                    ParentMenuId = 10,
+                    ModuleId = 2,
+                    Code = "MNU0000012",
+                    Name = "Gestionar Roles",
+                    Route = "/administracion/gestionar-roles",
+                    Icon = "extension-puzzle-outline",
+                    Order = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 13,
+                    ParentMenuId = 10,
+                    ModuleId = 2,
+                    Code = "MNU0000013",
+                    Name = "Asignar Role a Usuario",
+                    Route = "/administracion/asignar-roles",
+                    Icon = "person-outline",
+                    Order = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 14,
+                    ParentMenuId = 10,
+                    ModuleId = 2,
+                    Code = "MNU0000014",
+                    Name = "Configuración de Permisos",
+                    Route = "/administracion/configuracion-permisos",
+                    Icon = "key-outline",
+                    Order = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 15,
+                    ParentMenuId = null,
+                    ModuleId = 3,
+                    Code = "MNU0000015",
+                    Name = "Principal",
+                    Route = "/interface",
+                    Icon = "description",
+                    Order = 0,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 16,
+                    ParentMenuId = 15,
+                    ModuleId = 3,
+                    Code = "MNU0000016",
+                    Name = "Panel de control",
+                    Route = "/interface/inicio",
+                    Icon = "description",
+                    Order = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 17,
+                    ParentMenuId = 15,
+                    ModuleId = 3,
+                    Code = "MNU0000017",
+                    Name = "Tramite",
+                    Route = "/interface/tramites",
+                    Icon = "description",
+                    Order = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 18,
+                    ParentMenuId = 15,
+                    ModuleId = 3,
+                    Code = "MNU0000018",
+                    Name = "Inscripciones",
+                    Route = "/interface/inscripciones",
+                    Icon = "description",
+                    Order = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Menu
+                {
+                    Id = 19,
+                    ParentMenuId = 15,
+                    ModuleId = 3,
+                    Code = "MNU0000019",
+                    Name = "Novedades",
+                    Route = "/interface/novedades",
+                    Icon = "description",
+                    Order = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                }
+            );
         }
 
         /// <summary>
