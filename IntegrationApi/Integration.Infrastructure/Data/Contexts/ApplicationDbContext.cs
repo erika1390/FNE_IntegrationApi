@@ -1532,14 +1532,481 @@ namespace Integration.Infrastructure.Data.Contexts
                     CreatedBy = "system",
                     UpdatedBy = "system",
                     IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 39,
+                    RoleId = 3,
+                    MenuId = 11,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 40,
+                    RoleId = 3,
+                    MenuId = 11,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 41,
+                    RoleId = 3,
+                    MenuId = 11,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 42,
+                    RoleId = 3,
+                    MenuId = 11,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 43,
+                    RoleId = 3,
+                    MenuId = 11,
+                    PermissionId = 5,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 44,
+                    RoleId = 3,
+                    MenuId = 11,
+                    PermissionId = 6,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 45,
+                    RoleId = 3,
+                    MenuId = 12,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 46,
+                    RoleId = 3,
+                    MenuId = 12,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 47,
+                    RoleId = 3,
+                    MenuId = 12,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 48,
+                    RoleId = 3,
+                    MenuId = 12,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 49,
+                    RoleId = 3,
+                    MenuId = 13,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 50,
+                    RoleId = 3,
+                    MenuId = 13,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 51,
+                    RoleId = 3,
+                    MenuId = 13,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 52,
+                    RoleId = 3,
+                    MenuId = 13,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 53,
+                    RoleId = 3,
+                    MenuId = 14,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 54,
+                    RoleId = 3,
+                    MenuId = 14,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 55,
+                    RoleId = 3,
+                    MenuId = 14,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 56,
+                    RoleId = 3,
+                    MenuId = 14,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 57,
+                    RoleId = 3,
+                    MenuId = 16,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 58,
+                    RoleId = 3,
+                    MenuId = 17,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 59,
+                    RoleId = 3,
+                    MenuId = 17,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 60,
+                    RoleId = 3,
+                    MenuId = 17,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 61,
+                    RoleId = 3,
+                    MenuId = 17,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 62,
+                    RoleId = 3,
+                    MenuId = 17,
+                    PermissionId = 5,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 63,
+                    RoleId = 3,
+                    MenuId = 17,
+                    PermissionId = 6,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 64,
+                    RoleId = 3,
+                    MenuId = 18,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 65,
+                    RoleId = 3,
+                    MenuId = 18,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 66,
+                    RoleId = 3,
+                    MenuId = 18,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 67,
+                    RoleId = 3,
+                    MenuId = 18,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 68,
+                    RoleId = 3,
+                    MenuId = 18,
+                    PermissionId = 5,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 69,
+                    RoleId = 3,
+                    MenuId = 18,
+                    PermissionId = 6,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 70,
+                    RoleId = 3,
+                    MenuId = 19,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 71,
+                    RoleId = 3,
+                    MenuId = 19,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 72,
+                    RoleId = 3,
+                    MenuId = 19,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 73,
+                    RoleId = 3,
+                    MenuId = 19,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 74,
+                    RoleId = 3,
+                    MenuId = 19,
+                    PermissionId = 5,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 75,
+                    RoleId = 3,
+                    MenuId = 19,
+                    PermissionId = 6,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 }
             );
 
             builder.Entity<UserRole>().HasData(
                 new UserRole
                 {
+                    Id = 1,
                     UserId = 1,
                     RoleId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new UserRole
+                {
+                    Id = 2,
+                    UserId = 2,
+                    RoleId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new UserRole
+                {
+                    Id = 3,
+                    UserId = 1,
+                    RoleId = 3,
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
                     CreatedBy = "system",
