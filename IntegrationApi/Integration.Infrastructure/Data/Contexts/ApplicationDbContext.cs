@@ -30,6 +30,7 @@ namespace Integration.Infrastructure.Data.Contexts
         private static readonly string ROLE_CONCURRENCY_STAMP_4 = "3c2fac15-ca08-4b21-9175-fee779734fa8";
         private static readonly string ROLE_CONCURRENCY_STAMP_5 = "6f5e165e-d753-4847-84b1-913142273d00";
         private static readonly string ROLE_CONCURRENCY_STAMP_6 = "b69f36df-8915-4287-949e-80c1f0d99cf8";
+        private static readonly string ROLE_CONCURRENCY_STAMP_7 = "7f2a6c54-2d1e-4b37-9a5c-8f0e3b6a21d4";
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Integration.Core.Entities.Security.Application> Applications { get; set; }
@@ -244,6 +245,114 @@ namespace Integration.Infrastructure.Data.Contexts
                     SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
                     ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
                     PhoneNumber = "3157234494",
+                    PhoneNumberConfirmed = false,
+                    TwoFactorEnabled = false,
+                    LockoutEnd = null,
+                    LockoutEnabled = true,
+                    AccessFailedCount = 0
+                },
+                new User
+                {
+                    Id = 3,
+                    Code = "USR0000003",
+                    FirstName = "Estefania",
+                    LastName = "Giraldo Chica",
+                    DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0),
+                    CreatedBy = "system",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedBy = "system",
+                    UpdatedAt = StaticCreatedAt,
+                    IsActive = true,
+                    UserName = "egiraldo",
+                    NormalizedEmail = "EGIRALDO",
+                    Email = "egiraldo@Minsalud.gov.co",
+                    NormalizedUserName = "EGIRALDO@MINSALUD.GOV.CO",
+                    EmailConfirmed = false,
+                    PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
+                    SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
+                    ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
+                    PhoneNumber = "3157234495",
+                    PhoneNumberConfirmed = false,
+                    TwoFactorEnabled = false,
+                    LockoutEnd = null,
+                    LockoutEnabled = true,
+                    AccessFailedCount = 0
+                },
+                new User
+                {
+                    Id = 4,
+                    Code = "USR0000004",
+                    FirstName = "Julian",
+                    LastName = "Cuervo Bustamante",
+                    DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0),
+                    CreatedBy = "system",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedBy = "system",
+                    UpdatedAt = StaticCreatedAt,
+                    IsActive = true,
+                    UserName = "jcuervo",
+                    NormalizedEmail = "JCUERVO",
+                    Email = "jcuervo@Minsalud.gov.co",
+                    NormalizedUserName = "JCUERVO@MINSALUD.GOV.CO",
+                    EmailConfirmed = false,
+                    PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
+                    SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
+                    ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
+                    PhoneNumber = "3157234496",
+                    PhoneNumberConfirmed = false,
+                    TwoFactorEnabled = false,
+                    LockoutEnd = null,
+                    LockoutEnabled = true,
+                    AccessFailedCount = 0
+                },
+                new User
+                {
+                    Id = 5,
+                    Code = "USR0000005",
+                    FirstName = "William",
+                    LastName = "Molina Morales",
+                    DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0),
+                    CreatedBy = "system",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedBy = "system",
+                    UpdatedAt = StaticCreatedAt,
+                    IsActive = true,
+                    UserName = "wmolina",
+                    NormalizedEmail = "WMOLINA",
+                    Email = "wmolina@Minsalud.gov.co",
+                    NormalizedUserName = "WMOLINA@MINSALUD.GOV.CO",
+                    EmailConfirmed = false,
+                    PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
+                    SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
+                    ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
+                    PhoneNumber = "3157234497",
+                    PhoneNumberConfirmed = false,
+                    TwoFactorEnabled = false,
+                    LockoutEnd = null,
+                    LockoutEnabled = true,
+                    AccessFailedCount = 0
+                },
+                new User
+                {
+                    Id = 6,
+                    Code = "USR0000006",
+                    FirstName = "Juan Felipe",
+                    LastName = "Valencia Renteria",
+                    DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0),
+                    CreatedBy = "system",
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedBy = "system",
+                    UpdatedAt = StaticCreatedAt,
+                    IsActive = true,
+                    UserName = "jvalenciar",
+                    NormalizedEmail = "JVALENCIAR",
+                    Email = "jvalenciar@Minsalud.gov.co",
+                    NormalizedUserName = "JVALENCIAR@MINSALUD.GOV.CO",
+                    EmailConfirmed = false,
+                    PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
+                    SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
+                    ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
+                    PhoneNumber = "3157234498",
                     PhoneNumberConfirmed = false,
                     TwoFactorEnabled = false,
                     LockoutEnd = null,
@@ -684,6 +793,7 @@ namespace Integration.Infrastructure.Data.Contexts
                     IsActive = true
                 }
             );
+
             builder.Entity<Menu>().HasData(
                 new Menu
                 {
@@ -1040,7 +1150,7 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Asignador",
                     ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_4,
                     NormalizedName = "ASIGNADOR",
-                    ApplicationId = 2,
+                    ApplicationId = 3,
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
                     CreatedBy = "system",
@@ -1054,7 +1164,7 @@ namespace Integration.Infrastructure.Data.Contexts
                     Name = "Gestor",
                     ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_5,
                     NormalizedName = "GESTOR",
-                    ApplicationId = 2,
+                    ApplicationId = 3,
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
                     CreatedBy = "system",
@@ -1065,10 +1175,24 @@ namespace Integration.Infrastructure.Data.Contexts
                 {
                     Id = 6,
                     Code = "ROL0000006",
-                    Name = "Notificador",
+                    Name = "Consultor",
                     ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_6,
-                    NormalizedName = "NOTIFICADOR",
-                    ApplicationId = 2,
+                    NormalizedName = "CONSULTOR",
+                    ApplicationId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new Role
+                {
+                    Id = 7,
+                    Code = "ROL0000007",
+                    Name = "QuienRevisa",
+                    ConcurrencyStamp = ROLE_CONCURRENCY_STAMP_7,
+                    NormalizedName = "QUIENREVISA",
+                    ApplicationId = 3,
                     CreatedAt = StaticCreatedAt,
                     UpdatedAt = StaticCreatedAt,
                     CreatedBy = "system",
@@ -1076,6 +1200,7 @@ namespace Integration.Infrastructure.Data.Contexts
                     IsActive = true
                 }
             );
+
             builder.Entity<RoleMenuPermission>().HasData(
                 new RoleMenuPermission
                 {
@@ -1969,6 +2094,234 @@ namespace Integration.Infrastructure.Data.Contexts
                 {
                     Id = 75,
                     RoleId = 3,
+                    MenuId = 19,
+                    PermissionId = 6,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 76,
+                    RoleId = 4,
+                    MenuId = 16,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 77,
+                    RoleId = 4,
+                    MenuId = 17,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 78,
+                    RoleId = 4,
+                    MenuId = 17,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 79,
+                    RoleId = 4,
+                    MenuId = 17,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 80,
+                    RoleId = 4,
+                    MenuId = 17,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 81,
+                    RoleId = 4,
+                    MenuId = 17,
+                    PermissionId = 5,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 82,
+                    RoleId = 4,
+                    MenuId = 17,
+                    PermissionId = 6,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 83,
+                    RoleId = 4,
+                    MenuId = 18,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 84,
+                    RoleId = 4,
+                    MenuId = 18,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 85,
+                    RoleId = 4,
+                    MenuId = 18,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 86,
+                    RoleId = 4,
+                    MenuId = 18,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 87,
+                    RoleId = 4,
+                    MenuId = 18,
+                    PermissionId = 5,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 88,
+                    RoleId = 4,
+                    MenuId = 18,
+                    PermissionId = 6,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 89,
+                    RoleId = 4,
+                    MenuId = 19,
+                    PermissionId = 1,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 90,
+                    RoleId = 4,
+                    MenuId = 19,
+                    PermissionId = 2,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 91,
+                    RoleId = 4,
+                    MenuId = 19,
+                    PermissionId = 3,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 92,
+                    RoleId = 4,
+                    MenuId = 19,
+                    PermissionId = 4,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 93,
+                    RoleId = 4,
+                    MenuId = 19,
+                    PermissionId = 5,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new RoleMenuPermission
+                {
+                    Id = 94,
+                    RoleId = 4,
                     MenuId = 19,
                     PermissionId = 6,
                     CreatedAt = StaticCreatedAt,

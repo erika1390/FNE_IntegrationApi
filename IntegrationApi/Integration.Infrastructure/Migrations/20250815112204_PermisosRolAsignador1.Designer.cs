@@ -4,6 +4,7 @@ using Integration.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Integration.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250815112204_PermisosRolAsignador1")]
+    partial class PermisosRolAsignador1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2588,78 +2591,6 @@ namespace Integration.Infrastructure.Migrations
                             RoleId = 4,
                             UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
                             UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 89,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 19,
-                            PermissionId = 1,
-                            RoleId = 4,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 90,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 19,
-                            PermissionId = 2,
-                            RoleId = 4,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 91,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 19,
-                            PermissionId = 3,
-                            RoleId = 4,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 92,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 19,
-                            PermissionId = 4,
-                            RoleId = 4,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 93,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 19,
-                            PermissionId = 5,
-                            RoleId = 4,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 94,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 19,
-                            PermissionId = 6,
-                            RoleId = 4,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
                         });
                 });
 
@@ -2832,110 +2763,6 @@ namespace Integration.Infrastructure.Migrations
                             UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
                             UpdatedBy = "system",
                             UserName = "sjmedina"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccessFailedCount = 0,
-                            Code = "USR0000003",
-                            ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "egiraldo@Minsalud.gov.co",
-                            EmailConfirmed = false,
-                            FirstName = "Estefania",
-                            IsActive = true,
-                            LastName = "Giraldo Chica",
-                            LockoutEnabled = true,
-                            NormalizedEmail = "EGIRALDO",
-                            NormalizedUserName = "EGIRALDO@MINSALUD.GOV.CO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
-                            PhoneNumber = "3157234495",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
-                            TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system",
-                            UserName = "egiraldo"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AccessFailedCount = 0,
-                            Code = "USR0000004",
-                            ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "jcuervo@Minsalud.gov.co",
-                            EmailConfirmed = false,
-                            FirstName = "Julian",
-                            IsActive = true,
-                            LastName = "Cuervo Bustamante",
-                            LockoutEnabled = true,
-                            NormalizedEmail = "JCUERVO",
-                            NormalizedUserName = "JCUERVO@MINSALUD.GOV.CO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
-                            PhoneNumber = "3157234496",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
-                            TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system",
-                            UserName = "jcuervo"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AccessFailedCount = 0,
-                            Code = "USR0000005",
-                            ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "wmolina@Minsalud.gov.co",
-                            EmailConfirmed = false,
-                            FirstName = "William",
-                            IsActive = true,
-                            LastName = "Molina Morales",
-                            LockoutEnabled = true,
-                            NormalizedEmail = "WMOLINA",
-                            NormalizedUserName = "WMOLINA@MINSALUD.GOV.CO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
-                            PhoneNumber = "3157234497",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
-                            TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system",
-                            UserName = "wmolina"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AccessFailedCount = 0,
-                            Code = "USR0000006",
-                            ConcurrencyStamp = "b69f36df-8915-4287-949e-80c1f0d99cf8",
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            DateOfBirth = new DateTime(1990, 12, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "jvalenciar@Minsalud.gov.co",
-                            EmailConfirmed = false,
-                            FirstName = "Juan Felipe",
-                            IsActive = true,
-                            LastName = "Valencia Renteria",
-                            LockoutEnabled = true,
-                            NormalizedEmail = "JVALENCIAR",
-                            NormalizedUserName = "JVALENCIAR@MINSALUD.GOV.CO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMorJok85V7Kpf/EgOzE6dsr3UWrk6idDyT7BZszoRpr9OziW0BLL6vuF2zVj0B5ig==",
-                            PhoneNumber = "3157234498",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "2756991d-795c-4132-8848-34d79e60b300",
-                            TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system",
-                            UserName = "jvalenciar"
                         });
                 });
 
