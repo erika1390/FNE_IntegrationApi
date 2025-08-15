@@ -4,6 +4,7 @@ using Integration.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Integration.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250815114450_PermisosRolAsignador3")]
+    partial class PermisosRolAsignador3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2814,90 +2817,6 @@ namespace Integration.Infrastructure.Migrations
                             MenuId = 19,
                             PermissionId = 6,
                             RoleId = 5,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 108,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 16,
-                            PermissionId = 1,
-                            RoleId = 6,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 109,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 17,
-                            PermissionId = 1,
-                            RoleId = 6,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 110,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 17,
-                            PermissionId = 6,
-                            RoleId = 6,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 111,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 18,
-                            PermissionId = 1,
-                            RoleId = 6,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 112,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 18,
-                            PermissionId = 6,
-                            RoleId = 6,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 113,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 19,
-                            PermissionId = 1,
-                            RoleId = 6,
-                            UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UpdatedBy = "system"
-                        },
-                        new
-                        {
-                            Id = 114,
-                            CreatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "system",
-                            IsActive = true,
-                            MenuId = 19,
-                            PermissionId = 6,
-                            RoleId = 6,
                             UpdatedAt = new DateTime(2025, 7, 28, 0, 0, 0, 0, DateTimeKind.Utc),
                             UpdatedBy = "system"
                         });
