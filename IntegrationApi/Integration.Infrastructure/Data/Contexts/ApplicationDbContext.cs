@@ -2605,6 +2605,50 @@ namespace Integration.Infrastructure.Data.Contexts
                     CreatedBy = "system",
                     UpdatedBy = "system",
                     IsActive = true
+                },
+                new UserRole
+                {
+                    Id = 4,
+                    UserId = 3,
+                    RoleId = 7,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new UserRole
+                {
+                    Id = 5,
+                    UserId = 4,
+                    RoleId = 7,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new UserRole
+                {
+                    Id = 6,
+                    UserId = 5,
+                    RoleId = 7,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
+                },
+                new UserRole
+                {
+                    Id = 7,
+                    UserId = 6,
+                    RoleId = 7,
+                    CreatedAt = StaticCreatedAt,
+                    UpdatedAt = StaticCreatedAt,
+                    CreatedBy = "system",
+                    UpdatedBy = "system",
+                    IsActive = true
                 }
             );
         }
