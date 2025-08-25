@@ -8,6 +8,7 @@ namespace Integration.Application.Mappings.Security
         public ApplicationProfile()
         {
             CreateMap<Integration.Core.Entities.Security.Application, ApplicationDTO>()
+                .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
